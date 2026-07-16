@@ -13,17 +13,17 @@ export default function Listings() {
     scroller.current?.scrollBy({ left: dir * 420, behavior: 'smooth' })
 
   return (
-    <section className="relative overflow-hidden bg-[#f6f7fb] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-sv-cloud py-20 md:py-28">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <Reveal className="mb-10 flex flex-wrap items-end justify-between gap-5">
           <div>
-            <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#ff6a2d]/10 px-4 py-1.5 text-[12px] font-black uppercase tracking-wider text-[#ff6a2d]">
+            <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-sv-orange/10 px-4 py-1.5 text-[12px] font-black uppercase tracking-wider text-sv-orange">
               <Crown className="h-3.5 w-3.5" /> არჩეული შეთავაზებები
             </span>
-            <h2 className="text-[30px] font-black tracking-[-0.02em] text-[#0a1030] md:text-[40px]">
+            <h2 className="text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
               SUPER VIP განცხადებები
             </h2>
-            <p className="mt-2 text-[15px] font-semibold text-[#0a1030]/50 md:text-[16px]">
+            <p className="mt-2 text-[15px] font-semibold text-sv-ink/50 md:text-[16px]">
               პრემიუმ ქონებები AI ფასის შეფასებით
             </p>
           </div>
@@ -32,21 +32,21 @@ export default function Listings() {
               <button
                 onClick={() => scrollBy(-1)}
                 aria-label="წინა"
-                className="grid h-11 w-11 place-items-center rounded-full border border-[#0a1030]/10 bg-white text-[#0a1030] transition-all hover:border-[#2e6bff] hover:text-[#2e6bff]"
+                className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-white text-sv-ink transition-all hover:border-sv-blue hover:text-sv-blue"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <button
                 onClick={() => scrollBy(1)}
                 aria-label="შემდეგი"
-                className="grid h-11 w-11 place-items-center rounded-full border border-[#0a1030]/10 bg-white text-[#0a1030] transition-all hover:border-[#2e6bff] hover:text-[#2e6bff]"
+                className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-white text-sv-ink transition-all hover:border-sv-blue hover:text-sv-blue"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
             </div>
             <Link
               to="/search"
-              className="group flex items-center gap-2 text-[15px] font-extrabold text-[#2e6bff] transition-colors hover:text-[#1a4fd6]"
+              className="group flex items-center gap-2 text-[15px] font-extrabold text-sv-blue transition-colors hover:text-sv-blue-deep"
             >
               ყველას ნახვა
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />

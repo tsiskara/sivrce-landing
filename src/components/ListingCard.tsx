@@ -4,30 +4,32 @@ import { Heart, BedDouble, Bath, Ruler, MapPin, Eye, Crown, Flame } from 'lucide
 import type { Listing } from '../data/listings'
 import { formatListingPrice, formatPerM2, formatViews, formatFloor } from '../data/listings'
 import { useFavorites } from '../lib/favorites'
+import { BRAND } from '../lib/brand'
 
+/* VIP badge system — locked in BRAND.vipTiers, consumed here (BRAND.md §8) */
 export const BADGE_STYLE: Record<NonNullable<Listing['badge']>, string> = {
-  'SUPER VIP': 'bg-gradient-to-r from-[#ff6a2d] to-[#ff4d6d] text-white',
-  'VIP+': 'bg-gradient-to-r from-[#2e6bff] to-[#7a5cff] text-white',
-  VIP: 'bg-[#0a1030]/85 text-white backdrop-blur',
+  'SUPER VIP': BRAND.vipTiers['SUPER VIP'].style,
+  'VIP+': BRAND.vipTiers['VIP+'].style,
+  VIP: BRAND.vipTiers.VIP.style,
 }
 
 function AIScoreRing({ score, size = 40 }: { score: number; size?: number }) {
   return (
     <div className="relative grid shrink-0 place-items-center" style={{ width: size, height: size }}>
       <svg viewBox="0 0 36 36" className="-rotate-90" style={{ width: size, height: size }}>
-        <circle cx="18" cy="18" r="15.5" fill="none" stroke="#2e6bff" strokeOpacity="0.15" strokeWidth="3.5" />
+        <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--sv-blue)" strokeOpacity="0.15" strokeWidth="3.5" />
         <circle
           cx="18" cy="18" r="15.5" fill="none" stroke="url(#aigrad)" strokeWidth="3.5"
           strokeLinecap="round" strokeDasharray={`${(score / 100) * 97.4} 97.4`}
         />
         <defs>
           <linearGradient id="aigrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#2e6bff" />
-            <stop offset="100%" stopColor="#7a5cff" />
+            <stop offset="0%" stopColor="var(--sv-blue)" />
+            <stop offset="100%" stopColor="var(--sv-violet)" />
           </linearGradient>
         </defs>
       </svg>
-      <span className="absolute text-[11px] font-black text-[#2e6bff]">{score}</span>
+      <span className="absolute text-[11px] font-black text-sv-blue">{score}</span>
     </div>
   )
 }
@@ -53,10 +55,10 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
         e.stopPropagation()
         toggle(l.id)
       }}
-      className={`absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full backdrop-blur transition-all duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2e6bff] ${
+      className={`absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full backdrop-blur transition-all duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sv-blue ${
         fav
-          ? 'bg-white text-[#ff4d6d]'
-          : 'bg-white/90 text-[#0a1030] hover:bg-white hover:text-[#ff4d6d]'
+          ? 'bg-white text-sv-orange'
+          : 'bg-white/90 text-sv-ink hover:bg-white hover:text-sv-orange'
       }`}
     >
       <Heart className={`h-4 w-4 ${fav ? 'fill-current' : ''}`} />
@@ -71,7 +73,7 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
         loading="lazy"
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#060d2b]/70 via-transparent to-[#060d2b]/10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-sv-navy/70 via-transparent to-sv-navy/10" />
       {l.badge && (
         <span className={`absolute left-4 top-4 flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11px] font-black tracking-wider ${BADGE_STYLE[l.badge]}`}>
           {l.badge === 'SUPER VIP' ? <Crown className="h-3.5 w-3.5" /> : <Flame className="h-3.5 w-3.5" />}
@@ -84,7 +86,7 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
           <div className="text-[24px] font-black tracking-tight text-white drop-shadow">{formatListingPrice(l)}</div>
           <div className="text-[12px] font-bold text-white/75">{formatPerM2(l)}</div>
         </div>
-        <span className="flex items-center gap-1 rounded-full bg-black/40 px-2.5 py-1 text-[11px] font-bold text-white/85 backdrop-blur">
+        <span className="flex items-center gap-1 rounded-full bg-sv-navy/55 px-2.5 py-1 text-[11px] font-bold text-white/85 backdrop-blur">
           <Eye className="h-3 w-3" /> {formatViews(l.views)}
         </span>
       </div>
@@ -93,24 +95,24 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
 
   const bodyBlock = (
     <div className="flex min-w-0 flex-1 flex-col p-5">
-      <h3 className="line-clamp-1 text-[16px] font-extrabold text-[#0a1030] transition-colors group-hover:text-[#2e6bff]">
+      <h3 className="line-clamp-1 text-[16px] font-extrabold text-sv-ink transition-colors group-hover:text-sv-blue">
         {l.title}
       </h3>
-      <p className="mt-1.5 flex items-center gap-1.5 text-[13px] font-semibold text-[#0a1030]/50">
+      <p className="mt-1.5 flex items-center gap-1.5 text-[13px] font-semibold text-sv-ink/50">
         <MapPin className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{l.address}</span>
       </p>
-      <div className="mt-4 flex items-center gap-4 border-t border-[#0a1030]/[0.06] pt-4 text-[13px] font-bold text-[#0a1030]/70">
-        <span className="flex items-center gap-1.5"><BedDouble className="h-4 w-4 text-[#0a1030]/40" /> {l.beds}</span>
-        <span className="flex items-center gap-1.5"><Bath className="h-4 w-4 text-[#0a1030]/40" /> {l.baths}</span>
-        <span className="flex items-center gap-1.5"><Ruler className="h-4 w-4 text-[#0a1030]/40" /> {l.area} მ²</span>
-        <span className="ml-auto text-[#0a1030]/45">{formatFloor(l)}</span>
+      <div className="mt-4 flex items-center gap-4 border-t border-sv-ink/[0.06] pt-4 text-[13px] font-bold text-sv-ink/70">
+        <span className="flex items-center gap-1.5"><BedDouble className="h-4 w-4 text-sv-ink/40" /> {l.beds}</span>
+        <span className="flex items-center gap-1.5"><Bath className="h-4 w-4 text-sv-ink/40" /> {l.baths}</span>
+        <span className="flex items-center gap-1.5"><Ruler className="h-4 w-4 text-sv-ink/40" /> {l.area} მ²</span>
+        <span className="ml-auto text-sv-ink/45">{formatFloor(l)}</span>
       </div>
       {/* AI score */}
-      <div className="mt-4 flex items-center gap-3 rounded-2xl bg-gradient-to-r from-[#2e6bff]/[0.07] to-[#7a5cff]/[0.07] p-3 ring-1 ring-inset ring-[#2e6bff]/15">
+      <div className="mt-4 flex items-center gap-3 rounded-module bg-gradient-to-r from-sv-blue/[0.07] to-sv-violet/[0.07] p-3 ring-1 ring-inset ring-sv-blue/15">
         <AIScoreRing score={l.ai.score} />
         <div className="min-w-0">
-          <div className="text-[11px] font-black uppercase tracking-wider text-[#2e6bff]">AI შეფასება</div>
-          <div className="truncate text-[13px] font-extrabold text-[#0a1030]">{l.ai.label}</div>
+          <div className="text-[11px] font-black uppercase tracking-wider text-sv-blue">AI შეფასება</div>
+          <div className="truncate text-[13px] font-extrabold text-sv-ink">{l.ai.label}</div>
         </div>
       </div>
     </div>
@@ -129,7 +131,7 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.65, delay: (i % 3) * 0.08, ease: [0.21, 0.65, 0.2, 1] }}
-      className={`group overflow-hidden rounded-[26px] border border-[#0a1030]/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover ${sizeClass}`}
+      className={`group overflow-hidden rounded-card border border-sv-ink/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover ${sizeClass}`}
     >
       <Link
         to={`/listing/${l.id}`}

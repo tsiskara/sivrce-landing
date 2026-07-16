@@ -138,7 +138,7 @@ export default function HeroBackground() {
             bottom: p.bottom,
             width: p.size,
             height: p.size,
-            background: p.orange ? '#ff8a4d' : '#8fb4ff',
+            background: p.orange ? '#ffb25e' : '#8fb4ff',
             boxShadow: p.orange
               ? '0 0 12px rgba(255,106,45,0.8)'
               : '0 0 10px rgba(143,180,255,0.7)',
@@ -151,12 +151,12 @@ export default function HeroBackground() {
       ))}
 
       {/* Brand map pins */}
-      <span className="absolute left-[16%] top-[30%] hidden h-3 w-3 animate-pin rounded-full bg-[#ff6a2d] md:block" />
-      <span className="absolute right-[20%] top-[24%] hidden h-2.5 w-2.5 animate-pin rounded-full bg-[#2e6bff] md:block" style={{ animationDelay: '1.2s' }} />
+      <span className="absolute left-[16%] top-[30%] hidden h-3 w-3 animate-pin rounded-full bg-sv-orange md:block" />
+      <span className="absolute right-[20%] top-[24%] hidden h-2.5 w-2.5 animate-pin rounded-full bg-sv-blue md:block" style={{ animationDelay: '1.2s' }} />
 
       {/* Vignette + transition into next section */}
       <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_40%,transparent_55%,rgba(5,11,38,0.55))]" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-[#050b26]/60 to-white" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-sv-navy/60 to-white" />
     </div>
   )
 }

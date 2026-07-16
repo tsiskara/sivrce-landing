@@ -63,6 +63,7 @@ export const BRAND = {
     glowOrange: '0 12px 32px -8px rgba(255,106,45,.8)',
     glowOrangeHover: '0 20px 56px -12px rgba(255,106,45,.95)',
     glowBlue: '0 16px 48px -12px rgba(46,107,255,.7)',
+    glowBlueSm: '0 6px 16px -6px rgba(46,107,255,.7)', // compact controls (chips, toggles)
     panelDark: '0 30px 80px -20px rgba(1,4,20,.65)', // navy-based, never pure black
     showcaseBlue: '0 40px 120px -30px rgba(46,107,255,.45)',
   },

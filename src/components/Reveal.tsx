@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
+import { Link } from 'react-router'
 import type { ReactNode } from 'react'
 
 interface RevealProps {
@@ -60,25 +61,25 @@ export function LogoMark({ size = 36 }: { size?: number }) {
         <circle cx="33.4" cy="33.8" r="1.2" fill="#ffd7c2" />
       </svg>
       {/* Soft brand shadow */}
-      <span className="absolute inset-0 -z-10 rounded-[14px] bg-[#2e6bff] opacity-40 blur-md" />
+      <span className="absolute inset-0 -z-10 rounded-[14px] bg-sv-blue opacity-40 blur-md" />
     </span>
   )
 }
 
 export function Logo({ light = false, compact = false }: { light?: boolean; compact?: boolean }) {
   return (
-    <a href="#" className="group flex items-center gap-2.5" aria-label="სივრცე — მთავარი">
+    <Link to="/" className="group flex items-center gap-2.5" aria-label="სივრცე — მთავარი">
       <LogoMark size={36} />
       {!compact && (
         <span
           className={`text-[22px] font-extrabold tracking-[-0.045em] ${
-            light ? 'text-white' : 'text-[#0a1030]'
+            light ? 'text-white' : 'text-sv-ink'
           }`}
         >
           sivrce
-          <span className="text-[#ff6a2d]">.</span>
+          <span className="text-sv-orange">.</span>
         </span>
       )}
-    </a>
+    </Link>
   )
 }

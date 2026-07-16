@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router'
 import { Search, MapPin, Home, Banknote, Ruler, SlidersHorizontal, Sparkles, ChevronDown, BadgeCheck, ShieldCheck, Zap } from 'lucide-react'
 import HeroBackground from './HeroBackground'
 
@@ -17,6 +18,24 @@ const ease = [0.21, 0.65, 0.2, 1] as const
 
 export default function Hero() {
   const [tab, setTab] = useState(0)
+  const [keyword, setKeyword] = useState('')
+  const navigate = useNavigate()
+
+  const submitSearch = () => {
+    if (tab === 3) {
+      // „ახალი პროექტები" tab → homepage projects section
+      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    const params = new URLSearchParams()
+    if (tab === 0) params.set('deal', 'sale')
+    if (tab === 1 || tab === 2) params.set('deal', 'rent')
+    if (keyword.trim()) params.set('q', keyword.trim())
+    const qs = params.toString()
+    navigate(qs ? `/search?${qs}` : '/search')
+  }
+
+  const goDistrict = (q: string) => navigate(`/search?q=${encodeURIComponent(q)}`)
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden bg-sv-navy">
@@ -97,6 +116,9 @@ export default function Hero() {
                 <input
                   type="text"
                   placeholder="ქალაქი, უბანი, ქუჩა ან ID"
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && submitSearch()}
                   className="w-full bg-transparent text-[15px] font-semibold text-white placeholder:text-white/45 focus:outline-none"
                 />
               </label>
@@ -119,7 +141,10 @@ export default function Hero() {
                   <ChevronDown className="h-4 w-4 text-white/40 transition-transform group-hover:translate-y-0.5" />
                 </button>
               ))}
-              <button className="col-span-2 flex items-center justify-center gap-2.5 rounded-control bg-sv-orange px-7 py-3.5 text-[15px] font-extrabold text-white shadow-glow-orange transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-orange-lg md:col-span-1">
+              <button
+                onClick={submitSearch}
+                className="col-span-2 flex items-center justify-center gap-2.5 rounded-control bg-sv-orange px-7 py-3.5 text-[15px] font-extrabold text-white shadow-glow-orange transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-orange-lg md:col-span-1"
+              >
                 <Search className="h-[18px] w-[18px]" />
                 ძიება
               </button>
@@ -127,7 +152,10 @@ export default function Hero() {
 
             {/* Sub row */}
             <div className="mt-2 flex flex-wrap items-center gap-2 px-1 pb-1">
-              <button className="flex items-center gap-2 rounded-control px-3 py-2 text-[13px] font-bold text-white/70 transition-colors hover:bg-white/[0.07] hover:text-white">
+              <button
+                onClick={() => navigate('/search')}
+                className="flex items-center gap-2 rounded-control px-3 py-2 text-[13px] font-bold text-white/70 transition-colors hover:bg-white/[0.07] hover:text-white"
+              >
                 <SlidersHorizontal className="h-4 w-4" /> დეტალური ფილტრი
               </button>
               <button className="flex items-center gap-2 rounded-control px-3 py-2 text-[13px] font-bold text-white/70 transition-colors hover:bg-white/[0.07] hover:text-white">
@@ -145,6 +173,7 @@ export default function Hero() {
             {QUICK.map((q) => (
               <button
                 key={q}
+                onClick={() => goDistrict(q)}
                 className="rounded-full glass px-4 py-1.5 text-[13px] font-bold text-white/85 transition-all duration-200 hover:bg-white/20 hover:text-white"
               >
                 {q}
