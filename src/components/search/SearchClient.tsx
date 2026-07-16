@@ -10,6 +10,7 @@ import {
 import Navbar from '@/components/sections/Navbar'
 import Footer from '@/components/sections/Footer'
 import ListingCard from '@/components/ListingCard'
+import { useI18n, type DictKey } from '@/lib/i18n/context'
 import {
   filterListings, CITIES, districtsOf,
   type DealType, type PropType, type SortKey, type Listing,
@@ -17,19 +18,19 @@ import {
 
 const ease = [0.21, 0.65, 0.2, 1] as const
 
-const PROP_TYPES: { value: PropType; label: string }[] = [
-  { value: 'apartment', label: 'ბინა' },
-  { value: 'house', label: 'სახლი / აგარაკი' },
-  { value: 'commercial', label: 'კომერციული' },
-  { value: 'land', label: 'მიწა' },
+const PROP_TYPES: { value: PropType; key: DictKey }[] = [
+  { value: 'apartment', key: 'prop.apartment' },
+  { value: 'house', key: 'prop.house' },
+  { value: 'commercial', key: 'prop.commercial' },
+  { value: 'land', key: 'prop.land' },
 ]
 
-const SORTS: { value: SortKey; label: string }[] = [
-  { value: 'date', label: 'თარიღით' },
-  { value: 'price-asc', label: 'ფასი: ზრდადი' },
-  { value: 'price-desc', label: 'ფასი: კლებადი' },
-  { value: 'area', label: 'ფართით' },
-  { value: 'ai', label: 'AI ქულით' },
+const SORTS: { value: SortKey; key: DictKey }[] = [
+  { value: 'date', key: 'sort.date' },
+  { value: 'price-asc', key: 'sort.priceAsc' },
+  { value: 'price-desc', key: 'sort.priceDesc' },
+  { value: 'area', key: 'sort.area' },
+  { value: 'ai', key: 'sort.ai' },
 ]
 
 const ROOM_OPTIONS = ['1+', '2', '3', '4', '5+'] as const
@@ -50,6 +51,7 @@ function SkeletonCard() {
 export default function SearchClient() {
   const params = useSearchParams()
   const router = useRouter()
+  const { t } = useI18n()
   const [view, setView] = useState<'grid' | 'list'>('grid')
 
   // ——— Simulated fetch: brief skeleton on mount + every filter change ———
@@ -60,8 +62,8 @@ export default function SearchClient() {
 
   useEffect(() => {
     if (loadedKey === paramsKey) return
-    const t = window.setTimeout(() => setLoadedKey(paramsKey), 320)
-    return () => window.clearTimeout(t)
+    const timer = window.setTimeout(() => setLoadedKey(paramsKey), 320)
+    return () => window.clearTimeout(timer)
   }, [paramsKey, loadedKey])
 
   // ——— Read filters from URL ———
@@ -102,16 +104,17 @@ export default function SearchClient() {
   )
 
   // ——— Active filter chips ———
+  const propTypeKey = PROP_TYPES.find((p) => p.value === type)?.key
   const chips: { key: string; label: string; clear: () => void }[] = []
-  if (deal) chips.push({ key: 'deal', label: deal === 'sale' ? 'იყიდება' : 'ქირავდება', clear: () => patchParams({ deal: undefined }) })
-  if (type) chips.push({ key: 'type', label: PROP_TYPES.find((p) => p.value === type)?.label ?? type, clear: () => patchParams({ type: undefined }) })
+  if (deal) chips.push({ key: 'deal', label: t(deal === 'sale' ? 'search.sale' : 'search.rent'), clear: () => patchParams({ deal: undefined }) })
+  if (type) chips.push({ key: 'type', label: propTypeKey ? t(propTypeKey) : type, clear: () => patchParams({ type: undefined }) })
   if (city) chips.push({ key: 'city', label: city, clear: () => patchParams({ city: undefined, district: undefined }) })
   if (district) chips.push({ key: 'district', label: district, clear: () => patchParams({ district: undefined }) })
-  if (minPrice !== undefined) chips.push({ key: 'min', label: `მინ. $${minPrice.toLocaleString('en-US')}`, clear: () => patchParams({ min: undefined }) })
-  if (maxPrice !== undefined) chips.push({ key: 'max', label: `მაქს. $${maxPrice.toLocaleString('en-US')}`, clear: () => patchParams({ max: undefined }) })
-  if (rooms !== undefined) chips.push({ key: 'rooms', label: `${rooms}+ ოთახი`, clear: () => patchParams({ rooms: undefined }) })
-  if (minArea !== undefined) chips.push({ key: 'amin', label: `მინ. ${minArea} მ²`, clear: () => patchParams({ amin: undefined }) })
-  if (maxArea !== undefined) chips.push({ key: 'amax', label: `მაქს. ${maxArea} მ²`, clear: () => patchParams({ amax: undefined }) })
+  if (minPrice !== undefined) chips.push({ key: 'min', label: `${t('search.min')}. $${minPrice.toLocaleString('en-US')}`, clear: () => patchParams({ min: undefined }) })
+  if (maxPrice !== undefined) chips.push({ key: 'max', label: `${t('search.max')}. $${maxPrice.toLocaleString('en-US')}`, clear: () => patchParams({ max: undefined }) })
+  if (rooms !== undefined) chips.push({ key: 'rooms', label: t('search.roomsChip', { n: rooms }), clear: () => patchParams({ rooms: undefined }) })
+  if (minArea !== undefined) chips.push({ key: 'amin', label: `${t('search.min')}. ${minArea} მ²`, clear: () => patchParams({ amin: undefined }) })
+  if (maxArea !== undefined) chips.push({ key: 'amax', label: `${t('search.max')}. ${maxArea} მ²`, clear: () => patchParams({ amax: undefined }) })
   if (q) chips.push({ key: 'q', label: `„${q}"`, clear: () => patchParams({ q: undefined }) })
 
   const resetAll = () => router.replace('/search', { scroll: false })
@@ -129,11 +132,11 @@ export default function SearchClient() {
       <div className="bg-sv-navy pb-8 pt-[104px]">
         <div className="mx-auto max-w-[1440px] px-5 md:px-10">
           <h1 className="text-[28px] font-black tracking-[-0.02em] text-white md:text-[36px]">
-            ძიება
+            {t('search.title')}
           </h1>
           <p className="mt-1.5 flex items-center gap-2 text-[14px] font-semibold text-white/55">
             <MapPin className="h-4 w-4 text-sv-blue" />
-            {city ?? 'მთელი საქართველო'}
+            {city ?? t('search.allGeorgia')}
             {district ? ` · ${district}` : ''}
           </p>
         </div>
@@ -145,9 +148,9 @@ export default function SearchClient() {
           {/* Row 1: deal + type + location + sort */}
           <div className="flex flex-wrap items-center gap-2">
             {/* Deal segmented */}
-            <div className="flex rounded-control bg-sv-ink/[0.05] p-1" role="tablist" aria-label="გარიგების ტიპი">
+            <div className="flex rounded-control bg-sv-ink/[0.05] p-1" role="tablist" aria-label={t('search.dealType')}>
               {([undefined, 'sale', 'rent'] as const).map((d) => {
-                const label = d === undefined ? 'ყველა' : d === 'sale' ? 'იყიდება' : 'ქირავდება'
+                const label = t(d === undefined ? 'search.all' : d === 'sale' ? 'search.sale' : 'search.rent')
                 const active = deal === d
                 return (
                   <button
@@ -178,11 +181,11 @@ export default function SearchClient() {
                 value={type ?? ''}
                 onChange={(e) => patchParams({ type: (e.target.value || undefined) as PropType | undefined })}
                 className={selectClass}
-                aria-label="ქონების ტიპი"
+                aria-label={t('search.propType')}
               >
-                <option value="">ყველა ტიპი</option>
+                <option value="">{t('search.allTypes')}</option>
                 {PROP_TYPES.map((p) => (
-                  <option key={p.value} value={p.value}>{p.label}</option>
+                  <option key={p.value} value={p.value}>{t(p.key)}</option>
                 ))}
               </select>
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-sv-ink/40" />
@@ -194,9 +197,9 @@ export default function SearchClient() {
                 value={city ?? ''}
                 onChange={(e) => patchParams({ city: e.target.value || undefined, district: undefined })}
                 className={selectClass}
-                aria-label="ქალაქი"
+                aria-label={t('search.city')}
               >
-                <option value="">ყველა ქალაქი</option>
+                <option value="">{t('search.allCities')}</option>
                 {CITIES.map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
@@ -210,9 +213,9 @@ export default function SearchClient() {
                 value={district ?? ''}
                 onChange={(e) => patchParams({ district: e.target.value || undefined })}
                 className={selectClass}
-                aria-label="უბანი"
+                aria-label={t('search.district')}
               >
-                <option value="">ყველა უბანი</option>
+                <option value="">{t('search.allDistricts')}</option>
                 {districtsOf(city).map((d) => (
                   <option key={d} value={d}>{d}</option>
                 ))}
@@ -226,9 +229,9 @@ export default function SearchClient() {
               <input
                 value={q}
                 onChange={(e) => patchParams({ q: e.target.value || undefined })}
-                placeholder="ქუჩა, უბანი, საკვანძო სიტყვა…"
+                placeholder={t('search.keywordPlaceholder')}
                 className={`${inputClass} pl-10`}
-                aria-label="საძიებო სიტყვა"
+                aria-label={t('search.keyword')}
               />
             </label>
 
@@ -238,20 +241,20 @@ export default function SearchClient() {
                 value={sort}
                 onChange={(e) => patchParams({ sort: e.target.value === 'date' ? undefined : e.target.value })}
                 className={selectClass}
-                aria-label="დალაგება"
+                aria-label={t('search.sort')}
               >
                 {SORTS.map((s) => (
-                  <option key={s.value} value={s.value}>{s.label}</option>
+                  <option key={s.value} value={s.value}>{t(s.key)}</option>
                 ))}
               </select>
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-sv-ink/40" />
             </div>
 
             {/* View toggle */}
-            <div className="ml-auto flex rounded-control bg-sv-ink/[0.05] p-1" aria-label="ხედი">
+            <div className="ml-auto flex rounded-control bg-sv-ink/[0.05] p-1" aria-label={t('search.view')}>
               <button
                 onClick={() => setView('grid')}
-                aria-label="ბადე"
+                aria-label={t('search.grid')}
                 aria-pressed={view === 'grid'}
                 className={`grid h-8 w-9 place-items-center rounded-lg transition-colors ${view === 'grid' ? 'bg-white text-sv-blue shadow-sm' : 'text-sv-ink/45 hover:text-sv-ink'}`}
               >
@@ -259,7 +262,7 @@ export default function SearchClient() {
               </button>
               <button
                 onClick={() => setView('list')}
-                aria-label="სია"
+                aria-label={t('search.list')}
                 aria-pressed={view === 'list'}
                 className={`grid h-8 w-9 place-items-center rounded-lg transition-colors ${view === 'list' ? 'bg-white text-sv-blue shadow-sm' : 'text-sv-ink/45 hover:text-sv-ink'}`}
               >
@@ -271,26 +274,26 @@ export default function SearchClient() {
           {/* Row 2: price + rooms + area */}
           <div className="mt-2.5 flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">ფასი $</span>
+              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">{t('search.price')}</span>
               <input
-                type="number" min={0} placeholder="მინ"
+                type="number" min={0} placeholder={t('search.min')}
                 value={minPrice ?? ''}
                 onChange={(e) => patchParams({ min: e.target.value || undefined })}
                 className={`${inputClass} w-[104px]`}
-                aria-label="მინიმალური ფასი"
+                aria-label={t('search.minPrice')}
               />
               <span className="text-sv-ink/30">—</span>
               <input
-                type="number" min={0} placeholder="მაქს"
+                type="number" min={0} placeholder={t('search.max')}
                 value={maxPrice ?? ''}
                 onChange={(e) => patchParams({ max: e.target.value || undefined })}
                 className={`${inputClass} w-[104px]`}
-                aria-label="მაქსიმალური ფასი"
+                aria-label={t('search.maxPrice')}
               />
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">ოთახი</span>
+              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">{t('search.rooms')}</span>
               <div className="flex gap-1">
                 {ROOM_OPTIONS.map((r, idx) => {
                   const n = idx + 1
@@ -314,21 +317,21 @@ export default function SearchClient() {
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">ფართი მ²</span>
+              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">{t('search.area')}</span>
               <input
-                type="number" min={0} placeholder="მინ"
+                type="number" min={0} placeholder={t('search.min')}
                 value={minArea ?? ''}
                 onChange={(e) => patchParams({ amin: e.target.value || undefined })}
                 className={`${inputClass} w-[88px]`}
-                aria-label="მინიმალური ფართი"
+                aria-label={t('search.minArea')}
               />
               <span className="text-sv-ink/30">—</span>
               <input
-                type="number" min={0} placeholder="მაქს"
+                type="number" min={0} placeholder={t('search.max')}
                 value={maxArea ?? ''}
                 onChange={(e) => patchParams({ amax: e.target.value || undefined })}
                 className={`${inputClass} w-[88px]`}
-                aria-label="მაქსიმალური ფართი"
+                aria-label={t('search.maxArea')}
               />
             </div>
 
@@ -337,7 +340,7 @@ export default function SearchClient() {
                 onClick={resetAll}
                 className="ml-auto flex items-center gap-1.5 rounded-control px-3 py-2 text-[13px] font-extrabold text-sv-orange transition-colors hover:bg-sv-orange/10"
               >
-                <RotateCcw className="h-3.5 w-3.5" /> გასუფთავება
+                <RotateCcw className="h-3.5 w-3.5" /> {t('search.clear')}
               </button>
             )}
           </div>
@@ -348,7 +351,7 @@ export default function SearchClient() {
       <main className="mx-auto max-w-[1440px] px-5 py-8 md:px-10">
         <div className="mb-5 flex flex-wrap items-center gap-3">
           <p className="text-[15px] font-extrabold text-sv-ink" aria-live="polite">
-            {loading ? 'იტვირთება…' : `${results.length} განცხადება`}
+            {loading ? t('search.loading') : t('search.results', { n: results.length })}
           </p>
           <AnimatePresence>
             {chips.map((c) => (
@@ -362,7 +365,7 @@ export default function SearchClient() {
                 className="flex items-center gap-1.5 rounded-full bg-sv-blue/10 px-3.5 py-1.5 text-[12px] font-extrabold text-sv-blue transition-colors hover:bg-sv-blue/15"
               >
                 {c.label}
-                <X className="h-3 w-3" aria-label={`ფილტრის წაშლა: ${c.label}`} />
+                <X className="h-3 w-3" aria-label={t('search.removeFilter', { label: c.label })} />
               </motion.button>
             ))}
           </AnimatePresence>
@@ -378,17 +381,16 @@ export default function SearchClient() {
               <SearchX className="h-7 w-7 text-sv-blue" />
             </span>
             <h2 className="mt-5 text-[20px] font-black tracking-[-0.02em] text-sv-ink">
-              ვერაფერი მოიძებნა
+              {t('search.emptyTitle')}
             </h2>
             <p className="mt-2 max-w-[380px] text-[14px] font-semibold leading-relaxed text-sv-ink/50">
-              არჩეული ფილტრებით განცხადება არ არსებობს. სცადე ფილტრების შეცვლა
-              ან სრული გასუფთავება.
+              {t('search.emptyText')}
             </p>
             <button
               onClick={resetAll}
               className="mt-6 flex h-11 items-center gap-2 rounded-full bg-sv-blue px-6 text-[14px] font-extrabold text-white transition-all hover:bg-sv-blue-deep"
             >
-              <RotateCcw className="h-4 w-4" /> ფილტრების გასუფთავება
+              <RotateCcw className="h-4 w-4" /> {t('search.resetFilters')}
             </button>
           </div>
         ) : (
@@ -403,8 +405,7 @@ export default function SearchClient() {
         {!loading && results.length > 0 && (
           <p className="mt-10 flex items-start gap-2 text-[13px] font-semibold leading-relaxed text-sv-ink/40">
             <Home className="mt-0.5 h-4 w-4 shrink-0" />
-            სივრცეზე ყველა განცხადება ვერიფიცირებულია და თან ახლავს AI ფასის შეფასება —
-            ბინები, სახლები და კომერციული ფართები თბილისში, ბათუმსა და ქუთაისში.
+            {t('search.seoHint')}
           </p>
         )}
       </main>

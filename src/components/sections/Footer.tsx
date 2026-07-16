@@ -1,5 +1,8 @@
+'use client'
+
 import { Mail, Phone, MapPin } from 'lucide-react'
 import { Logo } from '@/components/Reveal'
+import { useI18n, type DictKey } from '@/lib/i18n/context'
 
 /* Brand glyphs (lucide-react v1 dropped brand icons) — same 24px stroke style */
 function FacebookIcon({ className }: { className?: string }) {
@@ -36,18 +39,18 @@ function LinkedinIcon({ className }: { className?: string }) {
   )
 }
 
-const COLS = [
+const COLS: { titleKey: DictKey; linkKeys: DictKey[] }[] = [
   {
-    title: 'უძრავი ქონება',
-    links: ['ბინები იყიდება', 'სახლები იყიდება', 'ქირავდება', 'დღიური ქირა', 'მიწის ნაკვეთები', 'კომერციული ფართები'],
+    titleKey: 'footer.colRealEstate',
+    linkKeys: ['footer.re.apartments', 'footer.re.houses', 'footer.re.rent', 'footer.re.daily', 'footer.re.land', 'footer.re.commercial'],
   },
   {
-    title: 'სერვისები',
-    links: ['ახალი პროექტები', 'აგენტები და სააგენტოები', 'დეველოპერები', 'რემონტის კალკულატორი', 'იპოთეკა', 'AI ფასის შეფასება'],
+    titleKey: 'footer.colServices',
+    linkKeys: ['footer.sv.projects', 'footer.sv.agents', 'footer.sv.developers', 'footer.sv.renovation', 'footer.sv.mortgage', 'footer.sv.ai'],
   },
   {
-    title: 'კომპანია',
-    links: ['ჩვენ შესახებ', 'კარიერა', 'ბლოგი', 'პარტნიორობა', 'სარეკლამო სერვისები', 'კონტაქტი'],
+    titleKey: 'footer.colCompany',
+    linkKeys: ['footer.co.about', 'footer.co.careers', 'footer.co.blog', 'footer.co.partnership', 'footer.co.ads', 'footer.co.contact'],
   },
 ]
 
@@ -59,6 +62,8 @@ const SOCIALS = [
 ]
 
 export default function Footer() {
+  const { t } = useI18n()
+
   return (
     <footer className="border-t border-white/[0.07] bg-sv-navy">
       <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-20">
@@ -66,8 +71,7 @@ export default function Footer() {
           <div>
             <Logo light />
             <p className="mt-5 max-w-[320px] text-[14px] font-medium leading-relaxed text-white/50">
-              სივრცე — უძრავი ქონება ერთ სივრცეში. №1 ტექნოლოგიური პლატფორმა
-              საქართველოში: 3D რუკა, AI შეფასება და სრული ეკოსისტემა.
+              {t('footer.tagline')}
             </p>
             <div className="mt-6 space-y-2.5 text-[14px] font-semibold text-white/60">
               <a href="mailto:info@sivrce.ge" className="flex items-center gap-2.5 transition-colors hover:text-white">
@@ -77,7 +81,7 @@ export default function Footer() {
                 <Phone className="h-4 w-4 text-sv-blue" /> +995 32 2 00 00 00
               </a>
               <span className="flex items-center gap-2.5">
-                <MapPin className="h-4 w-4 text-sv-blue" /> თბილისი, საქართველო
+                <MapPin className="h-4 w-4 text-sv-blue" /> {t('footer.location')}
               </span>
             </div>
             <div className="mt-7 flex gap-3">
@@ -95,16 +99,16 @@ export default function Footer() {
           </div>
 
           {COLS.map((c) => (
-            <div key={c.title}>
-              <h4 className="text-[13px] font-black uppercase tracking-wider text-white/40">{c.title}</h4>
+            <div key={c.titleKey}>
+              <h4 className="text-[13px] font-black uppercase tracking-wider text-white/40">{t(c.titleKey)}</h4>
               <ul className="mt-5 space-y-3">
-                {c.links.map((l) => (
-                  <li key={l}>
+                {c.linkKeys.map((key) => (
+                  <li key={key}>
                     <a
                       href="#"
                       className="text-[14px] font-semibold text-white/65 transition-colors hover:text-white"
                     >
-                      {l}
+                      {t(key)}
                     </a>
                   </li>
                 ))}
@@ -115,12 +119,12 @@ export default function Footer() {
 
         <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.07] pt-8">
           <p className="text-[13px] font-semibold text-white/35">
-            © 2026 სივრცე • sivrce.ge — ყველა უფლება დაცულია
+            {t('footer.rights')}
           </p>
           <div className="flex gap-6 text-[13px] font-semibold text-white/45">
-            <a href="#" className="transition-colors hover:text-white">წესები და პირობები</a>
-            <a href="#" className="transition-colors hover:text-white">კონფიდენციალურობა</a>
-            <a href="#" className="transition-colors hover:text-white">ქუქიები</a>
+            <a href="#" className="transition-colors hover:text-white">{t('footer.terms')}</a>
+            <a href="#" className="transition-colors hover:text-white">{t('footer.privacy')}</a>
+            <a href="#" className="transition-colors hover:text-white">{t('footer.cookies')}</a>
           </div>
         </div>
       </div>

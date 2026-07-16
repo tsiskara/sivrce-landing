@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, Noto_Sans_Georgian } from "next/font/google";
+import I18nProvider from "@/components/I18nProvider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -156,7 +157,7 @@ export default function RootLayout({
       className={`${manrope.variable} ${notoGeorgian.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        {children}
+        <I18nProvider>{children}</I18nProvider>
         <Toaster position="top-center" richColors />
         <script
           type="application/ld+json"

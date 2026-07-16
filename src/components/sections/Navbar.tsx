@@ -4,14 +4,17 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Heart, Globe, Menu, X, Plus, User } from 'lucide-react'
+import { ChevronDown, Heart, Menu, X, Plus, User } from 'lucide-react'
 import { Logo } from '@/components/Reveal'
 import { useFavorites } from '@/lib/favorites'
+import { useI18n, LANGS } from '@/lib/i18n/context'
+import type { DictKey } from '@/lib/i18n/context'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { count } = useFavorites()
+  const { lang, setLang, t } = useI18n()
   const pathname = usePathname()
 
   // Close the mobile menu on route change (render-time state adjustment)
@@ -32,13 +35,38 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const NAV_LINKS = [
-    { label: 'იყიდება', to: '/search?deal=sale' },
-    { label: 'ქირავდება', to: '/search?deal=rent' },
-    { label: 'ძიება', to: '/search' },
-    { label: 'ახალი პროექტები', to: `${pathname === '/' ? '' : '/'}#projects` },
-    { label: 'სერვისები', to: `${pathname === '/' ? '' : '/'}#services` },
+  const NAV_LINKS: { key: DictKey; to: string }[] = [
+    { key: 'nav.buy', to: '/search?deal=sale' },
+    { key: 'nav.rent', to: '/search?deal=rent' },
+    { key: 'nav.search', to: '/search' },
+    { key: 'nav.projects', to: `${pathname === '/' ? '' : '/'}#projects` },
+    { key: 'nav.services', to: `${pathname === '/' ? '' : '/'}#services` },
   ]
+
+  const langPills = (pillLight: boolean) => (
+    <div
+      role="group"
+      aria-label={t('nav.language')}
+      className={`flex items-center rounded-full p-1 ${pillLight ? 'bg-sv-ink/[0.05]' : 'bg-white/10'}`}
+    >
+      {LANGS.map((code) => (
+        <button
+          key={code}
+          onClick={() => setLang(code)}
+          aria-pressed={lang === code}
+          className={`rounded-full px-2.5 py-1.5 text-[12px] font-extrabold uppercase leading-none transition-colors duration-200 ${
+            lang === code
+              ? 'bg-sv-blue text-white shadow-glow-blue-sm'
+              : pillLight
+                ? 'text-sv-ink/55 hover:text-sv-ink'
+                : 'text-white/70 hover:text-white'
+          }`}
+        >
+          {code}
+        </button>
+      ))}
+    </div>
+  )
 
   return (
     <motion.header
@@ -56,11 +84,11 @@ export default function Navbar() {
       >
         <Logo light={!light} />
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="მთავარი ნავიგაცია">
+        <nav className="hidden items-center gap-1 lg:flex" aria-label={t('nav.main')}>
           {NAV_LINKS.map((l) =>
             l.to.includes('#') ? (
               <a
-                key={l.label}
+                key={l.key}
                 href={l.to}
                 className={`rounded-full px-4 py-2 text-[15px] font-semibold transition-colors duration-200 ${
                   light
@@ -68,11 +96,11 @@ export default function Navbar() {
                     : 'text-white/85 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                {l.label}
+                {t(l.key)}
               </a>
             ) : (
               <Link
-                key={l.label}
+                key={l.key}
                 href={l.to}
                 className={`rounded-full px-4 py-2 text-[15px] font-semibold transition-colors duration-200 ${
                   light
@@ -80,7 +108,7 @@ export default function Navbar() {
                     : 'text-white/85 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                {l.label}
+                {t(l.key)}
               </Link>
             ),
           )}
@@ -91,14 +119,14 @@ export default function Navbar() {
                 : 'text-white/85 hover:bg-white/10'
             }`}
           >
-            მეტი <ChevronDown className="h-4 w-4" />
+            {t('nav.more')} <ChevronDown className="h-4 w-4" />
           </button>
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
           <Link
             href="/search"
-            aria-label={`ფავორიტები${count > 0 ? ` — ${count}` : ''}`}
+            aria-label={`${t('nav.favorites')}${count > 0 ? ` — ${count}` : ''}`}
             className={`relative grid h-10 w-10 place-items-center rounded-full transition-colors ${
               light ? 'text-sv-ink/70 hover:bg-sv-ink/5' : 'text-white/85 hover:bg-white/10'
             }`}
@@ -110,26 +138,20 @@ export default function Navbar() {
               </span>
             )}
           </Link>
-          <button
-            className={`flex h-10 items-center gap-1.5 rounded-full px-3 text-[14px] font-bold transition-colors ${
-              light ? 'text-sv-ink/70 hover:bg-sv-ink/5' : 'text-white/85 hover:bg-white/10'
-            }`}
-          >
-            <Globe className="h-4 w-4" /> KA
-          </button>
+          {langPills(light)}
           <button
             className={`flex h-10 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-colors ${
               light ? 'text-sv-ink hover:bg-sv-ink/5' : 'text-white hover:bg-white/10'
             }`}
           >
-            <User className="h-4 w-4" /> შესვლა
+            <User className="h-4 w-4" /> {t('nav.login')}
           </button>
           <a
             href="#"
             className="group flex h-11 items-center gap-2 rounded-full bg-sv-orange px-5 text-[14px] font-extrabold text-white shadow-glow-orange transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-orange-lg"
           >
             <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
-            განცხადება
+            {t('nav.addListing')}
           </a>
         </div>
 
@@ -138,7 +160,7 @@ export default function Navbar() {
             light ? 'text-sv-ink' : 'text-white'
           }`}
           onClick={() => setOpen(!open)}
-          aria-label="მენიუ"
+          aria-label={t('nav.menu')}
         >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -156,29 +178,35 @@ export default function Navbar() {
             {NAV_LINKS.map((l) =>
               l.to.includes('#') ? (
                 <a
-                  key={l.label}
+                  key={l.key}
                   href={l.to}
                   onClick={() => setOpen(false)}
                   className="block rounded-control px-4 py-3 text-[16px] font-semibold text-sv-ink hover:bg-sv-ink/5"
                 >
-                  {l.label}
+                  {t(l.key)}
                 </a>
               ) : (
                 <Link
-                  key={l.label}
+                  key={l.key}
                   href={l.to}
                   onClick={() => setOpen(false)}
                   className="block rounded-control px-4 py-3 text-[16px] font-semibold text-sv-ink hover:bg-sv-ink/5"
                 >
-                  {l.label}
+                  {t(l.key)}
                 </Link>
               ),
             )}
+            <div className="mt-2 flex items-center justify-between rounded-control bg-sv-ink/[0.04] px-4 py-3">
+              <span className="text-[12px] font-extrabold uppercase tracking-wide text-sv-ink/45">
+                {t('nav.language')}
+              </span>
+              {langPills(true)}
+            </div>
             <a
               href="#"
               className="mt-2 flex items-center justify-center gap-2 rounded-control bg-sv-orange px-4 py-3.5 text-[15px] font-extrabold text-white"
             >
-              <Plus className="h-4 w-4" /> განცხადების დამატება
+              <Plus className="h-4 w-4" /> {t('nav.addListingFull')}
             </a>
           </motion.div>
         )}

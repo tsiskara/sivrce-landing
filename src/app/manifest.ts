@@ -1,0 +1,27 @@
+import type { MetadataRoute } from 'next'
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: 'sivrce — უძრავი ქონება ერთ სივრცეში',
+    short_name: 'sivrce',
+    start_url: '/',
+    display: 'standalone',
+    background_color: '#050B26',
+    theme_color: '#050B26',
+    lang: 'ka',
+    icons: [
+      {
+        src: '/icon.svg',
+        sizes: 'any',
+        type: 'image/svg+xml',
+        purpose: 'any',
+      },
+      {
+        src: '/icon.svg',
+        sizes: 'any',
+        type: 'image/svg+xml',
+        purpose: 'maskable',
+      },
+    ],
+  }
+}

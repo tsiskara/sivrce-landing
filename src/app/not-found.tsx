@@ -1,9 +1,14 @@
+'use client'
+
 import Link from 'next/link'
 import { SearchX, ArrowLeft } from 'lucide-react'
 import Navbar from '@/components/sections/Navbar'
 import Footer from '@/components/sections/Footer'
+import { useI18n } from '@/lib/i18n/context'
 
 export default function NotFound() {
+  const { t } = useI18n()
+
   return (
     <div className="font-geo min-h-screen bg-sv-cloud antialiased">
       <Navbar />
@@ -12,17 +17,16 @@ export default function NotFound() {
           <SearchX className="h-9 w-9 text-sv-blue" />
         </span>
         <h1 className="mt-6 text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[38px]">
-          განცხადება ვერ მოიძებნა
+          {t('detail.notFoundTitle')}
         </h1>
         <p className="mt-3 max-w-[420px] text-[15px] font-semibold leading-relaxed text-sv-ink/50">
-          შესაძლოა განცხადება უკვე წაშლილია ან ბმული არასწორია.
-          ნახე აქტიური შეთავაზებები ძიების გვერდზე.
+          {t('detail.notFoundText')}
         </p>
         <Link
           href="/search"
           className="mt-8 flex h-12 items-center gap-2 rounded-full bg-sv-blue px-7 text-[15px] font-extrabold text-white shadow-glow-blue transition-all hover:bg-sv-blue-deep"
         >
-          <ArrowLeft className="h-4 w-4" /> ძიებაზე დაბრუნება
+          <ArrowLeft className="h-4 w-4" /> {t('detail.backToSearch')}
         </Link>
       </main>
       <Footer />

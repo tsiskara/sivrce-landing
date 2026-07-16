@@ -14,21 +14,31 @@ import Footer from '@/components/sections/Footer'
 import ListingCard, { BADGE_STYLE } from '@/components/ListingCard'
 import {
   formatUSD, formatGEL, formatViews,
-  formatFloor, USD_GEL, type Listing,
+  formatFloor, USD_GEL, type Listing, type PropType,
 } from '@/data/listings'
 import { useFavorites } from '@/lib/favorites'
+import { useI18n, type DictKey } from '@/lib/i18n/context'
 
 const ease = [0.21, 0.65, 0.2, 1] as const
 
+const PROP_TYPE_KEY: Record<PropType, DictKey> = {
+  apartment: 'prop.apartment',
+  house: 'prop.houseShort',
+  commercial: 'prop.commercial',
+  land: 'prop.land',
+}
+
 /* ————— AI assessment copy by score ————— */
-function aiExplanation(l: Listing): string {
+function aiExplanation(l: Listing, t: (key: DictKey, vars?: Record<string, string | number>) => string): string {
   const { score } = l.ai
-  const base = `ფასი შედარებულია ${l.district} — ${l.city}-ის ${l.dealType === 'rent' ? 'ქირის' : 'გაყიდვის'} 40+ მსგავს განცხადებასთან.`
-  if (score >= 90)
-    return `${base} AI აფასებს ამ ქონებას ბაზრის საშუალოზე დაბლა — შესანიშნავი შესაძენად, ღირებულება ლოკაციის პოტენციალს ჩამორჩება.`
-  if (score >= 84)
-    return `${base} ფასი ბაზრის დონეს უდრის ან ოდნავ სცილდება ქვემოთ — კარგი ვარიანტია, მოლაპარაკების მარცვალი კვლავ არსებობს.`
-  return `${base} ფასი ბაზრის საშუალო დიაპაზონშია. გაითვალისწინე მდგომარეობა და მოსალოდნელი დამატებითი ხარჯები.`
+  const base = t('detail.aiBase', {
+    district: l.district,
+    city: l.city,
+    deal: t(l.dealType === 'rent' ? 'detail.dealRent' : 'detail.dealSale'),
+  })
+  if (score >= 90) return `${base} ${t('detail.aiVerdictHigh')}`
+  if (score >= 84) return `${base} ${t('detail.aiVerdictMid')}`
+  return `${base} ${t('detail.aiVerdictLow')}`
 }
 
 /* ————— Annuity mortgage payment ————— */
@@ -44,6 +54,8 @@ function monthlyPayment(principal: number, annualRatePct: number, years: number)
 function Lightbox({
   images, index, onClose, onNav,
 }: { images: string[]; index: number; onClose: () => void; onNav: (dir: number) => void }) {
+  const { t } = useI18n()
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -67,18 +79,18 @@ function Lightbox({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="ფოტოების ნახვა"
+      aria-label={t('detail.photoViewer')}
     >
       <button
         onClick={onClose}
-        aria-label="დახურვა"
+        aria-label={t('detail.close')}
         className="absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
       >
         <X className="h-5 w-5" />
       </button>
       <button
         onClick={(e) => { e.stopPropagation(); onNav(-1) }}
-        aria-label="წინა ფოტო"
+        aria-label={t('detail.prevPhoto')}
         className="absolute left-4 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
       >
         <ChevronLeft className="h-5 w-5" />
@@ -89,13 +101,13 @@ function Lightbox({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.35, ease }}
         src={images[index]}
-        alt={`ფოტო ${index + 1}`}
+        alt={t('detail.photo', { n: index + 1 })}
         className="max-h-[84vh] max-w-full rounded-module object-contain shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       />
       <button
         onClick={(e) => { e.stopPropagation(); onNav(1) }}
-        aria-label="შემდეგი ფოტო"
+        aria-label={t('detail.nextPhoto')}
         className="absolute right-4 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
       >
         <ChevronRight className="h-5 w-5" />
@@ -110,6 +122,7 @@ function Lightbox({
 /* ————— Page ————— */
 export default function ListingDetailClient({ listing: l, similar }: { listing: Listing; similar: Listing[] }) {
   const { has, toggle } = useFavorites()
+  const { t } = useI18n()
   const [photo, setPhoto] = useState(0)
   const [lightbox, setLightbox] = useState(false)
   const [currency, setCurrency] = useState<'USD' | 'GEL'>('USD')
@@ -141,12 +154,12 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
   const priceAlt = currency === 'USD' ? formatGEL(l.priceGEL) : formatUSD(l.priceUSD)
 
   const specs: { icon: typeof BedDouble; label: string; value: string }[] = [
-    { icon: DoorOpen, label: 'ოთახი', value: l.rooms > 0 ? String(l.rooms) : '—' },
-    { icon: BedDouble, label: 'საძინებელი', value: l.beds > 0 ? String(l.beds) : '—' },
-    { icon: Bath, label: 'სვ. წერტილი', value: l.baths > 0 ? String(l.baths) : '—' },
-    { icon: Ruler, label: 'ფართი', value: `${l.area} მ²` },
-    { icon: Building2, label: 'სართული', value: formatFloor(l) },
-    { icon: Layers, label: 'ტიპი', value: l.propType === 'apartment' ? 'ბინა' : l.propType === 'house' ? 'სახლი' : l.propType === 'commercial' ? 'კომერციული' : 'მიწა' },
+    { icon: DoorOpen, label: t('spec.rooms'), value: l.rooms > 0 ? String(l.rooms) : '—' },
+    { icon: BedDouble, label: t('spec.beds'), value: l.beds > 0 ? String(l.beds) : '—' },
+    { icon: Bath, label: t('spec.baths'), value: l.baths > 0 ? String(l.baths) : '—' },
+    { icon: Ruler, label: t('spec.area'), value: `${l.area} მ²` },
+    { icon: Building2, label: t('spec.floor'), value: formatFloor(l) },
+    { icon: Layers, label: t('spec.type'), value: t(PROP_TYPE_KEY[l.propType]) },
   ]
 
   const navPhoto = (dir: number) =>
@@ -158,10 +171,10 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
 
       <main className="mx-auto max-w-[1440px] px-5 pb-20 pt-[92px] md:px-10">
         {/* Breadcrumb */}
-        <nav className="mb-5 flex items-center gap-2 text-[13px] font-bold text-sv-ink/45" aria-label="ბრედკრამბი">
-          <Link href="/" className="transition-colors hover:text-sv-blue">მთავარი</Link>
+        <nav className="mb-5 flex items-center gap-2 text-[13px] font-bold text-sv-ink/45" aria-label={t('detail.breadcrumb')}>
+          <Link href="/" className="transition-colors hover:text-sv-blue">{t('detail.home')}</Link>
           <span>/</span>
-          <Link href="/search" className="transition-colors hover:text-sv-blue">ძიება</Link>
+          <Link href="/search" className="transition-colors hover:text-sv-blue">{t('search.title')}</Link>
           <span>/</span>
           <Link
             href={`/search?district=${encodeURIComponent(l.district)}`}
@@ -184,7 +197,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             <button
               className="block aspect-[16/10] w-full cursor-zoom-in"
               onClick={() => setLightbox(true)}
-              aria-label="ფოტოს გადიდება"
+              aria-label={t('detail.zoomPhoto')}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -203,19 +216,19 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             )}
             <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between">
               <span className="flex items-center gap-1.5 rounded-full bg-black/45 px-3 py-1.5 text-[12px] font-bold text-white/90 backdrop-blur">
-                <Eye className="h-3.5 w-3.5" /> {formatViews(l.views)} ნახვა
+                <Eye className="h-3.5 w-3.5" /> {t('detail.views', { n: formatViews(l.views) })}
               </span>
               <div className="flex gap-2">
                 <button
                   onClick={() => navPhoto(-1)}
-                  aria-label="წინა ფოტო"
+                  aria-label={t('detail.prevPhoto')}
                   className="grid h-10 w-10 place-items-center rounded-full bg-white/90 text-sv-ink backdrop-blur transition-all hover:bg-white"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => navPhoto(1)}
-                  aria-label="შემდეგი ფოტო"
+                  aria-label={t('detail.nextPhoto')}
                   className="grid h-10 w-10 place-items-center rounded-full bg-white/90 text-sv-ink backdrop-blur transition-all hover:bg-white"
                 >
                   <ChevronRight className="h-5 w-5" />
@@ -230,7 +243,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               <button
                 key={src + i}
                 onClick={() => setPhoto(i)}
-                aria-label={`ფოტო ${i + 1}`}
+                aria-label={t('detail.photo', { n: i + 1 })}
                 aria-pressed={photo === i}
                 className={`relative aspect-[16/10] overflow-hidden rounded-module transition-all duration-300 lg:aspect-auto lg:h-full ${
                   photo === i
@@ -255,7 +268,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                 <div className="flex flex-wrap items-center gap-2.5">
                   {l.isNew && (
                     <span className="rounded-full bg-sv-blue/10 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-sv-blue">
-                      ახალი კომპლექსი
+                      {t('detail.newComplex')}
                     </span>
                   )}
                   <span className="flex items-center gap-1 text-[12px] font-bold text-sv-ink/45">
@@ -273,7 +286,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               <div className="flex gap-2">
                 <button
                   onClick={() => toggle(l.id)}
-                  aria-label={fav ? 'ფავორიტებიდან წაშლა' : 'ფავორიტებში დამატება'}
+                  aria-label={fav ? t('detail.removeFavorite') : t('detail.addFavorite')}
                   aria-pressed={fav}
                   className={`grid h-11 w-11 place-items-center rounded-full border transition-all duration-300 hover:scale-105 ${
                     fav
@@ -286,9 +299,9 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                 <button
                   onClick={() => {
                     navigator.clipboard?.writeText(window.location.href).catch(() => {})
-                    toast.success('ბმული დაკოპირდა')
+                    toast.success(t('detail.linkCopied'))
                   }}
-                  aria-label="გაზიარება"
+                  aria-label={t('detail.share')}
                   className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-white text-sv-ink/60 transition-all duration-300 hover:scale-105 hover:text-sv-blue"
                 >
                   <Share2 className="h-5 w-5" />
@@ -300,18 +313,18 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-card border border-sv-ink/[0.06] bg-white p-6 shadow-card">
               <div>
                 <div className="text-[11px] font-black uppercase tracking-wider text-sv-ink/40">
-                  {isSale ? 'სრული ფასი' : 'თვიური ქირა'}
+                  {isSale ? t('detail.fullPrice') : t('detail.monthlyRent')}
                 </div>
                 <div className="mt-1 text-[32px] font-black tracking-tight text-sv-ink md:text-[36px]">
                   {priceMain}
-                  {!isSale && <span className="text-[18px] font-extrabold text-sv-ink/45"> /თვე</span>}
+                  {!isSale && <span className="text-[18px] font-extrabold text-sv-ink/45"> {t('detail.perMonth')}</span>}
                 </div>
                 <div className="mt-0.5 text-[14px] font-bold text-sv-ink/45">
                   {priceAlt} · ${l.perM2USD.toLocaleString('en-US')}/მ²
                 </div>
               </div>
               {/* Currency toggle */}
-              <div className="flex rounded-control bg-sv-ink/[0.05] p-1" role="tablist" aria-label="ვალუტა">
+              <div className="flex rounded-control bg-sv-ink/[0.05] p-1" role="tablist" aria-label={t('detail.currency')}>
                 {(['USD', 'GEL'] as const).map((c) => (
                   <button
                     key={c}
@@ -340,7 +353,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-sv-blue" />
                 <span className="text-[12px] font-black uppercase tracking-wider text-sv-blue">
-                  AI ფასის შეფასება
+                  {t('detail.aiScore')}
                 </span>
               </div>
               <div className="mt-4 flex flex-wrap items-center gap-6">
@@ -370,7 +383,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                 <div className="min-w-0 flex-1">
                   <div className="text-[18px] font-black text-sv-ink">{l.ai.label}</div>
                   <p className="mt-1.5 text-[14px] font-semibold leading-relaxed text-sv-ink/55">
-                    {aiExplanation(l)}
+                    {aiExplanation(l, t)}
                   </p>
                 </div>
               </div>
@@ -392,7 +405,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
 
             {/* Features */}
             <div className="mt-8">
-              <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">მახასიათებლები</h2>
+              <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">{t('detail.features')}</h2>
               <div className="mt-4 flex flex-wrap gap-2">
                 {l.features.map((f) => (
                   <span
@@ -407,7 +420,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
 
             {/* Description */}
             <div className="mt-8">
-              <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">აღწერა</h2>
+              <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">{t('detail.description')}</h2>
               <p className="mt-3 text-[15px] font-medium leading-[1.8] text-sv-ink/65">
                 {l.description}
               </p>
@@ -415,10 +428,10 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
 
             {/* Map */}
             <div className="mt-8">
-              <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">მდებარეობა</h2>
+              <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">{t('detail.location')}</h2>
               <div className="relative mt-4 overflow-hidden rounded-card shadow-card">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/map3d.png" alt="რუკა" className="h-[320px] w-full object-cover" />
+                <img src="/images/map3d.png" alt={t('detail.map')} className="h-[320px] w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-sv-navy/60 via-transparent to-transparent" />
                 {/* Pin */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -434,7 +447,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                     </div>
                   </div>
                   <span className="rounded-full glass px-3.5 py-1.5 text-[11px] font-bold text-white/70">
-                    3D რუკა — მალე ინტერაქტიული
+                    {t('detail.map3dSoon')}
                   </span>
                 </div>
               </div>
@@ -448,8 +461,8 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                     <Calculator className="h-5 w-5 text-sv-blue" />
                   </span>
                   <div>
-                    <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">იპოთეკის კალკულატორი</h2>
-                    <p className="text-[12px] font-bold text-sv-ink/45">ანაუიტეტური გრაფიკი · კურსი 1$ = {USD_GEL} ₾</p>
+                    <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">{t('detail.mortgage')}</h2>
+                    <p className="text-[12px] font-bold text-sv-ink/45">{t('detail.mortgageNote', { rate: USD_GEL })}</p>
                   </div>
                 </div>
 
@@ -457,39 +470,39 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   {/* Down payment */}
                   <div>
                     <div className="mb-2 flex items-center justify-between text-[13px] font-bold">
-                      <span className="text-sv-ink/60">პირველადი შენატანი</span>
+                      <span className="text-sv-ink/60">{t('detail.downPayment')}</span>
                       <span className="text-sv-ink">{downPct}% · {formatUSD(Math.round(l.priceUSD * downPct / 100))}</span>
                     </div>
                     <input
                       type="range" min={0} max={70} step={5} value={downPct}
                       onChange={(e) => setDownPct(Number(e.target.value))}
-                      aria-label="პირველადი შენატანი პროცენტებში"
+                      aria-label={t('detail.downPaymentAria')}
                       className="sv-range w-full"
                     />
                   </div>
                   {/* Years */}
                   <div>
                     <div className="mb-2 flex items-center justify-between text-[13px] font-bold">
-                      <span className="text-sv-ink/60">ვადა</span>
-                      <span className="text-sv-ink">{years} წელი</span>
+                      <span className="text-sv-ink/60">{t('detail.term')}</span>
+                      <span className="text-sv-ink">{t('detail.years', { n: years })}</span>
                     </div>
                     <input
                       type="range" min={1} max={30} step={1} value={years}
                       onChange={(e) => setYears(Number(e.target.value))}
-                      aria-label="სესხის ვადა წლებში"
+                      aria-label={t('detail.termAria')}
                       className="sv-range w-full"
                     />
                   </div>
                   {/* Rate */}
                   <div>
                     <div className="mb-2 flex items-center justify-between text-[13px] font-bold">
-                      <span className="text-sv-ink/60">საპროცენტო განაკვეთი (წლიური)</span>
+                      <span className="text-sv-ink/60">{t('detail.rate')}</span>
                     </div>
                     <div className="relative w-[140px]">
                       <input
                         type="number" min={0} max={30} step={0.1} value={rate}
                         onChange={(e) => setRate(Number(e.target.value))}
-                        aria-label="საპროცენტო განაკვეთი"
+                        aria-label={t('detail.rateAria')}
                         className="h-11 w-full rounded-control border border-sv-ink/10 bg-white px-3.5 pr-8 text-[14px] font-extrabold text-sv-ink outline-none transition-colors focus:border-sv-blue"
                       />
                       <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[14px] font-extrabold text-sv-ink/40">%</span>
@@ -500,17 +513,17 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                 {/* Result */}
                 <div className="mt-7 flex flex-wrap items-center justify-between gap-4 rounded-module bg-gradient-to-r from-sv-blue/[0.08] to-sv-violet/[0.08] p-5 ring-1 ring-inset ring-sv-blue/15">
                   <div>
-                    <div className="text-[11px] font-black uppercase tracking-wider text-sv-blue">თვიური გადასახადი</div>
+                    <div className="text-[11px] font-black uppercase tracking-wider text-sv-blue">{t('detail.monthlyPayment')}</div>
                     <div className="mt-1 text-[28px] font-black tracking-tight text-sv-ink">
                       {formatUSD(Math.round(monthlyUSD))}
-                      <span className="text-[15px] font-extrabold text-sv-ink/45"> /თვე</span>
+                      <span className="text-[15px] font-extrabold text-sv-ink/45"> {t('detail.perMonth')}</span>
                     </div>
                     <div className="text-[13px] font-bold text-sv-ink/45">
-                      ≈ {formatGEL(Math.round(monthlyUSD * USD_GEL))} თვეში
+                      {t('detail.approxPerMonth', { gel: formatGEL(Math.round(monthlyUSD * USD_GEL)) })}
                     </div>
                   </div>
                   <div className="text-right text-[12px] font-bold leading-relaxed text-sv-ink/45">
-                    სესხის თანხა<br />
+                    {t('detail.loanAmount')}<br />
                     <span className="text-[15px] font-black text-sv-ink">
                       {formatUSD(Math.round(l.priceUSD * (1 - downPct / 100)))}
                     </span>
@@ -530,7 +543,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5 text-[16px] font-black text-sv-ink">
                     <span className="truncate">{l.agent.name}</span>
-                    <BadgeCheck className="h-4 w-4 shrink-0 text-sv-blue" aria-label="ვერიფიცირებული აგენტი" />
+                    <BadgeCheck className="h-4 w-4 shrink-0 text-sv-blue" aria-label={t('detail.verifiedAgent')} />
                   </div>
                   <div className="text-[13px] font-bold text-sv-ink/45">{l.agent.agency}</div>
                 </div>
@@ -541,18 +554,18 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   href={`tel:${l.agent.phone.replace(/\s/g, '')}`}
                   className="flex h-12 items-center justify-center gap-2 rounded-full bg-sv-orange text-[14px] font-extrabold text-white shadow-[0_8px_24px_-8px_rgba(255,106,45,0.8)] transition-all duration-300 hover:bg-[#ff5a14]"
                 >
-                  <Phone className="h-4 w-4" /> დარეკვა
+                  <Phone className="h-4 w-4" /> {t('detail.call')}
                 </a>
                 <button
-                  onClick={() => toast.info('მესიჯები მალე დაემატება', { description: 'ჩატი აგენტთან მუშავდება' })}
+                  onClick={() => toast.info(t('detail.messagingSoon'), { description: t('detail.messagingSoonText') })}
                   className="flex h-12 items-center justify-center gap-2 rounded-full border border-sv-blue/25 bg-sv-blue/[0.06] text-[14px] font-extrabold text-sv-blue transition-all duration-300 hover:bg-sv-blue/10"
                 >
-                  <MessageCircle className="h-4 w-4" /> მესიჯი
+                  <MessageCircle className="h-4 w-4" /> {t('detail.message')}
                 </button>
               </div>
 
               <div className="mt-4 rounded-module bg-sv-ink/[0.03] p-4 text-center">
-                <div className="text-[12px] font-bold text-sv-ink/45">აგენტის ტელეფონი</div>
+                <div className="text-[12px] font-bold text-sv-ink/45">{t('detail.agentPhone')}</div>
                 <a
                   href={`tel:${l.agent.phone.replace(/\s/g, '')}`}
                   className="mt-0.5 block text-[16px] font-black tracking-wide text-sv-ink transition-colors hover:text-sv-blue"
@@ -563,16 +576,15 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
 
               <p className="mt-4 flex items-center justify-center gap-1.5 text-[11px] font-bold text-sv-ink/35">
                 <BadgeCheck className="h-3.5 w-3.5 text-sv-success" />
-                განცხადება ვერიფიცირებულია სივრცის გუნდის მიერ
+                {t('detail.verifiedBy')}
               </p>
             </div>
 
             {/* Safety note */}
             <div className="mt-4 rounded-tile border border-sv-ink/[0.06] bg-white p-5 shadow-card">
-              <div className="text-[13px] font-black text-sv-ink">უსაფრთხოების რჩევა</div>
+              <div className="text-[13px] font-black text-sv-ink">{t('detail.safetyTitle')}</div>
               <p className="mt-1.5 text-[12px] font-semibold leading-relaxed text-sv-ink/50">
-                არ გადაიხადო ავანსი ქონების ნახვამდე. სივრცე არასდროს
-                გთხოვს გადახდას პლატფორმის გარეთ.
+                {t('detail.safetyText')}
               </p>
             </div>
           </aside>
@@ -584,17 +596,17 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             <div className="mb-6 flex items-end justify-between">
               <div>
                 <h2 className="text-[24px] font-black tracking-[-0.02em] text-sv-ink md:text-[28px]">
-                  მსგავსი განცხადებები
+                  {t('detail.similar')}
                 </h2>
                 <p className="mt-1 text-[14px] font-semibold text-sv-ink/50">
-                  იგივე უბანი ან ტიპი · {isSale ? 'იყიდება' : 'ქირავდება'}
+                  {t('detail.similarSub', { deal: t(isSale ? 'search.sale' : 'search.rent') })}
                 </p>
               </div>
               <Link
                 href={`/search?deal=${l.dealType}&type=${l.propType}`}
                 className="hidden shrink-0 items-center gap-2 text-[14px] font-extrabold text-sv-blue transition-colors hover:text-sv-blue-deep sm:flex"
               >
-                მეტის ნახვა <ChevronRight className="h-4 w-4" />
+                {t('detail.seeMore')} <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
