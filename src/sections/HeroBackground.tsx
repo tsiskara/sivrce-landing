@@ -1,0 +1,162 @@
+import { useMemo } from 'react'
+
+/* Deterministic pseudo-random so SSR/build output is stable */
+function seeded(seed: number) {
+  let s = seed
+  return () => {
+    s = (s * 16807) % 2147483647
+    return (s - 1) / 2147483646
+  }
+}
+
+interface Particle {
+  left: string
+  bottom: string
+  size: number
+  duration: string
+  delay: string
+  drift: string
+  opacity: number
+  orange: boolean
+}
+
+interface WindowCell {
+  x: number
+  y: number
+  duration: string
+  delay: string
+  orange: boolean
+}
+
+/* Skyline: [x, width, height] — a stylized city silhouette */
+const BUILDINGS: Array<[number, number, number]> = [
+  [0, 52, 120], [58, 38, 176], [102, 64, 96], [172, 44, 210], [222, 60, 140],
+  [288, 36, 258], [330, 56, 168], [392, 70, 116], [468, 42, 226], [516, 62, 152],
+  [584, 48, 300], [638, 66, 132], [710, 40, 196], [756, 58, 104], [820, 46, 244],
+  [872, 68, 158], [946, 40, 208], [992, 60, 122], [1058, 50, 268], [1114, 64, 148],
+  [1184, 42, 188], [1232, 58, 108], [1296, 52, 224], [1354, 46, 144],
+]
+
+const SV_W = 1400
+const SV_H = 340
+
+export default function HeroBackground() {
+  const particles = useMemo<Particle[]>(() => {
+    const rnd = seeded(42)
+    return Array.from({ length: 26 }, () => ({
+      left: `${(rnd() * 100).toFixed(2)}%`,
+      bottom: `${(rnd() * 18).toFixed(2)}%`,
+      size: 2 + rnd() * 3.5,
+      duration: `${(11 + rnd() * 14).toFixed(1)}s`,
+      delay: `${(-rnd() * 20).toFixed(1)}s`,
+      drift: `${((rnd() - 0.5) * 90).toFixed(0)}px`,
+      opacity: 0.25 + rnd() * 0.45,
+      orange: rnd() > 0.82,
+    }))
+  }, [])
+
+  const windows = useMemo<WindowCell[]>(() => {
+    const rnd = seeded(7)
+    const cells: WindowCell[] = []
+    BUILDINGS.forEach(([bx, bw, bh]) => {
+      const cols = Math.floor((bw - 14) / 14)
+      const rows = Math.floor((bh - 20) / 18)
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows; r++) {
+          if (rnd() > 0.78) {
+            cells.push({
+              x: bx + 8 + c * 14,
+              y: SV_H - bh + 12 + r * 18,
+              duration: `${(3.5 + rnd() * 5).toFixed(1)}s`,
+              delay: `${(-rnd() * 6).toFixed(1)}s`,
+              orange: rnd() > 0.75,
+            })
+          }
+        }
+      }
+    })
+    return cells
+  }, [])
+
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-sv-navy" aria-hidden>
+      {/* Aurora gradient field — brand blue / violet / orange */}
+      <div className="animate-aurora-a absolute -left-[15%] top-[-25%] h-[70%] w-[60%] rounded-full bg-[radial-gradient(circle,rgba(46,107,255,0.34),transparent_65%)] blur-[90px]" />
+      <div className="animate-aurora-b absolute right-[-12%] top-[-10%] h-[65%] w-[55%] rounded-full bg-[radial-gradient(circle,rgba(122,92,255,0.26),transparent_65%)] blur-[100px]" />
+      <div className="animate-aurora-c absolute bottom-[-30%] left-[25%] h-[70%] w-[50%] rounded-full bg-[radial-gradient(circle,rgba(255,106,45,0.16),transparent_65%)] blur-[110px]" />
+      <div className="absolute left-1/2 top-[30%] h-[50%] w-[46%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(46,107,255,0.14),transparent_70%)] blur-[110px]" />
+
+      {/* Map dot-grid + faint line grid */}
+      <div className="bg-dots-dark absolute inset-0 [mask-image:radial-gradient(75%_65%_at_50%_42%,black,transparent)]" />
+      <div className="bg-grid-faint absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent,black_30%,black_75%,transparent)]" />
+
+      {/* Stylized skyline silhouette with glowing windows */}
+      <svg
+        viewBox={`0 0 ${SV_W} ${SV_H}`}
+        preserveAspectRatio="xMidYMax slice"
+        className="absolute bottom-0 left-0 h-[46%] w-full min-w-[900px]"
+      >
+        <defs>
+          <linearGradient id="skylineFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0a1440" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#050b26" stopOpacity="1" />
+          </linearGradient>
+        </defs>
+        {BUILDINGS.map(([x, w, h], i) => (
+          <g key={i}>
+            <rect x={x} y={SV_H - h} width={w} height={h} fill="url(#skylineFill)" />
+            <rect x={x} y={SV_H - h} width={w} height={2} fill="#2e6bff" opacity="0.22" />
+          </g>
+        ))}
+        {/* Antenna on tallest */}
+        <line x1={584 + 24} y1={SV_H - 300} x2={584 + 24} y2={SV_H - 332} stroke="#2e6bff" strokeWidth="2" opacity="0.5" />
+        <circle cx={584 + 24} cy={SV_H - 334} r="3" fill="#ff6a2d" opacity="0.9" />
+        {windows.map((w, i) => (
+          <rect
+            key={i}
+            x={w.x}
+            y={w.y}
+            width={5}
+            height={7}
+            rx={1}
+            className="sv-window"
+            fill={w.orange ? '#ffb25e' : '#8fb4ff'}
+            style={{ '--w-duration': w.duration, '--w-delay': w.delay } as React.CSSProperties}
+          />
+        ))}
+        {/* Ground fade */}
+        <rect x="0" y={SV_H - 90} width={SV_W} height={90} fill="url(#skylineFill)" opacity="0.6" />
+      </svg>
+
+      {/* Rising particles */}
+      {particles.map((p, i) => (
+        <span
+          key={i}
+          className="sv-particle absolute rounded-full"
+          style={{
+            left: p.left,
+            bottom: p.bottom,
+            width: p.size,
+            height: p.size,
+            background: p.orange ? '#ff8a4d' : '#8fb4ff',
+            boxShadow: p.orange
+              ? '0 0 12px rgba(255,106,45,0.8)'
+              : '0 0 10px rgba(143,180,255,0.7)',
+            '--p-duration': p.duration,
+            '--p-delay': p.delay,
+            '--p-drift': p.drift,
+            '--p-opacity': p.opacity,
+          } as React.CSSProperties}
+        />
+      ))}
+
+      {/* Brand map pins */}
+      <span className="absolute left-[16%] top-[30%] hidden h-3 w-3 animate-pin rounded-full bg-[#ff6a2d] md:block" />
+      <span className="absolute right-[20%] top-[24%] hidden h-2.5 w-2.5 animate-pin rounded-full bg-[#2e6bff] md:block" style={{ animationDelay: '1.2s' }} />
+
+      {/* Vignette + transition into next section */}
+      <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_40%,transparent_55%,rgba(5,11,38,0.55))]" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-[#050b26]/60 to-white" />
+    </div>
+  )
+}
