@@ -1,4 +1,4 @@
-import { MapPin, ArrowRight, BadgeCheck, Building2, CalendarCheck } from 'lucide-react'
+import { MapPin, ArrowRight, BadgeCheck, Building2, CalendarCheck, Star } from 'lucide-react'
 import { Reveal } from '../components/Reveal'
 
 const PROJECTS = [
@@ -28,21 +28,21 @@ const PROJECTS = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="bg-[#f6f7fb] py-20 md:py-28">
+    <section id="projects" className="bg-sv-cloud py-20 md:py-28">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <Reveal className="mb-10 flex flex-wrap items-end justify-between gap-5">
           <div>
-            <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#2e6bff]/10 px-4 py-1.5 text-[12px] font-black uppercase tracking-wider text-[#2e6bff]">
+            <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-sv-blue/10 px-4 py-1.5 text-[12px] font-black uppercase tracking-wider text-sv-blue">
               <Building2 className="h-3.5 w-3.5" /> ახალი კორპუსები
             </span>
-            <h2 className="text-[30px] font-black tracking-[-0.02em] text-[#0a1030] md:text-[40px]">
+            <h2 className="text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
               მშენებარე პროექტები
             </h2>
-            <p className="mt-2 text-[15px] font-semibold text-[#0a1030]/50 md:text-[16px]">
+            <p className="mt-2 text-[15px] font-semibold text-sv-ink/50 md:text-[16px]">
               ყველა დეველოპერი, ყველა პროექტი — შეფასებებით და 3D ვიზუალიზაციით
             </p>
           </div>
-          <a href="#" className="group flex items-center gap-2 text-[15px] font-extrabold text-[#2e6bff] hover:text-[#1a4fd6]">
+          <a href="#" className="group flex items-center gap-2 text-[15px] font-extrabold text-sv-blue hover:text-sv-blue-deep">
             136 პროექტის ნახვა
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </a>
@@ -51,7 +51,7 @@ export default function Projects() {
         <div className="grid gap-6 lg:grid-cols-2">
           {PROJECTS.map((p, i) => (
             <Reveal key={p.name} delay={i * 0.12}>
-              <article className="group cursor-pointer overflow-hidden rounded-[26px] border border-[#0a1030]/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover">
+              <article className="group cursor-pointer overflow-hidden rounded-card border border-sv-ink/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover">
                 <div className="relative aspect-[16/9] overflow-hidden">
                   <img
                     src={p.img}
@@ -59,41 +59,41 @@ export default function Projects() {
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#060d2b]/75 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-sv-navy/75 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-5 right-5 flex items-end justify-between">
                     <div>
                       <h3 className="text-[22px] font-black text-white drop-shadow">{p.name}</h3>
                       <p className="flex items-center gap-1.5 text-[13px] font-bold text-white/80">
-                        <BadgeCheck className="h-4 w-4 text-[#4ade80]" /> {p.dev}
+                        <BadgeCheck className="h-4 w-4 text-sv-success" /> {p.dev}
                       </p>
                     </div>
-                    <div className="rounded-xl bg-white/95 px-3 py-1.5 text-[14px] font-black text-[#0a1030]">
-                      ★ {p.rating}
+                    <div className="flex items-center gap-1 rounded-control bg-white/95 px-3 py-1.5 text-[14px] font-black text-sv-ink">
+                      <Star className="h-3.5 w-3.5 fill-sv-orange text-sv-orange" /> {p.rating}
                     </div>
                   </div>
                   {/* progress */}
-                  <div className="absolute left-5 top-4 rounded-full bg-black/45 px-3.5 py-1.5 text-[12px] font-extrabold text-white backdrop-blur">
+                  <div className="absolute left-5 top-4 rounded-full bg-sv-navy/55 px-3.5 py-1.5 text-[12px] font-extrabold text-white backdrop-blur">
                     აშენებულია {p.done}%
                   </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-3 p-5">
-                  <span className="flex items-center gap-1.5 text-[13px] font-bold text-[#0a1030]/55">
-                    <MapPin className="h-4 w-4 text-[#0a1030]/35" /> {p.location}
+                  <span className="flex items-center gap-1.5 text-[13px] font-bold text-sv-ink/55">
+                    <MapPin className="h-4 w-4 text-sv-ink/35" /> {p.location}
                   </span>
-                  <span className="flex items-center gap-1.5 text-[13px] font-bold text-[#0a1030]/55">
-                    <CalendarCheck className="h-4 w-4 text-[#0a1030]/35" /> ჩაბარება {p.finish}
+                  <span className="flex items-center gap-1.5 text-[13px] font-bold text-sv-ink/55">
+                    <CalendarCheck className="h-4 w-4 text-sv-ink/35" /> ჩაბარება {p.finish}
                   </span>
-                  <span className="flex items-center gap-1.5 text-[13px] font-bold text-[#0a1030]/55">
-                    <Building2 className="h-4 w-4 text-[#0a1030]/35" /> {p.flats} ბინა
+                  <span className="flex items-center gap-1.5 text-[13px] font-bold text-sv-ink/55">
+                    <Building2 className="h-4 w-4 text-sv-ink/35" /> {p.flats} ბინა
                   </span>
-                  <span className="ml-auto text-[16px] font-black text-[#2e6bff]">
-                    {p.priceFrom}<span className="text-[12px] font-bold text-[#0a1030]/45"> /მ²-დან</span>
+                  <span className="ml-auto text-[16px] font-black text-sv-blue">
+                    {p.priceFrom}<span className="text-[12px] font-bold text-sv-ink/45"> /მ²-დან</span>
                   </span>
                 </div>
                 {/* progress bar */}
-                <div className="mx-5 mb-5 h-1.5 overflow-hidden rounded-full bg-[#0a1030]/[0.07]">
+                <div className="mx-5 mb-5 h-1.5 overflow-hidden rounded-full bg-sv-ink/[0.07]">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-[#2e6bff] to-[#7a5cff] transition-all duration-1000"
+                    className="h-full rounded-full bg-gradient-to-r from-sv-blue to-sv-violet transition-all duration-1000"
                     style={{ width: `${p.done}%` }}
                   />
                 </div>

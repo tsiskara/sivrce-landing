@@ -168,7 +168,7 @@ export default function Navbar() {
             )}
             <a
               href="#"
-              className="mt-2 flex items-center justify-center gap-2 rounded-control bg-[#ff6a2d] px-4 py-3.5 text-[15px] font-extrabold text-white"
+              className="mt-2 flex items-center justify-center gap-2 rounded-control bg-sv-orange px-4 py-3.5 text-[15px] font-extrabold text-white"
             >
               <Plus className="h-4 w-4" /> განცხადების დამატება
             </a>

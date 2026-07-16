@@ -97,6 +97,7 @@ module.exports = {
         "glow-orange-lg": "0 20px 56px -12px rgba(255,106,45,.95)",
         "glow-blue": "0 16px 48px -12px rgba(46,107,255,.7)",
         "glow-blue-sm": "0 6px 16px -6px rgba(46,107,255,.7)",
+        "glow-navy": "0 16px 48px -12px rgba(5,11,38,.5)",
         "panel-dark": "0 30px 80px -20px rgba(1,4,20,.65)",
         "showcase-blue": "0 40px 120px -30px rgba(46,107,255,.45)",
       },

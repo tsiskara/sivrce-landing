@@ -27,17 +27,17 @@ const FEATURES = [
 
 export default function MapSection() {
   return (
-    <section className="relative overflow-hidden bg-[#060d2b] py-20 md:py-32">
+    <section className="relative overflow-hidden bg-sv-navy py-20 md:py-32">
       <div className="absolute inset-0 bg-grid-dark" />
-      <div className="absolute -left-40 top-1/3 h-[480px] w-[480px] animate-float rounded-full bg-[#2e6bff]/15 blur-[140px]" />
-      <div className="absolute -right-40 bottom-0 h-[420px] w-[420px] animate-float rounded-full bg-[#ff6a2d]/10 blur-[140px]" style={{ animationDelay: '-4s' }} />
+      <div className="absolute -left-40 top-1/3 h-[480px] w-[480px] animate-float rounded-full bg-sv-blue/15 blur-[140px]" />
+      <div className="absolute -right-40 bottom-0 h-[420px] w-[420px] animate-float rounded-full bg-sv-orange/10 blur-[140px]" style={{ animationDelay: '-4s' }} />
 
       <div className="relative mx-auto max-w-[1440px] px-5 md:px-10">
         <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.15fr]">
           {/* Copy */}
           <div>
             <Reveal>
-              <span className="mb-4 inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-[12px] font-black uppercase tracking-wider text-[#8fb4ff]">
+              <span className="mb-4 inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-[12px] font-black uppercase tracking-wider text-sv-blue-light">
                 <Layers className="h-3.5 w-3.5" /> ექსკლუზიური ტექნოლოგია
               </span>
               <h2 className="text-balance text-[32px] font-black leading-[1.12] tracking-[-0.02em] text-white md:text-[46px]">
@@ -52,8 +52,8 @@ export default function MapSection() {
             <div className="mt-10 space-y-3">
               {FEATURES.map((f, i) => (
                 <Reveal key={f.title} delay={0.1 + i * 0.08}>
-                  <div className="group flex gap-5 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 transition-all duration-500 hover:border-[#2e6bff]/40 hover:bg-white/[0.06]">
-                    <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[#2e6bff]/15 text-[#8fb4ff] transition-all duration-500 group-hover:bg-[#2e6bff] group-hover:text-white">
+                  <div className="group flex gap-5 rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 transition-all duration-500 hover:border-sv-blue/40 hover:bg-white/[0.06]">
+                    <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-sv-blue/15 text-sv-blue-light transition-all duration-500 group-hover:bg-sv-blue group-hover:text-white">
                       <f.icon className="h-5 w-5" />
                     </span>
                     <div>
@@ -68,7 +68,7 @@ export default function MapSection() {
             <Reveal delay={0.45}>
               <a
                 href="#"
-                className="group mt-9 inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-4 text-[15px] font-extrabold text-[#060d2b] transition-all duration-300 hover:bg-[#8fb4ff] hover:shadow-[0_16px_48px_-12px_rgba(46,107,255,0.7)]"
+                className="group mt-9 inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-4 text-[15px] font-extrabold text-sv-navy transition-all duration-300 hover:bg-sv-blue-light hover:shadow-glow-blue"
               >
                 გახსენი 3D რუკა
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -81,13 +81,13 @@ export default function MapSection() {
             <motion.div
               whileHover={{ scale: 1.015 }}
               transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-              className="relative overflow-hidden rounded-[28px] border border-white/10 shadow-[0_40px_120px_-30px_rgba(46,107,255,0.45)]"
+              className="relative overflow-hidden rounded-card border border-white/10 shadow-showcase-blue"
             >
               <img src="/images/map3d.png" alt="სივრცის 3D რუკა — თბილისი" className="w-full" loading="lazy" />
-              <div className="absolute inset-0 rounded-[28px] ring-1 ring-inset ring-white/10" />
+              <div className="absolute inset-0 rounded-card ring-1 ring-inset ring-white/10" />
               {/* Live pin */}
               <div className="absolute left-[58%] top-[34%]">
-                <span className="block h-4 w-4 animate-pin rounded-full bg-[#ff6a2d]" />
+                <span className="block h-4 w-4 animate-pin rounded-full bg-sv-orange" />
               </div>
             </motion.div>
 
@@ -97,10 +97,10 @@ export default function MapSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6, duration: 0.7 }}
-              className="absolute -bottom-6 -left-2 rounded-2xl glass p-4 shadow-soft backdrop-blur-2xl md:-left-8"
+              className="absolute -bottom-6 -left-2 rounded-tile glass p-4 shadow-soft backdrop-blur-2xl md:-left-8"
             >
               <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#ff6a2d]/20 text-[#ff6a2d]">
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-sv-orange/20 text-sv-orange">
                   <Building2 className="h-5 w-5" />
                 </span>
                 <div>
