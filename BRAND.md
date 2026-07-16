@@ -1,7 +1,7 @@
 # სივრცე — Brand Lock (v1.1)
 
 Everything user-facing must follow this system. No exceptions.
-Code tokens: `src/lib/brand.ts` · CSS variables: `src/index.css` · Tailwind palette: `tailwind.config.js`
+Code tokens: `src/lib/brand.ts` · CSS variables + Tailwind v4 palette (`@theme`): `src/app/globals.css`
 
 ## 0. Enforcement (how to build UI)
 
