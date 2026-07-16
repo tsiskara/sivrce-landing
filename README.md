@@ -1,73 +1,43 @@
-# React + TypeScript + Vite
+# sivrce — უძრავი ქონება ერთ სივრცეში
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Premium real estate platform for Georgia. Next.js 16 (App Router, Turbopack) · Tailwind CSS v4 (CSS-first `@theme`, no config file) · React 19 · shadcn/ui · next/font (Manrope + Noto Sans Georgian).
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Framework:** Next.js 16 · App Router · Turbopack · TypeScript strict
+- **Styling:** Tailwind CSS v4 — brand tokens live in `src/app/globals.css` (`@theme`)
+- **Brand lock:** `BRAND.md` is the single source of truth — colors, radius, elevation, motion. Code tokens in `src/lib/brand.ts`.
+- **UI:** shadcn/ui (Tailwind v4 native) in `src/components/ui/`
+- **Motion:** framer-motion · custom keyframes in `globals.css`
+- **SEO:** metadata API, OG/Twitter cards, JSON-LD (`WebSite` + `RealEstateAgent`, per-listing `RealEstateListing`), `sitemap.ts`, `robots.ts`
 
-## React Compiler
+## Develop
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev          # next dev (Turbopack) — http://localhost:3000
+npm run build        # production build
+npm run start        # serve production build
+npm run lint         # eslint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+  app/                  # routes: / (landing), /search, /listing/[id]
+    globals.css         # Tailwind v4 @theme brand tokens + brand utilities
+    layout.tsx          # fonts, SEO metadata, JSON-LD, Toaster
+  components/
+    sections/           # landing sections (Navbar, Hero, Stats, …)
+    ui/                 # shadcn/ui components
+    ListingCard.tsx     # shared listing card (VIP badges, AI score)
+    Reveal.tsx          # scroll-reveal + LogoMark/Logo
+  data/listings.ts      # shared listings data layer (client-side for now)
+  lib/
+    brand.ts            # locked brand tokens (mirror of BRAND.md)
+    favorites.ts        # localStorage favorites
+    utils.ts            # cn()
+```
+
+Deploys on Vercel (`vercel.json` → framework `nextjs`).

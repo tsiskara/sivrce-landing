@@ -1,5 +1,7 @@
+'use client'
+
 import { motion, useReducedMotion } from 'framer-motion'
-import { Link } from 'react-router'
+import Link from 'next/link'
 import type { ReactNode } from 'react'
 
 interface RevealProps {
@@ -68,7 +70,7 @@ export function LogoMark({ size = 36 }: { size?: number }) {
 
 export function Logo({ light = false, compact = false }: { light?: boolean; compact?: boolean }) {
   return (
-    <Link to="/" className="group flex items-center gap-2.5" aria-label="სივრცე — მთავარი">
+    <Link href="/" className="group flex items-center gap-2.5" aria-label="სივრცე — მთავარი">
       <LogoMark size={36} />
       {!compact && (
         <span

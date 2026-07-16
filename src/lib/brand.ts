@@ -82,4 +82,11 @@ export const BRAND = {
   },
 } as const
 
+/** VIP badge class per tier — the only allowed source (BRAND.md §8) */
+export const VIP_BADGE_STYLE: Record<keyof typeof BRAND.vipTiers, string> = {
+  VIP: BRAND.vipTiers.VIP.style,
+  'VIP+': BRAND.vipTiers['VIP+'].style,
+  'SUPER VIP': BRAND.vipTiers['SUPER VIP'].style,
+}
+
 export type Brand = typeof BRAND

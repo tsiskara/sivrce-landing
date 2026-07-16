@@ -1,10 +1,12 @@
+'use client'
+
 import { motion } from 'framer-motion'
-import { Link } from 'react-router'
+import Link from 'next/link'
 import { Heart, BedDouble, Bath, Ruler, MapPin, Eye, Crown, Flame } from 'lucide-react'
-import type { Listing } from '../data/listings'
-import { formatListingPrice, formatPerM2, formatViews, formatFloor } from '../data/listings'
-import { useFavorites } from '../lib/favorites'
-import { BRAND } from '../lib/brand'
+import type { Listing } from '@/data/listings'
+import { formatListingPrice, formatPerM2, formatViews, formatFloor } from '@/data/listings'
+import { useFavorites } from '@/lib/favorites'
+import { BRAND } from '@/lib/brand'
 
 /* VIP badge system — locked in BRAND.vipTiers, consumed here (BRAND.md §8) */
 export const BADGE_STYLE: Record<NonNullable<Listing['badge']>, string> = {
@@ -67,6 +69,7 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
 
   const imageBlock = (
     <div className={`relative overflow-hidden ${layout === 'list' ? 'aspect-[4/3] w-full sm:aspect-auto sm:h-full sm:min-h-[220px] sm:w-[300px] sm:shrink-0' : 'aspect-[4/3]'}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={l.img}
         alt={l.title}
@@ -134,7 +137,7 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
       className={`group overflow-hidden rounded-card border border-sv-ink/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover ${sizeClass}`}
     >
       <Link
-        to={`/listing/${l.id}`}
+        href={`/listing/${l.id}`}
         className={`flex h-full flex-col outline-none ${layout === 'list' ? 'sm:flex-row' : ''}`}
         aria-label={l.title}
       >
