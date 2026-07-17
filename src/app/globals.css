@@ -426,6 +426,16 @@
   animation-delay: var(--w-delay, 0s);
 }
 
+/* Twinkling stars in the hero night sky */
+@keyframes sv-twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+.sv-star {
+  animation: sv-twinkle var(--st-duration, 5s) ease-in-out infinite;
+  animation-delay: var(--st-delay, 0s);
+}
+
 /* Hero entrance — paint-driven (no hydration gate) so LCP text renders immediately */
 @keyframes sv-hero-in {
   from { opacity: 0; transform: translate3d(0, 28px, 0); }
@@ -470,7 +480,7 @@
     transition-duration: 0.01ms !important;
   }
   .animate-aurora-a, .animate-aurora-b, .animate-aurora-c,
-  .sv-particle, .sv-window, .animate-float, .animate-pin, .animate-marquee,
+  .sv-particle, .sv-window, .sv-star, .animate-float, .animate-pin, .animate-marquee,
   .animate-ping, .sv-hero-in, .animate-scroll-hint {
     animation: none !important;
   }

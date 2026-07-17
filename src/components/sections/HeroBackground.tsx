@@ -30,6 +30,15 @@ interface WindowCell {
   orange: boolean
 }
 
+interface Star {
+  top: string
+  left: string
+  size: number
+  duration: string
+  delay: string
+  blue: boolean
+}
+
 /* Skyline: [x, width, height] — a stylized city silhouette */
 const BUILDINGS: Array<[number, number, number]> = [
   [0, 52, 120], [58, 38, 176], [102, 64, 96], [172, 44, 210], [222, 60, 140],
@@ -80,8 +89,22 @@ function buildWindows(): WindowCell[] {
   return cells
 }
 
+/* Sparse twinkling star field — confined to the upper sky so it never collides with the H1/search panel */
+function buildStars(): Star[] {
+  const rnd = seeded(91)
+  return Array.from({ length: 18 }, () => ({
+    top: `${(4 + rnd() * 42).toFixed(2)}%`,
+    left: `${(rnd() * 96).toFixed(2)}%`,
+    size: 1.5 + rnd() * 1.8,
+    duration: `${(3 + rnd() * 5).toFixed(1)}s`,
+    delay: `${(-rnd() * 6).toFixed(1)}s`,
+    blue: rnd() > 0.55,
+  }))
+}
+
 const particles = buildParticles()
 const windows = buildWindows()
+const stars = buildStars()
 
 export default function HeroBackground() {
   const root = useRef<HTMLDivElement>(null)
@@ -104,6 +127,34 @@ export default function HeroBackground() {
       <div className="animate-aurora-b absolute right-[-12%] top-[-10%] h-[65%] w-[55%] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--sv-violet)_26%,transparent),transparent_65%)] blur-[100px]" />
       <div className="animate-aurora-c absolute bottom-[-30%] left-[25%] h-[70%] w-[50%] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--sv-orange)_16%,transparent),transparent_65%)] blur-[110px]" />
       <div className="absolute left-1/2 top-[30%] h-[50%] w-[46%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--sv-blue)_14%,transparent),transparent_70%)] blur-[110px]" />
+
+      {/* Moon — top-right crescent carved from bg, soft brand-blue glow */}
+      <div className="animate-float absolute right-[10%] top-[8%] hidden h-24 w-24 md:block">
+        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--sv-blue-light)_28%,transparent),transparent_65%)] blur-2xl" />
+        <div className="absolute left-4 top-3 h-14 w-14 overflow-hidden rounded-full">
+          <div className="absolute left-0 top-0 h-14 w-14 rounded-full bg-white" />
+          {/* ponytail: crescent carved with an offset navy disc — same color as section bg, zero new tokens */}
+          <div className="absolute left-5 top-[-4px] h-14 w-14 rounded-full bg-sv-navy" />
+        </div>
+      </div>
+
+      {/* Twinkling stars — upper sky only, staggered, pauses off-screen + under reduced-motion */}
+      {stars.map((s, i) => (
+        <span
+          key={i}
+          className="sv-star absolute hidden rounded-full md:block"
+          style={{
+            top: s.top,
+            left: s.left,
+            width: s.size,
+            height: s.size,
+            background: s.blue ? 'var(--sv-blue-light)' : 'rgba(255,255,255,0.85)',
+            boxShadow: '0 0 6px color-mix(in srgb, var(--sv-blue-light) 70%, transparent)',
+            '--st-duration': s.duration,
+            '--st-delay': s.delay,
+          } as React.CSSProperties}
+        />
+      ))}
 
       {/* Map dot-grid + faint line grid */}
       <div className="bg-dots-dark absolute inset-0 [mask-image:radial-gradient(75%_65%_at_50%_42%,black,transparent)]" />
