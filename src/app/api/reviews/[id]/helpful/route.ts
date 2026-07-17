@@ -5,12 +5,16 @@ import { type NextRequest, NextResponse } from "next/server"
 import { Prisma } from "@/generated/prisma/client"
 import { db } from "@/lib/db"
 import { clientIp, rateLimitOk } from "@/lib/reviews/rate-limit"
+import { isSameOrigin } from "@/lib/security/origin"
 
 export const dynamic = "force-dynamic"
 
 type Ctx = { params: Promise<{ id: string }> }
 
 export async function POST(req: NextRequest, ctx: Ctx) {
+  if (!isSameOrigin(req)) {
+    return NextResponse.json({ error: "bad_origin" }, { status: 403 })
+  }
   const { id } = await ctx.params
   const ip = clientIp(req.headers)
   if (!rateLimitOk(`helpful:${ip}`)) {

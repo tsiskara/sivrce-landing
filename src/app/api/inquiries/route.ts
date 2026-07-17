@@ -3,9 +3,13 @@ import { LISTINGS } from "@/data/listings"
 import { db } from "@/lib/db"
 import { checkRateLimit } from "@/lib/inquiries/rate-limit"
 import { hasHoneypot, validateInquiry } from "@/lib/inquiries/validate"
+import { isSameOrigin } from "@/lib/security/origin"
 
 /** Static-listing dealType → Inquiry.deal vocabulary. */
 const DEAL_MAP = { sale: "buy", rent: "rent", daily: "daily" } as const
+
+/** Where brand-level (contact form, no entity) leads are routed. */
+const SIVRCE_INBOX = "info@sivrce.ge"
 
 function clientIp(req: Request): string {
   return (
@@ -16,6 +20,9 @@ function clientIp(req: Request): string {
 }
 
 export async function POST(req: Request) {
+  if (!isSameOrigin(req)) {
+    return Response.json({ ok: false, error: "bad_origin" }, { status: 403 })
+  }
   const limit = checkRateLimit(clientIp(req))
   if (!limit.ok) {
     return Response.json(
@@ -38,31 +45,28 @@ export async function POST(req: Request) {
   if (!parsed.ok) {
     return Response.json({ ok: false, error: "validation", fields: parsed.fields }, { status: 400 })
   }
-  const { targetType, targetId, name, phone, message } = parsed.data
+  const { targetType, targetId, name, phone, message, email } = parsed.data
 
   // Session is optional — an auth hiccup must never lose a lead.
   const session = await auth().catch(() => null)
 
   // Enrich known static listings (agent + geo) so the CRM row is self-contained.
   const listing = targetType === "listing" ? LISTINGS.find((l) => l.id === targetId) : undefined
+  const agentName = listing?.agent.name ?? "Sivrce"
 
   try {
     await db.inquiry.create({
       data: {
         id: crypto.randomUUID(),
-        // ponytail: the Inquiry model has no targetType column — non-listing
-        // targets are prefixed (`developer:acme`) so listingId stays clean for
-        // the dominant listing case. Upgrade path: add targetType/targetId
-        // columns via migration and split the prefix here.
-        listingId: targetType === "listing" ? targetId : `${targetType}:${targetId}`,
-        agentName: listing?.agent.name ?? "Sivrce",
+        targetType,
+        targetId,
+        listingId: targetType === "listing" ? targetId : null,
+        agentName,
+        agentEmail: targetType === "general" ? SIVRCE_INBOX : null,
         agentPhone: listing?.agent.phone ?? null,
         buyerName: name,
-        // ponytail: Inquiry.buyerEmail is required but the form collects no
-        // email — use the session email when present, else a synthetic
-        // phone-derived placeholder. Upgrade path: nullable buyerEmail column.
-        buyerEmail: session?.user?.email ?? `lead+${phone.replace(/\D/g, "")}@sivrce.ge`,
-        buyerPhone: phone,
+        buyerEmail: email ?? session?.user?.email ?? null,
+        buyerPhone: phone ?? null,
         message,
         deal: listing ? DEAL_MAP[listing.dealType] : "buy",
         city: listing?.city ?? "",
@@ -71,7 +75,10 @@ export async function POST(req: Request) {
       },
     })
   } catch (error) {
-    console.error("[api/inquiries] create failed", error)
+    // ponytail: log only message/code — never the raw Prisma error (can leak
+    // connection-string fragments in some failure modes).
+    const e = error as { message?: string; code?: string }
+    console.error("[api/inquiries] create failed", e?.code, e?.message)
     return Response.json({ ok: false, error: "server" }, { status: 500 })
   }
 

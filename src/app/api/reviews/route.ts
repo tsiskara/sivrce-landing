@@ -5,6 +5,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { clientIp, rateLimitOk } from "@/lib/reviews/rate-limit"
+import { isSameOrigin } from "@/lib/security/origin"
 import type { Review } from "@/generated/prisma/client"
 
 export const dynamic = "force-dynamic"
@@ -180,6 +181,9 @@ function parseCreate(
 }
 
 export async function POST(req: NextRequest) {
+  if (!isSameOrigin(req)) {
+    return NextResponse.json({ error: "bad_origin" }, { status: 403 })
+  }
   const ip = clientIp(req.headers)
   if (!rateLimitOk(`reviews:${ip}`)) {
     return NextResponse.json({ error: "rate_limited" }, { status: 429 })
