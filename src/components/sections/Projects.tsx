@@ -46,17 +46,17 @@ export default function Projects() {
               ყველა დეველოპერი, ყველა პროექტი — შეფასებებით და 3D ვიზუალიზაციით
             </p>
           </div>
-          <a href="#" className="group flex items-center gap-2 text-[15px] font-extrabold text-sv-blue transition-colors duration-200 hover:text-sv-blue-deep">
+          <Link href="/projects" className="group flex items-center gap-2 text-[15px] font-extrabold text-sv-blue transition-colors duration-200 hover:text-sv-blue-deep">
             136 პროექტის ნახვა
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </a>
+          </Link>
         </Reveal>
 
         <div className="grid gap-6 lg:grid-cols-2">
           {PROJECTS.map((p, i) => (
             <Reveal key={p.name} delay={i * 0.12}>
               <Link href="/search" className="block">
-                <article className="group cursor-pointer overflow-hidden rounded-card border border-sv-ink/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover">
+                <article className="group cursor-pointer overflow-hidden rounded-card border border-sv-ink/[0.06] bg-sv-surface shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover">
                 <div className="relative aspect-[16/9] overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -73,7 +73,7 @@ export default function Projects() {
                         <BadgeCheck className="h-4 w-4 text-sv-success" /> {p.dev}
                       </p>
                     </div>
-                    <div className="flex items-center gap-1 rounded-control bg-white/95 px-3 py-1.5 text-[14px] font-black text-sv-ink">
+                    <div className="flex items-center gap-1 rounded-control bg-white/95 px-3 py-1.5 text-[14px] font-black text-sv-navy">
                       <Star className="h-3.5 w-3.5 fill-sv-orange text-sv-orange" /> {p.rating}
                     </div>
                   </div>

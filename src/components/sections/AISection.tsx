@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Sparkles, TrendingDown, TrendingUp, Minus, ArrowRight, BrainCircuit } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Reveal } from '@/components/Reveal'
@@ -8,7 +9,7 @@ const BARS = [42, 58, 50, 66, 61, 78, 72, 88, 81, 95, 90, 100]
 
 export default function AISection() {
   return (
-    <section className="relative overflow-hidden bg-white py-20 md:py-28">
+    <section className="relative overflow-hidden bg-sv-surface py-20 md:py-28">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <div className="grid items-center gap-14 lg:grid-cols-2">
           {/* Visual card */}
@@ -18,7 +19,7 @@ export default function AISection() {
               <motion.div
                 whileHover={{ y: -6 }}
                 transition={{ type: 'spring', stiffness: 220, damping: 22 }}
-                className="relative overflow-hidden rounded-card border border-sv-ink/[0.07] bg-white shadow-card-hover"
+                className="relative overflow-hidden rounded-card border border-sv-ink/[0.07] bg-sv-surface shadow-card-hover"
               >
                 {/* header */}
                 <div className="flex items-center justify-between border-b border-sv-ink/[0.06] bg-gradient-to-r from-sv-navy to-sv-navy-soft px-6 py-4">
@@ -127,13 +128,13 @@ export default function AISection() {
             </div>
 
             <Reveal delay={0.4}>
-              <a
-                href="#"
+              <Link
+                href="/search"
                 className="group mt-9 inline-flex items-center gap-2.5 rounded-full bg-sv-navy px-7 py-4 text-[15px] font-extrabold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-sv-navy-soft hover:shadow-glow-navy"
               >
                 შეაფასე შენი ქონება
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
+              </Link>
             </Reveal>
           </div>
         </div>

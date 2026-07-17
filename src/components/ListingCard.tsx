@@ -64,8 +64,8 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
       }}
       className={`absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full backdrop-blur transition-all duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sv-blue ${
         fav
-          ? 'bg-white text-sv-orange'
-          : 'bg-white/90 text-sv-ink hover:bg-white hover:text-sv-orange'
+          ? 'bg-sv-surface text-sv-orange'
+          : 'bg-white/90 text-sv-navy hover:bg-sv-surface hover:text-sv-orange'
       }`}
     >
       <Heart className={`h-4 w-4 ${fav ? 'fill-current' : ''}`} />
@@ -146,7 +146,7 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.7, delay: (i % 3) * 0.08, ease: [0.21, 0.65, 0.2, 1] }}
-      className={`group relative flex flex-col overflow-hidden rounded-card border border-sv-ink/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover ${sizeClass}`}
+      className={`group relative flex flex-col overflow-hidden rounded-card border border-sv-ink/[0.06] bg-sv-surface shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover ${sizeClass}`}
     >
       {imageBlock}
       {bodyBlock}

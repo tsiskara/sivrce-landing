@@ -37,7 +37,7 @@ const ROOM_OPTIONS = ['1+', '2', '3', '4', '5+'] as const
 
 function SkeletonCard() {
   return (
-    <div className="overflow-hidden rounded-card border border-sv-ink/[0.06] bg-white shadow-card">
+    <div className="overflow-hidden rounded-card border border-sv-ink/[0.06] bg-sv-surface shadow-card">
       <div className="aspect-[4/3] animate-pulse bg-sv-ink/[0.06]" />
       <div className="space-y-3 p-5">
         <div className="h-4 w-3/4 animate-pulse rounded-full bg-sv-ink/[0.08]" />
@@ -154,9 +154,9 @@ export default function SearchClient() {
   }
 
   const selectClass =
-    'h-11 w-full appearance-none rounded-control border border-sv-ink/10 bg-white pl-3.5 pr-9 text-[13px] font-bold text-sv-ink outline-none transition-colors focus:border-sv-blue focus-visible:ring-2 focus-visible:ring-sv-blue/30 cursor-pointer'
+    'h-11 w-full appearance-none rounded-control border border-sv-ink/10 bg-sv-surface pl-3.5 pr-9 text-[13px] font-bold text-sv-ink outline-none transition-colors focus:border-sv-blue focus-visible:ring-2 focus-visible:ring-sv-blue/30 cursor-pointer'
   const inputClass =
-    'h-11 w-full rounded-control border border-sv-ink/10 bg-white px-3.5 text-[13px] font-bold text-sv-ink outline-none transition-colors placeholder:text-sv-ink/35 focus:border-sv-blue focus-visible:ring-2 focus-visible:ring-sv-blue/30'
+    'h-11 w-full rounded-control border border-sv-ink/10 bg-sv-surface px-3.5 text-[13px] font-bold text-sv-ink outline-none transition-colors placeholder:text-sv-ink/35 focus:border-sv-blue focus-visible:ring-2 focus-visible:ring-sv-blue/30'
 
   return (
     <div className="font-geo min-h-screen bg-sv-cloud antialiased">
@@ -291,7 +291,7 @@ export default function SearchClient() {
                 onClick={() => setView('grid')}
                 aria-label={t('search.grid')}
                 aria-pressed={view === 'grid'}
-                className={`grid h-11 w-11 place-items-center rounded-lg transition-colors ${view === 'grid' ? 'bg-white text-sv-blue shadow-glow-blue-sm' : 'text-sv-ink/45 hover:text-sv-ink'}`}
+                className={`grid h-11 w-11 place-items-center rounded-lg transition-colors ${view === 'grid' ? 'bg-sv-surface text-sv-blue shadow-glow-blue-sm' : 'text-sv-ink/45 hover:text-sv-ink'}`}
               >
                 <LayoutGrid className="h-5 w-5" />
               </button>
@@ -299,7 +299,7 @@ export default function SearchClient() {
                 onClick={() => setView('list')}
                 aria-label={t('search.list')}
                 aria-pressed={view === 'list'}
-                className={`grid h-11 w-11 place-items-center rounded-lg transition-colors ${view === 'list' ? 'bg-white text-sv-blue shadow-glow-blue-sm' : 'text-sv-ink/45 hover:text-sv-ink'}`}
+                className={`grid h-11 w-11 place-items-center rounded-lg transition-colors ${view === 'list' ? 'bg-sv-surface text-sv-blue shadow-glow-blue-sm' : 'text-sv-ink/45 hover:text-sv-ink'}`}
               >
                 <Rows3 className="h-5 w-5" />
               </button>
@@ -341,7 +341,7 @@ export default function SearchClient() {
                       className={`h-11 min-w-[44px] rounded-control px-2.5 text-[13px] font-extrabold transition-colors ${
                         active
                           ? 'bg-sv-blue text-white shadow-glow-blue-sm'
-                          : 'border border-sv-ink/10 bg-white text-sv-ink/60 hover:border-sv-blue/50 hover:text-sv-blue'
+                          : 'border border-sv-ink/10 bg-sv-surface text-sv-ink/60 hover:border-sv-blue/50 hover:text-sv-blue'
                       }`}
                     >
                       {r}
@@ -412,7 +412,7 @@ export default function SearchClient() {
             {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
           </div>
         ) : results.length === 0 ? (
-          <div className="flex flex-col items-center rounded-card border border-sv-ink/[0.06] bg-white px-6 py-20 text-center shadow-card">
+          <div className="flex flex-col items-center rounded-card border border-sv-ink/[0.06] bg-sv-surface px-6 py-20 text-center shadow-card">
             <span className="grid h-16 w-16 place-items-center rounded-module bg-sv-blue/10">
               <SearchX className="h-7 w-7 text-sv-blue" />
             </span>

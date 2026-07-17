@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { MousePointerClick, Building2, BarChart3, Layers, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Reveal } from '@/components/Reveal'
@@ -68,13 +69,13 @@ export default function MapSection() {
             </div>
 
             <Reveal delay={0.45}>
-              <a
-                href="#"
+              <Link
+                href="/search"
                 className="group mt-9 inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-4 text-[15px] font-extrabold text-sv-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-sv-blue-light hover:shadow-glow-blue"
               >
                 გახსენი 3D რუკა
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
+              </Link>
             </Reveal>
           </div>
 

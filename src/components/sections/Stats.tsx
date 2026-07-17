@@ -48,13 +48,13 @@ const STATS = [
 
 export default function Stats() {
   return (
-    <section className="relative bg-white py-20 md:py-28">
+    <section className="relative bg-sv-surface py-20 md:py-28">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
           {STATS.map((s, i) => (
             <Reveal key={s.label} delay={i * 0.02} className="h-full">
               <div
-                className="group relative h-full overflow-hidden rounded-card border border-sv-ink/[0.06] bg-gradient-to-b from-sv-cloud to-white p-6 transition-all duration-500 hover:-translate-y-1.5 hover:border-sv-blue/25 hover:shadow-card-hover"
+                className="group relative h-full overflow-hidden rounded-card border border-sv-ink/[0.06] bg-gradient-to-b from-sv-cloud to-sv-surface p-6 transition-all duration-500 hover:-translate-y-1.5 hover:border-sv-blue/25 hover:shadow-card-hover"
               >
                 <div className="mb-5 grid h-11 w-11 place-items-center rounded-module bg-sv-blue/10 text-sv-blue transition-all duration-500 group-hover:scale-110 group-hover:bg-sv-blue group-hover:text-white">
                   <s.icon className="h-5 w-5" />

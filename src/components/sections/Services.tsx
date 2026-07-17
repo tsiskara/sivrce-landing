@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Users, Building2, Paintbrush, Landmark, ArrowUpRight } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
 import { SERVICE_BRAND } from '@/lib/category-brand'
@@ -10,30 +11,34 @@ const SERVICES = [
     title: 'აგენტები და სააგენტოები',
     text: '1,800+ ვერიფიცირებული პროფესიონელი შეფასებებით — აირჩიე საუკეთესო.',
     brand: SERVICE_BRAND.agents,
+    href: '/advertise',
   },
   {
     icon: Building2,
     title: 'დეველოპერები',
     text: 'ყველა დეველოპერული კომპანია, მათი პროექტები და რეალური რეიტინგი.',
     brand: SERVICE_BRAND.developers,
+    href: '/projects',
   },
   {
     icon: Paintbrush,
     title: 'რემონტი და კალკულატორი',
     text: 'რემონტის კომპანიები შეფასებებით და ღირებულების ზუსტი კალკულატორი.',
     brand: SERVICE_BRAND.renovation,
+    href: '/contact',
   },
   {
     icon: Landmark,
     title: 'იპოთეკა და ფინანსები',
     text: 'ბანკების შეთავაზებების შედარება და წინასწარი დამტკიცება ონლაინ.',
     brand: SERVICE_BRAND.mortgage,
+    href: '/contact',
   },
 ]
 
 export default function Services() {
   return (
-    <section id="services" className="bg-white py-20 md:py-28">
+    <section id="services" className="bg-sv-surface py-20 md:py-28">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <Reveal className="mb-12 text-center">
           <h2 className="text-balance text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
@@ -47,9 +52,9 @@ export default function Services() {
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {SERVICES.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.08}>
-              <a
-                href="#"
-                className="group relative block h-full overflow-hidden rounded-card border border-sv-ink/[0.06] bg-gradient-to-b from-sv-cloud to-white p-7 transition-all duration-500 hover:-translate-y-2 hover:border-transparent hover:shadow-card-hover"
+              <Link
+                href={s.href}
+                className="group relative block h-full overflow-hidden rounded-card border border-sv-ink/[0.06] bg-gradient-to-b from-sv-cloud to-sv-surface p-7 transition-all duration-500 hover:-translate-y-2 hover:border-transparent hover:shadow-card-hover"
               >
                 <span
                   className="grid h-14 w-14 place-items-center rounded-module transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
@@ -67,7 +72,7 @@ export default function Services() {
                   className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-20"
                   style={{ backgroundColor: s.brand.hue }}
                 />
-              </a>
+              </Link>
             </Reveal>
           ))}
         </div>

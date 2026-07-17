@@ -15,9 +15,10 @@ import ListingCard, { BADGE_STYLE } from '@/components/ListingCard'
 import { Reveal } from '@/components/Reveal'
 import {
   formatUSD, formatGEL, formatViews,
-  formatFloor, USD_GEL, type Listing, type PropType,
+  formatFloor, getListing, USD_GEL, type Listing, type PropType,
 } from '@/data/listings'
 import { useFavorites } from '@/lib/favorites'
+import { pushRecent, useRecentIds } from '@/lib/recent'
 import { useI18n, type DictKey } from '@/lib/i18n/context'
 
 const ease = [0.21, 0.65, 0.2, 1] as const
@@ -148,7 +149,19 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
 
   useEffect(() => {
     window.scrollTo({ top: 0 })
+    pushRecent(l.id)
   }, [l.id])
+
+  const recentIds = useRecentIds()
+  const recent = useMemo(
+    () =>
+      recentIds
+        .filter((id) => id !== l.id)
+        .map(getListing)
+        .filter((x): x is Listing => Boolean(x))
+        .slice(0, 3),
+    [recentIds, l.id],
+  )
 
   const monthlyUSD = useMemo(() => {
     if (l.dealType !== 'sale') return 0
@@ -229,14 +242,14 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                 <button
                   onClick={() => navPhoto(-1)}
                   aria-label={t('detail.prevPhoto')}
-                  className="grid h-11 w-11 place-items-center rounded-full bg-white/90 text-sv-ink backdrop-blur transition-all hover:bg-white"
+                  className="grid h-11 w-11 place-items-center rounded-full bg-white/90 text-sv-navy backdrop-blur transition-all hover:bg-sv-surface"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => navPhoto(1)}
                   aria-label={t('detail.nextPhoto')}
-                  className="grid h-11 w-11 place-items-center rounded-full bg-white/90 text-sv-ink backdrop-blur transition-all hover:bg-white"
+                  className="grid h-11 w-11 place-items-center rounded-full bg-white/90 text-sv-navy backdrop-blur transition-all hover:bg-sv-surface"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
@@ -298,7 +311,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   className={`group grid h-11 w-11 place-items-center rounded-full border transition-all duration-300 hover:scale-105 ${
                     fav
                       ? 'border-sv-orange/30 bg-sv-orange/10 text-sv-orange'
-                      : 'border-sv-ink/10 bg-white text-sv-ink'
+                      : 'border-sv-ink/10 bg-sv-surface text-sv-ink'
                   }`}
                 >
                   <Heart
@@ -308,13 +321,23 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   />
                 </button>
                 <button
-                  onClick={() => {
-                    navigator.clipboard?.writeText(window.location.href)
+                  onClick={async () => {
+                    const url = window.location.href
+                    // Native share sheet on mobile; clipboard elsewhere
+                    if (navigator.share) {
+                      try {
+                        await navigator.share({ title: document.title, url })
+                        return
+                      } catch {
+                        return // user dismissed the sheet — nothing to do
+                      }
+                    }
+                    navigator.clipboard?.writeText(url)
                       .then(() => toast.success(t('detail.linkCopied')))
                       .catch(() => toast.error('ბმულის კოპირება ვერ მოხერხდა'))
                   }}
                   aria-label={t('detail.share')}
-                  className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-white text-sv-ink/60 transition-all duration-300 hover:scale-105 hover:text-sv-blue"
+                  className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-sv-surface text-sv-ink/60 transition-all duration-300 hover:scale-105 hover:text-sv-blue"
                 >
                   <Share2 className="h-5 w-5" />
                 </button>
@@ -322,7 +345,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             </div>
 
             {/* Price block */}
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-card border border-sv-ink/[0.06] bg-white p-6 shadow-card">
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-card border border-sv-ink/[0.06] bg-sv-surface p-6 shadow-card">
               <div>
                 <div className="text-[11px] font-black uppercase tracking-wider text-sv-ink/40">
                   {isSale ? t('detail.fullPrice') : t('detail.monthlyRent')}
@@ -363,7 +386,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             </div>
 
             {/* AI assessment */}
-            <div className="mt-6 overflow-hidden rounded-card border border-sv-blue/15 bg-gradient-to-br from-sv-blue/[0.06] via-white to-sv-violet/[0.06] p-6 shadow-card">
+            <div className="mt-6 overflow-hidden rounded-card border border-sv-blue/15 bg-gradient-to-br from-sv-blue/[0.06] via-sv-surface to-sv-violet/[0.06] p-6 shadow-card">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-sv-blue" />
                 <span className="text-[12px] font-black uppercase tracking-wider text-sv-blue">
@@ -408,7 +431,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               {specs.map((s) => (
                 <div
                   key={s.label}
-                  className="rounded-tile border border-sv-ink/[0.06] bg-white p-4 shadow-card"
+                  className="rounded-tile border border-sv-ink/[0.06] bg-sv-surface p-4 shadow-card"
                 >
                   <s.icon className="h-5 w-5 text-sv-blue" />
                   <div className="mt-2.5 text-[18px] font-black text-sv-ink">{s.value}</div>
@@ -424,7 +447,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                 {l.features.map((f) => (
                   <span
                     key={f}
-                    className="flex items-center gap-1.5 rounded-full border border-sv-ink/[0.08] bg-white px-4 py-2 text-[13px] font-bold text-sv-ink/70"
+                    className="flex items-center gap-1.5 rounded-full border border-sv-ink/[0.08] bg-sv-surface px-4 py-2 text-[13px] font-bold text-sv-ink/70"
                   >
                     <BadgeCheck className="h-3.5 w-3.5 text-sv-blue" /> {f}
                   </span>
@@ -469,7 +492,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
 
             {/* Mortgage calculator */}
             {isSale && (
-              <div className="mt-8 rounded-card border border-sv-ink/[0.06] bg-white p-6 shadow-card md:p-8">
+              <div className="mt-8 rounded-card border border-sv-ink/[0.06] bg-sv-surface p-6 shadow-card md:p-8">
                 <div className="flex items-center gap-2.5">
                   <span className="grid h-10 w-10 place-items-center rounded-control bg-sv-blue/10">
                     <Calculator className="h-5 w-5 text-sv-blue" />
@@ -517,7 +540,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                         type="number" min={0} max={30} step={0.1} value={rate}
                         onChange={(e) => setRate(Number(e.target.value))}
                         aria-label={t('detail.rateAria')}
-                        className="h-11 w-full rounded-control border border-sv-ink/10 bg-white px-3.5 pr-8 text-[14px] font-extrabold text-sv-ink outline-none transition-colors focus:border-sv-blue"
+                        className="h-11 w-full rounded-control border border-sv-ink/10 bg-sv-surface px-3.5 pr-8 text-[14px] font-extrabold text-sv-ink outline-none transition-colors focus:border-sv-blue"
                       />
                       <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[14px] font-extrabold text-sv-ink/40">%</span>
                     </div>
@@ -549,7 +572,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
 
           {/* Right: agent card (sticky) */}
           <aside className="lg:sticky lg:top-[92px] lg:self-start">
-            <div className="rounded-card border border-sv-ink/[0.06] bg-white p-6 shadow-card">
+            <div className="rounded-card border border-sv-ink/[0.06] bg-sv-surface p-6 shadow-card">
               <div className="flex items-center gap-4">
                 <div className="grid h-14 w-14 shrink-0 place-items-center rounded-module bg-gradient-to-br from-sv-blue to-sv-violet text-[18px] font-black text-white">
                   {l.agent.name.charAt(0)}
@@ -595,7 +618,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             </div>
 
             {/* Safety note */}
-            <div className="mt-4 rounded-tile border border-sv-ink/[0.06] bg-white p-5 shadow-card">
+            <div className="mt-4 rounded-tile border border-sv-ink/[0.06] bg-sv-surface p-5 shadow-card">
               <div className="text-[13px] font-black text-sv-ink">{t('detail.safetyTitle')}</div>
               <p className="mt-1.5 text-[12px] font-semibold leading-relaxed text-sv-ink/50">
                 {t('detail.safetyText')}
@@ -627,6 +650,21 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {similar.map((s, i) => (
                   <ListingCard key={s.id} l={s} i={i} layout="wide" />
+                ))}
+              </div>
+            </section>
+          </Reveal>
+        )}
+        {/* ————— Recently viewed ————— */}
+        {recent.length > 0 && (
+          <Reveal className="mt-16">
+            <section aria-label={t('recent.title')}>
+              <h2 className="mb-6 text-[24px] font-black tracking-[-0.02em] text-sv-ink md:text-[28px]">
+                {t('recent.title')}
+              </h2>
+              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                {recent.map((r, i) => (
+                  <ListingCard key={r.id} l={r} i={i} layout="wide" />
                 ))}
               </div>
             </section>

@@ -21,6 +21,9 @@
   --color-sv-navy-soft: #0a1440;
   --color-sv-ink: #0a1030;
   --color-sv-cloud: #f6f7fb;
+  /* Semantic surface — white cards in light, elevated navy in dark.
+     Flipped in .dark below. Usage: bg-sv-surface */
+  --color-sv-surface: #ffffff;
   --color-sv-success: #4ade80;
 
   /* Locked category branding (BRAND.md §3.1) — every category/service owns
@@ -155,6 +158,7 @@
   --sv-navy-soft: #0a1440;
   --sv-ink: #0a1030;
   --sv-cloud: #f6f7fb;
+  --sv-surface: #ffffff;
   --sv-success: #4ade80;
 }
 
@@ -193,6 +197,38 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ————— Dark mode — brand token flips (BRAND.md stays single source) —————
+   sv-ink → near-white foreground, sv-cloud → deepest navy page bg,
+   sv-surface → elevated navy card. Alpha utilities (bg-sv-ink/5 etc.)
+   automatically become white-alpha overlays. Navy stays fixed — hero,
+   CTA, map and footer sections are brand-dark in BOTH themes. */
+.dark {
+  color-scheme: dark;
+
+  --color-sv-ink: #e9edff;
+  --color-sv-cloud: #060b21;
+  --color-sv-surface: #0e1737;
+  --sv-ink: #e9edff;
+  --sv-cloud: #060b21;
+  --sv-surface: #0e1737;
+
+  /* Category chips: pastel fills → translucent hue tints (same hues) */
+  --color-cat-apartments-chip: color-mix(in oklab, #2e6bff 16%, transparent);
+  --color-cat-houses-chip: color-mix(in oklab, #ff6a2d 16%, transparent);
+  --color-cat-cottages-chip: color-mix(in oklab, #16a34a 18%, transparent);
+  --color-cat-land-chip: color-mix(in oklab, #d97706 18%, transparent);
+  --color-cat-commercial-chip: color-mix(in oklab, #7c3aed 18%, transparent);
+  --color-cat-daily-rent-chip: color-mix(in oklab, #e11d48 18%, transparent);
+  --color-cat-hotels-chip: color-mix(in oklab, #0891b2 18%, transparent);
+  --color-cat-new-projects-chip: color-mix(in oklab, #5b8bff 16%, transparent);
+}
+
+/* Frosted nav/menu glass: light milk → smoked navy in dark mode */
+.dark .glass-light {
+  background: rgba(8, 13, 38, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -201,12 +237,19 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
   }
   body {
     font-family: var(--font-sans);
     background: var(--sv-cloud);
     color: var(--sv-ink);
     overflow-x: hidden;
+    /* Apple-grade theme crossfade — surfaces with their own transitions
+       (cards, pills, glass) animate along via `transition-all` */
+    transition: background-color 0.35s ease, color 0.35s ease;
   }
   ::selection {
     background: rgba(46, 107, 255, 0.22);

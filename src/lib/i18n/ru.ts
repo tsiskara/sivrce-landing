@@ -20,6 +20,8 @@ export const ru: Dict = {
   'nav.menu': 'Меню',
   'nav.main': 'Основная навигация',
   'nav.language': 'Язык',
+  'nav.theme': 'Тема',
+  'nav.themeToggle': 'Переключить тему — светлую или тёмную',
 
   // ——— Search page chrome ———
   'search.title': 'Поиск',
@@ -287,4 +289,19 @@ export const ru: Dict = {
   'add.autoTitle.rooms': '{rooms}-комн. {type} · {district}',
   'add.autoTitle.simple': '{type} · {district}',
   'add.previewTitle': 'Ваше объявление',
+
+  // Error pages
+  'error.title': 'Что-то пошло не так',
+  'error.text': 'Не удалось загрузить страницу. Попробуйте ещё раз или вернитесь на главную.',
+  'error.retry': 'Попробовать снова',
+  'error.home': 'Главная страница',
+
+  // Recently viewed
+  'recent.title': 'Недавно просмотренные',
+
+  // Favorites page
+  'fav.title': 'Избранное',
+  'fav.subtitle': '{n} объявлений',
+  'fav.empty': 'Пока ничего нет — нажмите на сердце в любом объявлении, и оно появится здесь.',
+  'fav.browse': 'Смотреть объявления',
 }

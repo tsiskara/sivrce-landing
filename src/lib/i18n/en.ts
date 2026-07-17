@@ -20,6 +20,8 @@ export const en: Dict = {
   'nav.menu': 'Menu',
   'nav.main': 'Main navigation',
   'nav.language': 'Language',
+  'nav.theme': 'Theme',
+  'nav.themeToggle': 'Toggle theme — light or dark',
 
   // ——— Search page chrome ———
   'search.title': 'Search',
@@ -287,4 +289,19 @@ export const en: Dict = {
   'add.autoTitle.rooms': '{rooms}-room {type} · {district}',
   'add.autoTitle.simple': '{type} · {district}',
   'add.previewTitle': 'Your listing',
+
+  // Error pages
+  'error.title': 'Something went wrong',
+  'error.text': 'The page failed to load. Try again or go back to the homepage.',
+  'error.retry': 'Try again',
+  'error.home': 'Homepage',
+
+  // Recently viewed
+  'recent.title': 'Recently viewed',
+
+  // Favorites page
+  'fav.title': 'Saved listings',
+  'fav.subtitle': '{n} listings',
+  'fav.empty': 'Nothing saved yet — tap the heart on any listing and it will appear here.',
+  'fav.browse': 'Browse listings',
 }

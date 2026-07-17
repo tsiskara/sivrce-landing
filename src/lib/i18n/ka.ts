@@ -19,6 +19,8 @@ export const ka = {
   'nav.menu': 'მენიუ',
   'nav.main': 'მთავარი ნავიგაცია',
   'nav.language': 'ენა',
+  'nav.theme': 'თემა',
+  'nav.themeToggle': 'თემის გადართვა — ნათელი ან მუქი',
 
   // ——— Search page chrome ———
   'search.title': 'ძიება',
@@ -286,6 +288,21 @@ export const ka = {
   'add.autoTitle.rooms': '{rooms}-ოთახიანი {type} · {district}',
   'add.autoTitle.simple': '{type} · {district}',
   'add.previewTitle': 'შენი განცხადება',
+
+  // Error pages
+  'error.title': 'რაღაც შეცდომა მოხდა',
+  'error.text': 'გვერდის ჩატვირთვა ვერ მოხერხდა. სცადე თავიდან ან დაბრუნდი მთავარ გვერდზე.',
+  'error.retry': 'თავიდან ცდა',
+  'error.home': 'მთავარი გვერდი',
+
+  // Recently viewed
+  'recent.title': 'ბოლოს ნანახი',
+
+  // Favorites page
+  'fav.title': 'შენახული განცხადებები',
+  'fav.subtitle': '{n} განცხადება',
+  'fav.empty': 'ჯერ არაფერი გაქვს შენახული — დააჭირე გულს ნებისმიერ განცხადებაზე და ის აქ გამოჩნდება.',
+  'fav.browse': 'განცხადებების ნახვა',
 } as const
 
 export type DictKey = keyof typeof ka

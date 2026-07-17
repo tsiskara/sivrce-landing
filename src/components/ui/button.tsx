@@ -12,7 +12,7 @@ const buttonVariants = cva(
         action:
           "bg-sv-orange text-white shadow-glow-orange hover:-translate-y-0.5 hover:shadow-glow-orange-lg active:scale-[0.98]",
         outline:
-          "border border-sv-ink/10 bg-white text-sv-ink hover:border-sv-blue/50 hover:text-sv-blue",
+          "border border-sv-ink/10 bg-sv-surface text-sv-ink hover:border-sv-blue/50 hover:text-sv-blue",
         ghost: "text-sv-ink hover:bg-sv-ink/5",
         link: "text-sv-blue underline-offset-4 hover:text-sv-blue-deep hover:underline",
       },

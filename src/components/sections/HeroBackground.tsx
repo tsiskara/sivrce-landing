@@ -158,7 +158,7 @@ export default function HeroBackground() {
 
       {/* Vignette + transition into next section */}
       <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_40%,transparent_55%,color-mix(in_srgb,var(--sv-navy)_55%,transparent))]" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-sv-navy/60 to-white" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-sv-navy/60 to-sv-surface" />
     </div>
   )
 }

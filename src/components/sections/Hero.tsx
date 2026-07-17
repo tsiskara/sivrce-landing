@@ -97,7 +97,7 @@ export default function Hero() {
                 onClick={() => setTab(i)}
                 aria-pressed={tab === i}
                 className={`relative rounded-module px-4 py-2.5 text-[13px] font-extrabold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue-light focus-visible:ring-offset-2 focus-visible:ring-offset-sv-navy md:px-5 md:text-[14px] ${
-                  tab === i ? 'text-sv-ink' : 'text-white/75 hover:text-white'
+                  tab === i ? 'text-sv-navy' : 'text-white/75 hover:text-white'
                 }`}
               >
                 {tab === i && (

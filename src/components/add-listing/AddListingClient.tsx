@@ -190,7 +190,7 @@ export default function AddListingClient() {
 
   /* ————— shared field styles ————— */
   const input =
-    'w-full rounded-control border border-sv-ink/[0.08] bg-white px-4 py-3.5 text-[15px] font-semibold text-sv-ink placeholder:text-sv-ink/35 outline-none transition-all focus:border-sv-blue focus:ring-4 focus:ring-sv-blue/10'
+    'w-full rounded-control border border-sv-ink/[0.08] bg-sv-surface px-4 py-3.5 text-[15px] font-semibold text-sv-ink placeholder:text-sv-ink/35 outline-none transition-all focus:border-sv-blue focus:ring-4 focus:ring-sv-blue/10'
   const label = 'mb-2 block text-[13px] font-extrabold text-sv-ink/70'
   const err = (bad: boolean) => (touched && bad ? 'border-sv-orange ring-4 ring-sv-orange/10' : '')
 
@@ -231,7 +231,7 @@ export default function AddListingClient() {
             </Link>
             <button
               onClick={() => { setPublished(false); setStep(0); setPhotos([]); setPrice(''); setDescription(''); setTouched(false) }}
-              className="flex items-center gap-2 rounded-full border border-sv-ink/10 bg-white px-8 py-4 text-[15px] font-extrabold text-sv-ink transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card"
+              className="flex items-center gap-2 rounded-full border border-sv-ink/10 bg-sv-surface px-8 py-4 text-[15px] font-extrabold text-sv-ink transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card"
             >
               <Plus className="h-4 w-4" /> {t('add.successNew')}
             </button>
@@ -269,7 +269,7 @@ export default function AddListingClient() {
                       ? 'bg-sv-blue text-white'
                       : i === step
                         ? 'bg-sv-orange text-white shadow-glow-orange'
-                        : 'border border-sv-ink/10 bg-white text-sv-ink/40'
+                        : 'border border-sv-ink/10 bg-sv-surface text-sv-ink/40'
                   }`}
                 >
                   {i < step ? <Check className="h-4 w-4" /> : i + 1}
@@ -294,7 +294,7 @@ export default function AddListingClient() {
 
         <div className="grid items-start gap-8 lg:grid-cols-[1fr_400px]">
           {/* ————— wizard card ————— */}
-          <div className="rounded-card border border-sv-ink/[0.06] bg-white p-6 shadow-card md:p-10">
+          <div className="rounded-card border border-sv-ink/[0.06] bg-sv-surface p-6 shadow-card md:p-10">
             <AnimatePresence mode="wait">
               <motion.div
                 key={step}
@@ -315,7 +315,7 @@ export default function AddListingClient() {
                             key={d.key}
                             onClick={() => setDeal(d.key)}
                             className={`flex flex-col items-center gap-2.5 rounded-tile border p-5 transition-all duration-300 hover:-translate-y-0.5 ${
-                              active ? 'border-transparent shadow-card' : 'border-sv-ink/[0.08] bg-white hover:shadow-card'
+                              active ? 'border-transparent shadow-card' : 'border-sv-ink/[0.08] bg-sv-surface hover:shadow-card'
                             }`}
                             style={active ? { backgroundColor: `${d.hue}0D`, boxShadow: `0 0 0 2px ${d.hue}` } : undefined}
                           >
@@ -340,7 +340,7 @@ export default function AddListingClient() {
                             key={p.key}
                             onClick={() => setPropType(p.key)}
                             className={`flex flex-col items-center gap-2.5 rounded-tile border p-5 transition-all duration-300 hover:-translate-y-0.5 ${
-                              active ? 'border-transparent' : 'border-sv-ink/[0.08] bg-white hover:shadow-card'
+                              active ? 'border-transparent' : 'border-sv-ink/[0.08] bg-sv-surface hover:shadow-card'
                             }`}
                             style={active ? { backgroundColor: p.brand.chip, boxShadow: `0 0 0 2px ${p.brand.hue}` } : undefined}
                           >
@@ -369,7 +369,7 @@ export default function AddListingClient() {
                             key={c}
                             onClick={() => { setCity(c); setDistrict('') }}
                             className={`rounded-full px-4 py-2.5 text-[13px] font-extrabold transition-all duration-300 ${
-                              city === c ? 'bg-sv-blue text-white shadow-glow-blue-sm' : 'border border-sv-ink/[0.08] bg-white text-sv-ink/60 hover:border-sv-blue/40 hover:text-sv-blue'
+                              city === c ? 'bg-sv-blue text-white shadow-glow-blue-sm' : 'border border-sv-ink/[0.08] bg-sv-surface text-sv-ink/60 hover:border-sv-blue/40 hover:text-sv-blue'
                             }`}
                           >
                             {c}
@@ -439,7 +439,7 @@ export default function AddListingClient() {
                         <label className={label}>{t('spec.rooms')}</label>
                         <div className="flex items-center gap-2">
                           <button onClick={() => setRooms(Math.max(0, rooms - 1))} className="grid h-[52px] w-[52px] shrink-0 place-items-center rounded-control border border-sv-ink/[0.08] text-[20px] font-black text-sv-ink/50 transition-colors hover:border-sv-blue hover:text-sv-blue">−</button>
-                          <div className="grid h-[52px] flex-1 place-items-center rounded-control border border-sv-ink/[0.08] bg-white text-[17px] font-black text-sv-ink">
+                          <div className="grid h-[52px] flex-1 place-items-center rounded-control border border-sv-ink/[0.08] bg-sv-surface text-[17px] font-black text-sv-ink">
                             <span className="flex items-center gap-2"><BedDouble className="h-4 w-4 text-sv-ink/35" />{rooms}</span>
                           </div>
                           <button onClick={() => setRooms(Math.min(12, rooms + 1))} className="grid h-[52px] w-[52px] shrink-0 place-items-center rounded-control border border-sv-ink/[0.08] text-[20px] font-black text-sv-ink/50 transition-colors hover:border-sv-blue hover:text-sv-blue">+</button>
@@ -449,7 +449,7 @@ export default function AddListingClient() {
                         <label className={label}>{t('spec.baths')}</label>
                         <div className="flex items-center gap-2">
                           <button onClick={() => setBaths(Math.max(1, baths - 1))} className="grid h-[52px] w-[52px] shrink-0 place-items-center rounded-control border border-sv-ink/[0.08] text-[20px] font-black text-sv-ink/50 transition-colors hover:border-sv-blue hover:text-sv-blue">−</button>
-                          <div className="grid h-[52px] flex-1 place-items-center rounded-control border border-sv-ink/[0.08] bg-white text-[17px] font-black text-sv-ink">
+                          <div className="grid h-[52px] flex-1 place-items-center rounded-control border border-sv-ink/[0.08] bg-sv-surface text-[17px] font-black text-sv-ink">
                             <span className="flex items-center gap-2"><Bath className="h-4 w-4 text-sv-ink/35" />{baths}</span>
                           </div>
                           <button onClick={() => setBaths(Math.min(6, baths + 1))} className="grid h-[52px] w-[52px] shrink-0 place-items-center rounded-control border border-sv-ink/[0.08] text-[20px] font-black text-sv-ink/50 transition-colors hover:border-sv-blue hover:text-sv-blue">+</button>
@@ -479,7 +479,7 @@ export default function AddListingClient() {
                             key={c}
                             onClick={() => setCondition(c)}
                             className={`rounded-full px-4 py-2.5 text-[13px] font-extrabold transition-all duration-300 ${
-                              condition === c ? 'bg-sv-ink text-white' : 'border border-sv-ink/[0.08] bg-white text-sv-ink/60 hover:border-sv-ink/30'
+                              condition === c ? 'bg-sv-ink text-sv-cloud' : 'border border-sv-ink/[0.08] bg-sv-surface text-sv-ink/60 hover:border-sv-ink/30'
                             }`}
                           >
                             {t(c)}
@@ -496,7 +496,7 @@ export default function AddListingClient() {
                             key={s}
                             onClick={() => setStatus(s)}
                             className={`rounded-full px-4 py-2.5 text-[13px] font-extrabold transition-all duration-300 ${
-                              status === s ? 'bg-sv-ink text-white' : 'border border-sv-ink/[0.08] bg-white text-sv-ink/60 hover:border-sv-ink/30'
+                              status === s ? 'bg-sv-ink text-sv-cloud' : 'border border-sv-ink/[0.08] bg-sv-surface text-sv-ink/60 hover:border-sv-ink/30'
                             }`}
                           >
                             {t(s)}
@@ -515,7 +515,7 @@ export default function AddListingClient() {
                               key={f}
                               onClick={() => setFeatures(on ? features.filter((x) => x !== f) : [...features, f])}
                               className={`flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[13px] font-extrabold transition-all duration-300 ${
-                                on ? 'bg-sv-blue text-white shadow-glow-blue-sm' : 'border border-sv-ink/[0.08] bg-white text-sv-ink/60 hover:border-sv-blue/40 hover:text-sv-blue'
+                                on ? 'bg-sv-blue text-white shadow-glow-blue-sm' : 'border border-sv-ink/[0.08] bg-sv-surface text-sv-ink/60 hover:border-sv-blue/40 hover:text-sv-blue'
                               }`}
                             >
                               {on && <Check className="h-3.5 w-3.5" />}
@@ -619,7 +619,7 @@ export default function AddListingClient() {
                         <button
                           onClick={() => setNegotiable(!negotiable)}
                           className={`flex items-center gap-2.5 rounded-control border px-4 py-3.5 text-[14px] font-extrabold transition-all duration-300 ${
-                            negotiable ? 'border-transparent bg-sv-blue text-white shadow-glow-blue-sm' : 'border-sv-ink/[0.08] bg-white text-sv-ink/60 hover:border-sv-blue/40'
+                            negotiable ? 'border-transparent bg-sv-blue text-white shadow-glow-blue-sm' : 'border-sv-ink/[0.08] bg-sv-surface text-sv-ink/60 hover:border-sv-blue/40'
                           }`}
                         >
                           <span className={`grid h-5 w-5 place-items-center rounded-md border ${negotiable ? 'border-white bg-white/20' : 'border-sv-ink/20'}`}>
@@ -727,7 +727,7 @@ export default function AddListingClient() {
                               key={m}
                               onClick={() => setMessengers(on ? messengers.filter((x) => x !== m) : [...messengers, m])}
                               className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-extrabold transition-all duration-300 ${
-                                on ? 'bg-sv-blue text-white shadow-glow-blue-sm' : 'border border-sv-ink/[0.08] bg-white text-sv-ink/60 hover:border-sv-blue/40 hover:text-sv-blue'
+                                on ? 'bg-sv-blue text-white shadow-glow-blue-sm' : 'border border-sv-ink/[0.08] bg-sv-surface text-sv-ink/60 hover:border-sv-blue/40 hover:text-sv-blue'
                               }`}
                             >
                               <MessageCircle className="h-3.5 w-3.5" /> {m}
@@ -741,7 +741,7 @@ export default function AddListingClient() {
                       onClick={() => setTerms(!terms)}
                       className="flex items-start gap-3 rounded-module border border-sv-ink/[0.08] bg-sv-cloud/60 p-4 text-left transition-colors hover:border-sv-blue/30"
                     >
-                      <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border transition-all ${terms ? 'border-sv-blue bg-sv-blue text-white' : 'border-sv-ink/25 bg-white'} ${touched && !terms ? 'border-sv-orange ring-4 ring-sv-orange/10' : ''}`}>
+                      <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border transition-all ${terms ? 'border-sv-blue bg-sv-blue text-white' : 'border-sv-ink/25 bg-sv-surface'} ${touched && !terms ? 'border-sv-orange ring-4 ring-sv-orange/10' : ''}`}>
                         {terms && <Check className="h-3.5 w-3.5" />}
                       </span>
                       <span className="text-[13px] font-semibold leading-relaxed text-sv-ink/60">{t('add.terms')}</span>
@@ -754,7 +754,7 @@ export default function AddListingClient() {
             {/* footer nav */}
             <div className="mt-10 flex items-center justify-between border-t border-sv-ink/[0.06] pt-6">
               {step > 0 ? (
-                <button onClick={() => go(-1)} className="flex items-center gap-2 rounded-full border border-sv-ink/10 bg-white px-6 py-3.5 text-[14px] font-extrabold text-sv-ink transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card">
+                <button onClick={() => go(-1)} className="flex items-center gap-2 rounded-full border border-sv-ink/10 bg-sv-surface px-6 py-3.5 text-[14px] font-extrabold text-sv-ink transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card">
                   <ChevronLeft className="h-4 w-4" /> {t('add.back')}
                 </button>
               ) : (
@@ -798,7 +798,7 @@ export default function AddListingClient() {
             </div>
 
             {/* strength meter */}
-            <div className="mt-5 rounded-tile border border-sv-ink/[0.06] bg-white p-5 shadow-card">
+            <div className="mt-5 rounded-tile border border-sv-ink/[0.06] bg-sv-surface p-5 shadow-card">
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-black text-sv-ink">{t('add.strength')}</span>
                 <span className="text-[13px] font-black" style={{ color: strengthColor }}>{strength}%</span>

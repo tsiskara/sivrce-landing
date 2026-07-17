@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Mail, Phone, MapPin } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import { useI18n, type DictKey } from '@/lib/i18n/context'
@@ -39,18 +40,39 @@ function LinkedinIcon({ className }: { className?: string }) {
   )
 }
 
-const COLS: { titleKey: DictKey; linkKeys: DictKey[] }[] = [
+const COLS: { titleKey: DictKey; links: { key: DictKey; href: string }[] }[] = [
   {
     titleKey: 'footer.colRealEstate',
-    linkKeys: ['footer.re.apartments', 'footer.re.houses', 'footer.re.rent', 'footer.re.daily', 'footer.re.land', 'footer.re.commercial'],
+    links: [
+      { key: 'footer.re.apartments', href: '/sale/apartments' },
+      { key: 'footer.re.houses', href: '/sale/houses' },
+      { key: 'footer.re.rent', href: '/rent/apartments' },
+      { key: 'footer.re.daily', href: '/rent' },
+      { key: 'footer.re.land', href: '/sale/land' },
+      { key: 'footer.re.commercial', href: '/sale/commercial' },
+    ],
   },
   {
     titleKey: 'footer.colServices',
-    linkKeys: ['footer.sv.projects', 'footer.sv.agents', 'footer.sv.developers', 'footer.sv.renovation', 'footer.sv.mortgage', 'footer.sv.ai'],
+    links: [
+      { key: 'footer.sv.projects', href: '/projects' },
+      { key: 'footer.sv.agents', href: '/advertise' },
+      { key: 'footer.sv.developers', href: '/advertise' },
+      { key: 'footer.sv.renovation', href: '/contact' },
+      { key: 'footer.sv.mortgage', href: '/contact' },
+      { key: 'footer.sv.ai', href: '/#ai' },
+    ],
   },
   {
     titleKey: 'footer.colCompany',
-    linkKeys: ['footer.co.about', 'footer.co.careers', 'footer.co.blog', 'footer.co.partnership', 'footer.co.ads', 'footer.co.contact'],
+    links: [
+      { key: 'footer.co.about', href: '/about' },
+      { key: 'footer.co.careers', href: '/contact' },
+      { key: 'footer.co.blog', href: '/faq' },
+      { key: 'footer.co.partnership', href: '/contact' },
+      { key: 'footer.co.ads', href: '/advertise' },
+      { key: 'footer.co.contact', href: '/contact' },
+    ],
   },
 ]
 
@@ -104,14 +126,14 @@ export default function Footer() {
             <div key={c.titleKey}>
               <h4 className="text-[13px] font-black uppercase tracking-wider text-white/60">{t(c.titleKey)}</h4>
               <ul className="mt-5 space-y-3">
-                {c.linkKeys.map((key) => (
-                  <li key={key}>
-                    <a
-                      href="#"
+                {c.links.map((l) => (
+                  <li key={l.key}>
+                    <Link
+                      href={l.href}
                       className="text-[14px] font-semibold text-white/65 transition-colors hover:text-white"
                     >
-                      {t(key)}
-                    </a>
+                      {t(l.key)}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -124,9 +146,9 @@ export default function Footer() {
             {t('footer.rights')}
           </p>
           <div className="flex gap-6 text-[13px] font-semibold text-white/60">
-            <a href="#" className="transition-colors hover:text-white">{t('footer.terms')}</a>
-            <a href="#" className="transition-colors hover:text-white">{t('footer.privacy')}</a>
-            <a href="#" className="transition-colors hover:text-white">{t('footer.cookies')}</a>
+            <Link href="/terms" className="transition-colors hover:text-white">{t('footer.terms')}</Link>
+            <Link href="/privacy" className="transition-colors hover:text-white">{t('footer.privacy')}</Link>
+            <Link href="/privacy#cookies" className="transition-colors hover:text-white">{t('footer.cookies')}</Link>
           </div>
         </div>
       </div>

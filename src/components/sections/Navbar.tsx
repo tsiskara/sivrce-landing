@@ -6,15 +6,17 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { ChevronDown, Heart, Menu, X, Plus, User } from 'lucide-react'
 import { Logo } from '@/components/Logo'
+import { LangSwitcher } from '@/components/LangSwitcher'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { useFavorites } from '@/lib/favorites'
-import { useI18n, LANGS } from '@/lib/i18n/context'
+import { useI18n } from '@/lib/i18n/context'
 import type { DictKey } from '@/lib/i18n/context'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { count } = useFavorites()
-  const { lang, setLang, t } = useI18n()
+  const { t } = useI18n()
   const pathname = usePathname()
   const reduceMotion = useReducedMotion()
 
@@ -37,37 +39,12 @@ export default function Navbar() {
   }, [])
 
   const NAV_LINKS: { key: DictKey; to: string }[] = [
-    { key: 'nav.buy', to: '/search?deal=sale' },
-    { key: 'nav.rent', to: '/search?deal=rent' },
+    { key: 'nav.buy', to: '/sale' },
+    { key: 'nav.rent', to: '/rent' },
     { key: 'nav.search', to: '/search' },
-    { key: 'nav.projects', to: `${pathname === '/' ? '' : '/'}#projects` },
+    { key: 'nav.projects', to: '/projects' },
     { key: 'nav.services', to: `${pathname === '/' ? '' : '/'}#services` },
   ]
-
-  const langPills = (pillLight: boolean) => (
-    <div
-      role="group"
-      aria-label={t('nav.language')}
-      className={`flex items-center rounded-full p-1 ${pillLight ? 'bg-sv-ink/[0.05]' : 'bg-white/10'}`}
-    >
-      {LANGS.map((code) => (
-        <button
-          key={code}
-          onClick={() => setLang(code)}
-          aria-pressed={lang === code}
-          className={`rounded-full px-3.5 py-2.5 text-[12px] font-extrabold uppercase leading-none transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
-            lang === code
-              ? 'bg-sv-blue text-white shadow-glow-blue-sm'
-              : pillLight
-                ? 'text-sv-ink/55 hover:text-sv-ink'
-                : 'text-white/70 hover:text-white'
-          }`}
-        >
-          {code}
-        </button>
-      ))}
-    </div>
-  )
 
   return (
     <motion.header
@@ -127,7 +104,7 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-2 md:flex">
           <Link
-            href="/search"
+            href="/favorites"
             aria-label={`${t('nav.favorites')}${count > 0 ? ` — ${count}` : ''}`}
             className={`relative grid h-10 w-10 place-items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
               light ? 'text-sv-ink/70 hover:bg-sv-ink/5' : 'text-white/85 hover:bg-white/10'
@@ -140,7 +117,8 @@ export default function Navbar() {
               </span>
             )}
           </Link>
-          {langPills(light)}
+          <ThemeToggle light={light} />
+          <LangSwitcher light={light} />
           <button
             className={`flex h-10 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
               light ? 'text-sv-ink hover:bg-sv-ink/5' : 'text-white hover:bg-white/10'
@@ -205,7 +183,13 @@ export default function Navbar() {
               <span className="text-[12px] font-extrabold uppercase tracking-wide text-sv-ink/45">
                 {t('nav.language')}
               </span>
-              {langPills(true)}
+              <LangSwitcher light />
+            </div>
+            <div className="mt-2 flex items-center justify-between rounded-control bg-sv-ink/[0.04] px-4 py-3">
+              <span className="text-[12px] font-extrabold uppercase tracking-wide text-sv-ink/45">
+                {t('nav.theme')}
+              </span>
+              <ThemeToggle light />
             </div>
             <Link
               href="/add-listing"
