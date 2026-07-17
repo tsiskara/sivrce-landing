@@ -11,12 +11,14 @@ import { useAccountStrings, type AccountStringKey } from './i18n'
 
 interface MyReview {
   id: string
-  targetType: string
-  targetId: string
   rating: number
   title?: string
   body: string
   createdAt: string
+  // ponytail: the landed /api/reviews toDto omits targetType/targetId — the
+  // target column renders only when the API starts sending them.
+  targetType?: string
+  targetId?: string
 }
 
 type State =
@@ -30,11 +32,11 @@ function isMyReview(x: unknown): x is MyReview {
   const r = x as Record<string, unknown>
   return (
     typeof r.id === 'string' &&
-    typeof r.targetType === 'string' &&
-    typeof r.targetId === 'string' &&
     typeof r.rating === 'number' &&
     typeof r.body === 'string' &&
-    typeof r.createdAt === 'string'
+    typeof r.createdAt === 'string' &&
+    (r.targetType === undefined || typeof r.targetType === 'string') &&
+    (r.targetId === undefined || typeof r.targetId === 'string')
   )
 }
 
@@ -66,15 +68,13 @@ export default function MyReviews({ signedIn }: { signedIn: boolean }) {
   const tt = useAccountStrings()
   const { lang } = useI18n()
   const [attempt, setAttempt] = useState(0)
+  // ponytail: signedIn comes from the server render and is stable for the
+  // page's lifetime, so the anon branch never needs a runtime reset.
   const [state, setState] = useState<State>(signedIn ? { status: 'loading' } : { status: 'anon' })
 
   useEffect(() => {
-    if (!signedIn) {
-      setState({ status: 'anon' })
-      return
-    }
+    if (!signedIn) return
     let cancelled = false
-    setState({ status: 'loading' })
     fetch('/api/reviews?mine=1', { credentials: 'same-origin' })
       .then(async (res): Promise<State> => {
         if (res.status === 401) return { status: 'anon' }
@@ -126,7 +126,10 @@ export default function MyReviews({ signedIn }: { signedIn: boolean }) {
         <div className="flex flex-wrap items-center gap-4">
           <p className="text-[14px] font-semibold text-sv-ink/50">{tt('reviewsError')}</p>
           <button
-            onClick={() => setAttempt((a) => a + 1)}
+            onClick={() => {
+              setState({ status: 'loading' })
+              setAttempt((a) => a + 1)
+            }}
             className="flex h-11 items-center rounded-full border border-sv-ink/10 px-5 text-[13px] font-extrabold text-sv-ink transition-colors hover:border-sv-blue/50 hover:text-sv-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue/30"
           >
             {tt('retry')}
@@ -140,23 +143,25 @@ export default function MyReviews({ signedIn }: { signedIn: boolean }) {
         ) : (
           <ul className="divide-y divide-sv-ink/[0.06]">
             {state.reviews.map((r) => {
-              const listing = r.targetType === 'listing' ? getListing(r.targetId) : undefined
-              const targetLabel = listing?.title ?? tt(TARGET_KEYS[r.targetType] ?? 'targetListing')
-              const target =
-                r.targetType === 'listing' ? (
-                  <Link
-                    href={`/listing/${r.targetId}`}
-                    className="rounded-sm font-extrabold text-sv-blue hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue/30"
-                  >
-                    {targetLabel}
-                  </Link>
-                ) : (
-                  <span className="font-extrabold text-sv-ink">{targetLabel}</span>
-                )
+              // Target column only when the API sends targetType/targetId
+              const hasTarget = typeof r.targetType === 'string' && typeof r.targetId === 'string'
+              const listing = hasTarget && r.targetType === 'listing' ? getListing(r.targetId ?? '') : undefined
+              const targetLabel = listing?.title ?? (hasTarget ? tt(TARGET_KEYS[r.targetType ?? ''] ?? 'targetListing') : null)
               return (
                 <li key={r.id} className="py-3 first:pt-0 last:pb-0">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]">
-                    {target}
+                    {hasTarget && targetLabel ? (
+                      r.targetType === 'listing' ? (
+                        <Link
+                          href={`/listing/${r.targetId ?? ''}`}
+                          className="rounded-sm font-extrabold text-sv-blue hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue/30"
+                        >
+                          {targetLabel}
+                        </Link>
+                      ) : (
+                        <span className="font-extrabold text-sv-ink">{targetLabel}</span>
+                      )
+                    ) : null}
                     <Stars rating={r.rating} />
                     <time className="ml-auto text-[12px] font-semibold text-sv-ink/40" dateTime={r.createdAt}>
                       {new Date(r.createdAt).toLocaleDateString(lang)}

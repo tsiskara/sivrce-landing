@@ -29,7 +29,6 @@ export function StickyLeadBar({ targetType, targetId, phone, recipientName, clas
   const s = leadStrings(lang)
   const [open, setOpen] = useState(false)
   const panelRef = useRef<HTMLDivElement>(null)
-  const messageBtnRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     if (!open) return
@@ -44,7 +43,8 @@ export function StickyLeadBar({ targetType, targetId, phone, recipientName, clas
     return () => {
       window.removeEventListener('keydown', onKey)
       window.clearTimeout(timer)
-      messageBtnRef.current?.focus()
+      // Button remounts when the sheet closes; look it up fresh after paint.
+      requestAnimationFrame(() => document.getElementById('sticky-lead-message')?.focus())
     }
   }, [open])
 
@@ -79,7 +79,7 @@ export function StickyLeadBar({ targetType, targetId, phone, recipientName, clas
               {s.call}
             </a>
             <button
-              ref={messageBtnRef}
+              id="sticky-lead-message"
               type="button"
               onClick={onMessage}
               className="flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-full bg-sv-orange text-[15px] font-extrabold text-white shadow-glow-orange transition-all hover:shadow-glow-orange-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sv-orange active:scale-[0.98]"

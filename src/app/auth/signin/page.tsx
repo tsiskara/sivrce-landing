@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { redirect } from "next/navigation"
 
 import { signIn } from "@/auth"
@@ -91,13 +92,13 @@ export default async function SignInPage({
 
         <p className="mt-6 text-center text-[11.5px] font-medium leading-relaxed text-sv-ink/40">
           შესვლით ეთანხმები sivrce-ის{" "}
-          <a href="/terms" className="underline hover:text-sv-blue">
+          <Link href="/terms" className="underline hover:text-sv-blue">
             პირობებს
-          </a>{" "}
+          </Link>{" "}
           და{" "}
-          <a href="/privacy" className="underline hover:text-sv-blue">
+          <Link href="/privacy" className="underline hover:text-sv-blue">
             კონფიდენციალურობას
-          </a>
+          </Link>
           .
         </p>
       </div>
