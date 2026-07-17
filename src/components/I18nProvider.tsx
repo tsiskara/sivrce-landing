@@ -19,6 +19,7 @@ import { useCallback, useEffect, useMemo, useSyncExternalStore, type ReactNode }
 import { MotionConfig } from 'framer-motion'
 import {
   I18nContext,
+  RTL_LANGS,
   emitLangChange,
   getServerLang,
   persistLang,
@@ -42,6 +43,7 @@ export default function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = lang
+    document.documentElement.dir = RTL_LANGS.has(lang) ? 'rtl' : 'ltr'
   }, [lang])
 
   const value = useMemo<I18nContextValue>(

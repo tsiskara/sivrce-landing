@@ -10,6 +10,7 @@ import {
 import Navbar from '@/components/sections/Navbar'
 import Footer from '@/components/sections/Footer'
 import ListingCard from '@/components/ListingCard'
+import SaveSearchControl from '@/components/search/SaveSearchControl'
 import { useI18n, type DictKey } from '@/lib/i18n/context'
 import { CATEGORY_BRAND } from '@/lib/category-brand'
 import {
@@ -413,6 +414,7 @@ export default function SearchClient() {
               </motion.button>
             ))}
           </AnimatePresence>
+          <SaveSearchControl />
         </div>
 
         {loading ? (

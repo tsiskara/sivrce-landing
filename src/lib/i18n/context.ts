@@ -10,15 +10,24 @@ import { createContext, useContext } from 'react'
 import { ka, type DictKey } from './ka'
 import { en } from './en'
 import { ru } from './ru'
+import { he } from './he'
+import { ar } from './ar'
+import { tr } from './tr'
+import { uk } from './uk'
+import { hy } from './hy'
+import { az } from './az'
 
 export type { DictKey }
-export type Lang = 'ka' | 'en' | 'ru'
+export type Lang = 'ka' | 'en' | 'ru' | 'he' | 'ar' | 'tr' | 'uk' | 'hy' | 'az'
 
-export const LANGS: readonly Lang[] = ['ka', 'en', 'ru']
+export const LANGS: readonly Lang[] = ['ka', 'en', 'ru', 'he', 'ar', 'tr', 'uk', 'hy', 'az']
+
+/** Right-to-left languages — I18nProvider syncs <html dir> from this. */
+export const RTL_LANGS: ReadonlySet<Lang> = new Set(['he', 'ar'])
 const STORAGE_KEY = 'sivrce:lang'
 const LANG_EVENT = 'sivrce:lang-changed'
 
-const DICTS: Record<Lang, Record<DictKey, string>> = { ka, en, ru }
+const DICTS: Record<Lang, Record<DictKey, string>> = { ka, en, ru, he, ar, tr, uk, hy, az }
 
 export interface I18nContextValue {
   lang: Lang

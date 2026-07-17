@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { LISTINGS, getListing, similarListings, formatUSD } from '@/data/listings'
+import { LISTINGS, getListing, formatUSD } from '@/data/listings'
+import { getReviewAggregate } from '@/lib/reviews/aggregate'
 import { jsonLd } from '@/lib/utils'
 import ListingDetailClient from '@/components/listing/ListingDetailClient'
 
@@ -56,7 +57,18 @@ export default async function ListingPage({ params }: PageProps) {
   const listing = getListing(id)
   if (!listing) notFound()
 
-  const similar = similarListings(listing, 3)
+  // Deterministic: same dealType + city, exclude self, cap 8 (source order)
+  const similar = LISTINGS.filter(
+    (x) => x.id !== listing.id && x.dealType === listing.dealType && x.city === listing.city,
+  ).slice(0, 8)
+
+  // Reviews aggregate for rich results — a DB outage must never break the page
+  let aggregate: { average: number; count: number } | null = null
+  try {
+    aggregate = await getReviewAggregate('listing', listing.id)
+  } catch {
+    aggregate = null
+  }
 
   // Offer validity: 30 days after posting (matches the 30-day listing lifetime)
   const priceValidUntil = new Date(
@@ -114,6 +126,17 @@ export default async function ListingPage({ params }: PageProps) {
       unitCode: 'MTK',
     },
     ...(listing.rooms > 0 && { numberOfRooms: listing.rooms }),
+    // ponytail: no `review` node — the aggregate contract exposes only
+    // {average,count}; synthesizing review bodies would fabricate content.
+    ...(aggregate && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: aggregate.average,
+        reviewCount: aggregate.count,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }),
   }
 
   const breadcrumbLd = {

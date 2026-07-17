@@ -14,6 +14,9 @@ import Navbar from '@/components/sections/Navbar'
 import Footer from '@/components/sections/Footer'
 import ListingCard, { BADGE_STYLE } from '@/components/ListingCard'
 import { Reveal } from '@/components/Reveal'
+import { ReviewsSection } from '@/components/reviews/ReviewsSection'
+import { LeadForm } from '@/components/lead/LeadForm'
+import { lt } from './i18n'
 import {
   formatUSD, formatGEL, formatViews,
   formatFloor, getListing, USD_GEL, type Listing, type PropType,
@@ -130,7 +133,7 @@ function Lightbox({
 /* ————— Page ————— */
 export default function ListingDetailClient({ listing: l, similar }: { listing: Listing; similar: Listing[] }) {
   const { has, toggle } = useFavorites()
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const [photo, setPhoto] = useState(0)
   const [lightbox, setLightbox] = useState(false)
   const [currency, setCurrency] = useState<'USD' | 'GEL'>('USD')
@@ -186,11 +189,31 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
   const navPhoto = (dir: number) =>
     setPhoto((p) => (p + dir + l.images.length) % l.images.length)
 
+  // "Message" CTAs jump to the lead form in the sidebar
+  const scrollToLead = () =>
+    document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+  // Native share sheet where available; clipboard copy elsewhere
+  const share = async () => {
+    const url = window.location.href
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: document.title, url })
+      } catch {
+        /* user dismissed the sheet — nothing to do */
+      }
+      return
+    }
+    navigator.clipboard?.writeText(url)
+      .then(() => toast.success(t('detail.linkCopied')))
+      .catch(() => toast.error('ბმულის კოპირება ვერ მოხერხდა'))
+  }
+
   return (
     <div className="font-geo min-h-screen bg-sv-cloud antialiased">
       <Navbar />
 
-      <main id="main" className="mx-auto max-w-[1440px] px-5 pb-20 pt-[92px] md:px-10">
+      <main id="main" className="mx-auto max-w-[1440px] px-5 pb-28 pt-[92px] md:px-10 lg:pb-20">
         {/* Breadcrumb */}
         <nav className="mb-5 flex items-center gap-2 text-[13px] font-bold text-sv-ink/45" aria-label={t('detail.breadcrumb')}>
           <Link href="/" className="transition-colors hover:text-sv-blue">{t('detail.home')}</Link>
@@ -323,21 +346,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   />
                 </button>
                 <button
-                  onClick={async () => {
-                    const url = window.location.href
-                    // Native share sheet on mobile; clipboard elsewhere
-                    if (navigator.share) {
-                      try {
-                        await navigator.share({ title: document.title, url })
-                        return
-                      } catch {
-                        return // user dismissed the sheet — nothing to do
-                      }
-                    }
-                    navigator.clipboard?.writeText(url)
-                      .then(() => toast.success(t('detail.linkCopied')))
-                      .catch(() => toast.error('ბმულის კოპირება ვერ მოხერხდა'))
-                  }}
+                  onClick={share}
                   aria-label={t('detail.share')}
                   className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-sv-surface text-sv-ink/60 transition-all duration-300 hover:scale-105 hover:text-sv-blue"
                 >
@@ -595,10 +604,34 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   <Phone className="h-4 w-4" /> {t('detail.call')}
                 </a>
                 <button
-                  onClick={() => toast.info(t('detail.messagingSoon'), { description: t('detail.messagingSoonText') })}
+                  onClick={scrollToLead}
                   className="flex h-12 items-center justify-center gap-2 rounded-full border border-sv-blue/25 bg-sv-blue/[0.06] text-[14px] font-extrabold text-sv-blue transition-all duration-300 hover:bg-sv-blue/10"
                 >
                   <MessageCircle className="h-4 w-4" /> {t('detail.message')}
+                </button>
+              </div>
+
+              <div className="mt-2.5 grid grid-cols-2 gap-2.5">
+                <button
+                  onClick={() => toggle(l.id)}
+                  aria-label={fav ? t('detail.removeFavorite') : t('detail.addFavorite')}
+                  aria-pressed={fav}
+                  className={`flex h-11 items-center justify-center gap-2 rounded-full border transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sv-orange ${
+                    fav
+                      ? 'border-sv-orange/30 bg-sv-orange/10 text-sv-orange'
+                      : 'border-sv-ink/10 bg-sv-surface text-sv-ink/60 hover:text-sv-orange'
+                  }`}
+                >
+                  <Heart className={`h-4.5 w-4.5 ${fav ? 'fill-sv-orange text-sv-orange' : ''}`} />
+                  <span className="text-[13px] font-extrabold">{t('detail.addFavorite')}</span>
+                </button>
+                <button
+                  onClick={share}
+                  aria-label={t('detail.share')}
+                  className="flex h-11 items-center justify-center gap-2 rounded-full border border-sv-ink/10 bg-sv-surface text-sv-ink/60 transition-all duration-300 hover:text-sv-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sv-blue"
+                >
+                  <Share2 className="h-4.5 w-4.5" />
+                  <span className="text-[13px] font-extrabold">{t('detail.share')}</span>
                 </button>
               </div>
 
@@ -618,6 +651,14 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               </p>
             </div>
 
+            {/* Lead form — anchor target for the "message" CTAs */}
+            <div
+              id="lead-form"
+              className="mt-4 scroll-mt-28 rounded-card border border-sv-ink/[0.06] bg-sv-surface p-6 shadow-card"
+            >
+              <LeadForm targetType="listing" targetId={l.id} recipientName={l.agent.name} />
+            </div>
+
             {/* Safety note */}
             <div className="mt-4 rounded-tile border border-sv-ink/[0.06] bg-sv-surface p-5 shadow-card">
               <div className="text-[13px] font-black text-sv-ink">{t('detail.safetyTitle')}</div>
@@ -627,6 +668,19 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             </div>
           </aside>
         </div>
+
+        {/* ————— Reviews ————— */}
+        <Reveal className="mt-16">
+          <section id="reviews" aria-label={lt(lang, 'reviewsTitle')}>
+            <h2 className="text-[24px] font-black tracking-[-0.02em] text-sv-ink md:text-[28px]">
+              {lt(lang, 'reviewsTitle')}
+            </h2>
+            <p className="mt-1 text-[14px] font-semibold text-sv-ink/50">
+              {lt(lang, 'reviewsSub')}
+            </p>
+            <ReviewsSection targetType="listing" targetId={l.id} className="mt-6" />
+          </section>
+        </Reveal>
 
         {/* ————— Similar ————— */}
         {similar.length > 0 && (
@@ -638,7 +692,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                     {t('detail.similar')}
                   </h2>
                   <p className="mt-1 text-[14px] font-semibold text-sv-ink/50">
-                    {t('detail.similarSub', { deal: t(isSale ? 'search.sale' : 'search.rent') })}
+                    {lt(lang, 'similarSub', { deal: t(isSale ? 'search.sale' : 'search.rent') })}
                   </p>
                 </div>
                 <Link
@@ -648,10 +702,14 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   {t('detail.seeMore')} <ChevronRight className="h-4 w-4" />
                 </Link>
               </div>
-              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                {similar.map((s, i) => (
-                  <ListingCard key={s.id} l={s} i={i} layout="wide" />
-                ))}
+              <div className="-mx-5 overflow-x-auto px-5 pb-2 md:-mx-10 md:px-10">
+                <div className="flex snap-x snap-mandatory gap-6">
+                  {similar.map((s, i) => (
+                    <div key={s.id} className="w-[300px] shrink-0 snap-start sm:w-[340px]">
+                      <ListingCard l={s} i={i} layout="wide" />
+                    </div>
+                  ))}
+                </div>
               </div>
             </section>
           </Reveal>
@@ -674,6 +732,38 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
       </main>
 
       <Footer />
+
+      {/* ————— Mobile conversion bar (call / message / favorite) ————— */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-sv-ink/10 bg-sv-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+        <div className="grid grid-cols-3 gap-2 px-4 py-2.5">
+          <a
+            href={`tel:${l.agent.phone.replace(/\s/g, '')}`}
+            aria-label={t('detail.call')}
+            className="flex h-12 items-center justify-center gap-2 rounded-full bg-sv-orange text-[14px] font-extrabold text-white shadow-glow-orange transition-all active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sv-orange"
+          >
+            <Phone className="h-4 w-4" /> {t('detail.call')}
+          </a>
+          <button
+            onClick={scrollToLead}
+            aria-label={t('detail.message')}
+            className="flex h-12 items-center justify-center gap-2 rounded-full border border-sv-blue/25 bg-sv-blue/[0.06] text-[14px] font-extrabold text-sv-blue transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sv-blue"
+          >
+            <MessageCircle className="h-4 w-4" /> {t('detail.message')}
+          </button>
+          <button
+            onClick={() => toggle(l.id)}
+            aria-label={fav ? t('detail.removeFavorite') : t('detail.addFavorite')}
+            aria-pressed={fav}
+            className={`flex h-12 items-center justify-center gap-2 rounded-full border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sv-orange ${
+              fav
+                ? 'border-sv-orange/30 bg-sv-orange/10 text-sv-orange'
+                : 'border-sv-ink/10 bg-sv-surface text-sv-ink/70'
+            }`}
+          >
+            <Heart className={`h-5 w-5 ${fav ? 'fill-sv-orange text-sv-orange' : ''}`} />
+          </button>
+        </div>
+      </div>
 
       {/* Lightbox */}
       <AnimatePresence>

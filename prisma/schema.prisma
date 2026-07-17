@@ -1145,23 +1145,43 @@ model SavedSearchAlertLog {
 }
 
 model Review {
-  id         String    @id @db.VarChar(120)
-  targetType String    @map("target_type") @db.VarChar(30)
-  targetId   String    @map("target_id") @db.VarChar(120)
-  authorId   String?   @map("author_id") @db.VarChar(120)
-  authorName String    @map("author_name") @db.VarChar(160)
-  rating     Int
-  body       String    @db.Text
-  verified   Boolean   @default(false)
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-  deletedAt  DateTime? @map("deleted_at") @db.Timestamptz(6)
+  id           String    @id @db.VarChar(120)
+  targetType   String    @map("target_type") @db.VarChar(30)
+  targetId     String    @map("target_id") @db.VarChar(120)
+  authorId     String?   @map("author_id") @db.VarChar(120)
+  authorName   String    @map("author_name") @db.VarChar(160)
+  rating       Int
+  title        String?   @db.VarChar(200)
+  body         String    @db.Text
+  locale       String    @default("ka") @db.VarChar(8)
+  status       String    @default("published") @db.VarChar(20)
+  verified     Boolean   @default(false)
+  helpfulCount Int       @default(0) @map("helpful_count")
+  ownerReply   String?   @map("owner_reply") @db.Text
+  ownerReplyAt DateTime? @map("owner_reply_at") @db.Timestamptz(6)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz(6)
 
-  complaintsAsSubject  Complaint[]       @relation("ComplaintSubjectReview")
-  moderationQueueItems ModerationQueue[] @relation("ModerationQueueReview")
+  complaintsAsSubject  Complaint[]         @relation("ComplaintSubjectReview")
+  moderationQueueItems ModerationQueue[]   @relation("ModerationQueueReview")
+  helpfulVotes         ReviewHelpfulVote[]
 
   @@index([targetType, targetId], map: "reviews_target_idx")
   @@map("reviews")
+}
+
+model ReviewHelpfulVote {
+  id        String   @id @default(cuid()) @db.VarChar(120)
+  reviewId  String   @map("review_id") @db.VarChar(120)
+  voterKey  String   @map("voter_key") @db.VarChar(120)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, voterKey], map: "review_helpful_votes_review_voter_key")
+  @@index([reviewId], map: "review_helpful_votes_review_id_idx")
+  @@map("review_helpful_votes")
 }
 
 model StripeOrder {

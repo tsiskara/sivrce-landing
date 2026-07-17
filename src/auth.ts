@@ -29,6 +29,18 @@ if (process.env.NODE_ENV === "production" && !process.env.AUTH_SECRET) {
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
   providers,
+  pages: {
+    signIn: "/auth/signin",
+    error: "/auth/error",
+  },
+  callbacks: {
+    // Database strategy: `user` is the adapter row, so role rides the session.
+    async session({ session, user }) {
+      session.user.id = user.id
+      session.user.role = user.role
+      return session
+    },
+  },
   // Database sessions via the Prisma adapter (Session model in schema).
   session: {
     strategy: "database",
