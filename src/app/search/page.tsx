@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description:
     'მოძებნე ბინები, სახლები, აგარაკები, მიწა და კომერციული ფართები მთელ საქართველოში — ვერიფიცირებული განცხადებები AI ფასის შეფასებით.',
   alternates: { canonical: '/search' },
+  robots: { index: false, follow: true },
 }
 
 function SearchFallback() {

@@ -70,7 +70,7 @@ export default function SearchClient() {
 
   // ——— Read filters from URL — invalid values are ignored (whitelists + numeric checks) ———
   const dealParam = params.get('deal')
-  const deal: DealType | undefined = dealParam === 'sale' || dealParam === 'rent' ? dealParam : undefined
+  const deal: DealType | undefined = dealParam === 'sale' || dealParam === 'rent' || dealParam === 'daily' ? dealParam : undefined
   const typeParam = params.get('type')
   const type: PropType | undefined = PROP_TYPES.some((p) => p.value === typeParam)
     ? (typeParam as PropType)
@@ -140,7 +140,7 @@ export default function SearchClient() {
   const propType = PROP_TYPES.find((p) => p.value === type)
   const propTypeKey = propType?.key
   const chips: { key: string; label: string; hue?: string; clear: () => void }[] = []
-  if (deal) chips.push({ key: 'deal', label: t(deal === 'sale' ? 'search.sale' : 'search.rent'), hue: deal === 'rent' ? '#7C3AED' : '#2E6BFF', clear: () => patchParams({ deal: undefined }) })
+  if (deal) chips.push({ key: 'deal', label: t(deal === 'sale' ? 'search.sale' : deal === 'daily' ? 'add.deal.daily' : 'search.rent'), hue: deal === 'rent' ? '#7C3AED' : deal === 'daily' ? '#E11D48' : '#2E6BFF', clear: () => patchParams({ deal: undefined }) })
   if (type) chips.push({ key: 'type', label: propTypeKey ? t(propTypeKey) : type, hue: propType?.brand.hue, clear: () => patchParams({ type: undefined }) })
   if (city) chips.push({ key: 'city', label: city, clear: () => patchParams({ city: undefined, district: undefined }) })
   if (district) chips.push({ key: 'district', label: district, clear: () => patchParams({ district: undefined }) })
@@ -187,8 +187,8 @@ export default function SearchClient() {
           <div className="flex flex-wrap items-center gap-2">
             {/* Deal segmented */}
             <div className="flex rounded-control bg-sv-ink/[0.05] p-1" role="tablist" aria-label={t('search.dealType')}>
-              {([undefined, 'sale', 'rent'] as const).map((d) => {
-                const label = t(d === undefined ? 'search.all' : d === 'sale' ? 'search.sale' : 'search.rent')
+              {([undefined, 'sale', 'rent', 'daily'] as const).map((d) => {
+                const label = t(d === undefined ? 'search.all' : d === 'sale' ? 'search.sale' : d === 'daily' ? 'add.deal.daily' : 'search.rent')
                 const active = deal === d
                 return (
                   <button
@@ -197,13 +197,14 @@ export default function SearchClient() {
                     aria-selected={active}
                     onClick={() => patchParams({ deal: d })}
                     className={`relative rounded-lg px-4 py-2 text-[13px] font-extrabold transition-colors ${
-                      active ? 'text-white' : 'text-sv-ink/60 hover:text-sv-ink'
+                      active ? 'text-white' : 'text-sv-ink/65 hover:text-sv-ink'
                     }`}
                   >
                     {active && (
                       <motion.span
                         layoutId="deal-seg"
-                        className="absolute inset-0 rounded-lg bg-sv-blue"
+                        className="absolute inset-0 rounded-lg"
+                        style={{ backgroundColor: d === 'rent' ? '#7C3AED' : d === 'daily' ? '#E11D48' : '#2E6BFF' }}
                         transition={{ type: 'spring', bounce: 0.18, duration: 0.5 }}
                       />
                     )}
@@ -312,7 +313,7 @@ export default function SearchClient() {
           {/* Row 2: price + rooms + area */}
           <div className="mt-2.5 flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">{t('search.price')}</span>
+              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/65">{t('search.price')}</span>
               <input
                 type="number" min={0} placeholder={t('search.min')}
                 value={drafts.min}
@@ -320,7 +321,7 @@ export default function SearchClient() {
                 className={`${inputClass} w-[104px]`}
                 aria-label={t('search.minPrice')}
               />
-              <span className="text-sv-ink/30">—</span>
+              <span className="text-sv-ink/65">—</span>
               <input
                 type="number" min={0} placeholder={t('search.max')}
                 value={drafts.max}
@@ -331,7 +332,7 @@ export default function SearchClient() {
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">{t('search.rooms')}</span>
+              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/65">{t('search.rooms')}</span>
               <div className="flex gap-1">
                 {ROOM_OPTIONS.map((r, idx) => {
                   const n = idx + 1
@@ -355,7 +356,7 @@ export default function SearchClient() {
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">{t('search.area')}</span>
+              <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/65">{t('search.area')}</span>
               <input
                 type="number" min={0} placeholder={t('search.min')}
                 value={drafts.amin}
@@ -363,7 +364,7 @@ export default function SearchClient() {
                 className={`${inputClass} w-[88px]`}
                 aria-label={t('search.minArea')}
               />
-              <span className="text-sv-ink/30">—</span>
+              <span className="text-sv-ink/65">—</span>
               <input
                 type="number" min={0} placeholder={t('search.max')}
                 value={drafts.amax}
@@ -401,8 +402,12 @@ export default function SearchClient() {
                 transition={{ duration: 0.25, ease }}
                 onClick={c.clear}
                 aria-label={t('search.removeFilter', { label: c.label })}
-                className="flex items-center gap-1.5 rounded-full bg-sv-blue/10 px-3.5 py-1.5 text-[12px] font-extrabold text-sv-blue transition-colors hover:bg-sv-blue/15"
+                className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] font-extrabold transition-colors ${
+                  c.hue ? '' : 'bg-sv-blue/10 text-sv-blue hover:bg-sv-blue/15'
+                }`}
+                style={c.hue ? { backgroundColor: `${c.hue}1A`, color: c.hue } : undefined}
               >
+                {c.hue && <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: c.hue }} aria-hidden />}
                 {c.label}
                 <X className="h-3 w-3" aria-hidden="true" />
               </motion.button>
@@ -442,7 +447,7 @@ export default function SearchClient() {
 
         {/* SEO hint */}
         {!loading && results.length > 0 && (
-          <p className="mt-10 flex items-start gap-2 text-[13px] font-semibold leading-relaxed text-sv-ink/40">
+          <p className="mt-10 flex items-start gap-2 text-[13px] font-semibold leading-relaxed text-sv-ink/65">
             <Home className="mt-0.5 h-4 w-4 shrink-0" />
             {t('search.seoHint')}
           </p>

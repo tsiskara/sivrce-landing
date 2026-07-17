@@ -3,6 +3,7 @@ import { Plus } from 'lucide-react'
 import Navbar from '@/components/sections/Navbar'
 import Footer from '@/components/sections/Footer'
 import { Reveal } from '@/components/Reveal'
+import { jsonLd } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'ხშირად დასმული კითხვები — sivrce',
@@ -73,7 +74,7 @@ const SECTIONS: { title: string; items: QA[] }[] = [
   },
 ]
 
-const jsonLd = {
+const faqLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   inLanguage: 'ka',
@@ -90,7 +91,7 @@ const jsonLd = {
 export default function FaqPage() {
   return (
     <div className="min-h-screen bg-white">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqLd) }} />
       <Navbar />
       <main id="main" className="pt-24 md:pt-28">
         <section className="mx-auto max-w-4xl px-6 py-14 md:py-20">

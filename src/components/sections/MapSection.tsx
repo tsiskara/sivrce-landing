@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { MousePointerClick, Building2, BarChart3, Layers, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Reveal } from '@/components/Reveal'
@@ -86,8 +87,7 @@ export default function MapSection() {
               transition={{ type: 'spring', stiffness: 200, damping: 20 }}
               className="relative overflow-hidden rounded-card border border-white/10 shadow-showcase-blue"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/map3d.webp" alt="სივრცის 3D რუკა — თბილისი" width={2048} height={1077} className="w-full" loading="lazy" />
+              <Image src="/images/map3d.webp" alt="სივრცის 3D რუკა — თბილისი" width={2048} height={1077} sizes="(max-width:1024px) 100vw, 700px" className="w-full" />
               <div className="absolute inset-0 rounded-card ring-1 ring-inset ring-white/10" />
               {/* Live pin */}
               <div className="absolute left-[58%] top-[34%]">

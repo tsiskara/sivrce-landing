@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { Search, MapPin, Home, Banknote, Ruler, SlidersHorizontal, Sparkles, ChevronDown, BadgeCheck, ShieldCheck, Zap } from 'lucide-react'
 import HeroBackground from './HeroBackground'
@@ -22,13 +22,10 @@ const TRUST = [
   { icon: Zap, label: 'AI ფასის შეფასება' },
 ]
 
-const ease = [0.21, 0.65, 0.2, 1] as const
-
 export default function Hero() {
   const [tab, setTab] = useState(0)
   const [keyword, setKeyword] = useState('')
   const router = useRouter()
-  const reduceMotion = useReducedMotion()
 
   const submitSearch = () => {
     if (tab === 3) {
@@ -38,7 +35,8 @@ export default function Hero() {
     }
     const params = new URLSearchParams()
     if (tab === 0) params.set('deal', 'sale')
-    if (tab === 1 || tab === 2) params.set('deal', 'rent')
+    if (tab === 1) params.set('deal', 'rent')
+    if (tab === 2) params.set('deal', 'daily')
     if (keyword.trim()) params.set('q', keyword.trim())
     const qs = params.toString()
     router.push(qs ? `/search?${qs}` : '/search')
@@ -53,11 +51,10 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1440px] flex-col items-center justify-center px-5 pb-24 pt-36 md:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15, ease }}
-          className="mb-7 flex items-center gap-2.5 rounded-full glass px-5 py-2.5"
+        {/* LCP content: static markup + paint-driven CSS entrance (sv-hero-in), no hydration gate */}
+        <div
+          className="sv-hero-in mb-7 flex items-center gap-2.5 rounded-full glass px-5 py-2.5"
+          style={{ animationDelay: '0.05s' }}
         >
           <span className="relative flex h-2.5 w-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sv-success opacity-60" />
@@ -66,34 +63,25 @@ export default function Hero() {
           <span className="text-[13px] font-bold tracking-wide text-white/90 md:text-[14px]">
             52,400+ აქტიური განცხადება საქართველოში
           </span>
-        </motion.div>
+        </div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.28, ease }}
-          className="text-balance text-center text-[44px] font-black leading-[1.06] tracking-[-0.03em] text-white md:text-[72px] lg:text-[84px]"
-        >
+        <h1 className="sv-hero-in text-balance text-center text-[44px] font-black leading-[1.06] tracking-[-0.03em] text-white md:text-[72px] lg:text-[84px]">
           იპოვე შენი
           <span className="text-gradient-blue"> სივრცე</span>
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.42, ease }}
-          className="mt-6 max-w-[640px] text-balance text-center text-[16px] font-medium leading-relaxed text-white/70 md:text-[19px]"
+        <p
+          className="sv-hero-in mt-6 max-w-[640px] text-balance text-center text-[16px] font-medium leading-relaxed text-white/70 md:text-[19px]"
+          style={{ animationDelay: '0.08s' }}
         >
           ბინები, სახლები, აგარაკები, მიწა და კომერციული ფართები — ყველაფერი ერთ
           პლატფორმაზე, 3D რუკით და AI შეფასებით
-        </motion.p>
+        </p>
 
         {/* Search panel */}
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.55, ease }}
-          className="mt-11 w-full max-w-[980px]"
+        <div
+          className="sv-hero-in mt-11 w-full max-w-[980px]"
+          style={{ animationDelay: '0.16s' }}
         >
           {/* Tabs */}
           <div className="mb-0 flex w-fit items-center gap-1 rounded-t-tile glass p-1.5 max-md:mx-auto">
@@ -148,7 +136,7 @@ export default function Hero() {
                 >
                   <f.icon className="h-[18px] w-[18px] shrink-0 text-white/50" style={f.hue ? { color: f.hue } : undefined} />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[11px] font-bold uppercase tracking-wider text-white/45">
+                    <span className="block text-[11px] font-bold uppercase tracking-wider text-white/70">
                       {f.label}
                     </span>
                     <span className="block truncate text-[14px] font-bold text-white">{f.value}</span>
@@ -187,7 +175,7 @@ export default function Hero() {
 
           {/* Quick chips */}
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-            <span className="text-[13px] font-bold text-white/45">პოპულარული:</span>
+            <span className="text-[13px] font-bold text-white/70">პოპულარული:</span>
             {QUICK.map((q) => (
               <button
                 key={q}
@@ -198,39 +186,31 @@ export default function Hero() {
               </button>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Trust row */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.9 }}
-          className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-4"
+        <div
+          className="sv-hero-in mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-4"
+          style={{ animationDelay: '0.3s' }}
         >
           {TRUST.map((t) => (
-            <div key={t.label} className="flex items-center gap-2.5 text-white/60">
+            <div key={t.label} className="flex items-center gap-2.5 text-white/70">
               <t.icon className="h-[18px] w-[18px] text-sv-success" />
               <span className="text-[13px] font-bold md:text-[14px]">{t.label}</span>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
       {/* Scroll hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 1 }}
-        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2"
+      <div
+        className="sv-hero-in absolute bottom-6 left-1/2 z-10 -translate-x-1/2"
+        style={{ animationDelay: '0.5s' }}
       >
         <div className="flex h-12 w-7 items-start justify-center rounded-full border-2 border-white/25 p-1.5">
-          <motion.span
-            animate={reduceMotion ? undefined : { y: [0, 14, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            className="h-2 w-2 rounded-full bg-white/70"
-          />
+          <span className="animate-scroll-hint h-2 w-2 rounded-full bg-white/70" />
         </div>
-      </motion.div>
+      </div>
     </section>
   )
 }

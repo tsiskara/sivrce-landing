@@ -51,7 +51,7 @@ export function ThemeToggle({ light = false }: { light?: boolean }) {
       aria-checked={isDark}
       aria-label={t('nav.themeToggle')}
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className={`group relative inline-flex shrink-0 items-center rounded-full transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
+      className={`group relative inline-flex shrink-0 items-center rounded-full transition-colors duration-300 before:absolute before:-inset-[7px] before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
         light ? 'bg-sv-ink/[0.07]' : 'bg-white/10'
       }`}
       style={{ width: W, height: H }}

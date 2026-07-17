@@ -2,6 +2,7 @@
 
 import { useId } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Heart, BedDouble, Bath, Ruler, MapPin, Eye, Crown, Flame } from 'lucide-react'
 import type { Listing } from '@/data/listings'
@@ -74,12 +75,13 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
 
   const imageBlock = (
     <div className={`relative overflow-hidden ${layout === 'list' ? 'aspect-[4/3] w-full sm:aspect-auto sm:h-full sm:min-h-[220px] sm:w-[300px] sm:shrink-0' : 'aspect-[4/3]'}`}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={l.img}
         alt={l.title}
-        loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+        fill
+        sizes="(max-width:640px) 86vw, 380px"
+        priority={i === 0}
+        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-sv-navy/70 via-transparent to-sv-navy/10" />
       {l.badge && (

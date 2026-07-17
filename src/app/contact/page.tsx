@@ -4,6 +4,7 @@ import Navbar from '@/components/sections/Navbar'
 import Footer from '@/components/sections/Footer'
 import ContactForm from '@/components/contact/ContactForm'
 import { Reveal } from '@/components/Reveal'
+import { jsonLd } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'კონტაქტი — sivrce',
@@ -17,7 +18,7 @@ const CHANNELS = [
   { icon: MapPin, label: 'მისამართი', value: 'თბილისი, საქართველო', href: null },
 ]
 
-const jsonLd = {
+const contactLd = {
   '@context': 'https://schema.org',
   '@type': 'ContactPage',
   name: 'კონტაქტი — sivrce',
@@ -41,7 +42,7 @@ const jsonLd = {
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-white">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(contactLd) }} />
       <Navbar />
       <main id="main" className="pt-24 md:pt-28">
         <section className="mx-auto max-w-6xl px-6 py-14 md:py-20">

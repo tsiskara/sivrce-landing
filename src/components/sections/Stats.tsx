@@ -63,7 +63,7 @@ export default function Stats() {
                   <CountUp target={s.value} suffix={s.suffix} />
                 </div>
                 <div className="mt-1 text-[14px] font-extrabold text-sv-ink/85">{s.label}</div>
-                <div className="mt-0.5 text-[12px] font-semibold text-sv-ink/60">{s.sub}</div>
+                <div className="mt-0.5 text-[12px] font-semibold text-sv-ink/65">{s.sub}</div>
               </div>
             </Reveal>
           ))}

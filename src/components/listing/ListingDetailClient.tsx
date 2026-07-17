@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import {
@@ -215,16 +216,18 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             className="group relative overflow-hidden rounded-card shadow-card"
           >
             <button
-              className="block aspect-[16/10] w-full cursor-zoom-in"
+              className="relative block aspect-[16/10] w-full cursor-zoom-in"
               onClick={() => setLightbox(true)}
               aria-label={t('detail.zoomPhoto')}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 key={photo}
                 src={l.images[photo]}
-                alt={l.title}
-                className="h-full w-full object-cover"
+                alt={`${l.title} — ფოტო ${photo + 1}`}
+                fill
+                sizes="(max-width:1024px) 100vw, 850px"
+                priority
+                className="object-cover"
               />
             </button>
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-sv-navy/50 via-transparent to-sv-navy/10" />
@@ -271,8 +274,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                     : 'opacity-75 hover:opacity-100'
                 }`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                <Image src={src} alt={`${l.title} — ფოტო ${i + 1}`} fill sizes="(max-width:1024px) 25vw, 420px" className="object-cover" />
               </button>
             ))}
           </div>
@@ -466,9 +468,8 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             {/* Map */}
             <div className="mt-8">
               <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">{t('detail.location')}</h2>
-              <div className="relative mt-4 overflow-hidden rounded-card shadow-card">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/map3d.webp" alt={t('detail.map')} className="h-[320px] w-full object-cover" />
+              <div className="relative mt-4 h-[320px] overflow-hidden rounded-card shadow-card">
+                <Image src="/images/map3d.webp" alt={t('detail.map')} fill sizes="(max-width:1024px) 100vw, 850px" className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-sv-navy/60 via-transparent to-transparent" />
                 {/* Pin */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">

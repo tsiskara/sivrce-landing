@@ -235,9 +235,11 @@
   --chip-new-projects: color-mix(in oklab, #5b8bff 18%, transparent);
 }
 
-/* Frosted nav/menu glass: light milk → smoked navy in dark mode */
+/* Frosted nav/menu glass: light milk → smoked navy in dark mode.
+   0.92 keeps a hint of frost while guaranteeing text separation over
+   the animated dark hero. */
 .dark .glass-light {
-  background: rgba(8, 13, 38, 0.85);
+  background: rgba(8, 13, 38, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -424,6 +426,28 @@
   animation-delay: var(--w-delay, 0s);
 }
 
+/* Hero entrance — paint-driven (no hydration gate) so LCP text renders immediately */
+@keyframes sv-hero-in {
+  from { opacity: 0; transform: translate3d(0, 28px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.sv-hero-in {
+  animation: sv-hero-in 0.7s cubic-bezier(0.21, 0.65, 0.2, 1) both;
+}
+
+@keyframes sv-scroll-hint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(14px); }
+}
+.animate-scroll-hint {
+  animation: sv-scroll-hint 1.8s ease-in-out infinite;
+}
+
+/* HeroBackground off-screen: freeze ambient animations (toggled via IntersectionObserver) */
+.sv-anim-paused, .sv-anim-paused * {
+  animation-play-state: paused !important;
+}
+
 /* Dot map-grid */
 .bg-dots-dark {
   background-image: radial-gradient(rgba(143, 180, 255, 0.13) 1px, transparent 1.5px);
@@ -439,9 +463,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+  }
   .animate-aurora-a, .animate-aurora-b, .animate-aurora-c,
   .sv-particle, .sv-window, .animate-float, .animate-pin, .animate-marquee,
-  .animate-ping {
+  .animate-ping, .sv-hero-in, .animate-scroll-hint {
     animation: none !important;
   }
 }

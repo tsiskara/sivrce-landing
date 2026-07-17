@@ -27,6 +27,7 @@ const securityHeaders = [
   },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
     key: "Permissions-Policy",
@@ -47,7 +48,15 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 768, 1024, 1280, 1536, 1920],
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      ...["/images/:path*", "/icons/:path*", "/logo/:path*"].map((source) => ({
+        source,
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      })),
+    ];
   },
 };
 

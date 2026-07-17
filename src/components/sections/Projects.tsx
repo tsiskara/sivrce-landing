@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { MapPin, ArrowRight, BadgeCheck, Building2, CalendarCheck, Star } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
 
@@ -58,12 +59,12 @@ export default function Projects() {
               <Link href="/search" className="block">
                 <article className="group cursor-pointer overflow-hidden rounded-card border border-sv-ink/[0.06] bg-sv-surface shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover">
                 <div className="relative aspect-[16/9] overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={p.img}
                     alt={p.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                    fill
+                    sizes="(max-width:1024px) 100vw, 690px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-sv-navy/75 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-5 right-5 flex items-end justify-between">

@@ -34,14 +34,14 @@ export default function Listings() {
               <button
                 onClick={() => scrollBy(-1)}
                 aria-label="წინა"
-                className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-sv-surface text-sv-ink transition-all duration-300 hover:border-sv-blue hover:text-sv-blue"
+                className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-sv-surface text-sv-ink transition-all duration-300 hover:border-sv-blue hover:text-sv-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <button
                 onClick={() => scrollBy(1)}
                 aria-label="შემდეგი"
-                className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-sv-surface text-sv-ink transition-all duration-300 hover:border-sv-blue hover:text-sv-blue"
+                className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-sv-surface text-sv-ink transition-all duration-300 hover:border-sv-blue hover:text-sv-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>

@@ -4,23 +4,25 @@ import { generateAllSeoParams } from '@/lib/seo-pages'
 
 const BASE = 'https://sivrce.ge'
 
+// Static pages: one lastmod per deploy, not per request
+const DEPLOY_DATE = new Date('2026-07-17')
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
-    { url: BASE, lastModified: new Date(), changeFrequency: 'hourly', priority: 1 },
-    { url: `${BASE}/search`, lastModified: new Date(), changeFrequency: 'hourly', priority: 0.9 },
-    { url: `${BASE}/projects`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-    { url: `${BASE}/advertise`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${BASE}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${BASE}/faq`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${BASE}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.2 },
-    { url: `${BASE}/privacy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.2 },
+    { url: BASE, lastModified: DEPLOY_DATE, changeFrequency: 'hourly', priority: 1 },
+    { url: `${BASE}/projects`, lastModified: DEPLOY_DATE, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${BASE}/advertise`, lastModified: DEPLOY_DATE, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE}/about`, lastModified: DEPLOY_DATE, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${BASE}/contact`, lastModified: DEPLOY_DATE, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${BASE}/faq`, lastModified: DEPLOY_DATE, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${BASE}/terms`, lastModified: DEPLOY_DATE, changeFrequency: 'yearly', priority: 0.2 },
+    { url: `${BASE}/privacy`, lastModified: DEPLOY_DATE, changeFrequency: 'yearly', priority: 0.2 },
   ]
 
   // Programmatic SEO pages: shallower = higher priority
   const seoPages: MetadataRoute.Sitemap = generateAllSeoParams().map((slug) => ({
     url: `${BASE}/${slug.join('/')}`,
-    lastModified: new Date(),
+    lastModified: DEPLOY_DATE,
     changeFrequency: 'daily',
     priority: Math.max(0.5, 0.9 - slug.length * 0.1),
   }))

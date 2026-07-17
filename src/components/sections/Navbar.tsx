@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useSession, signIn } from 'next-auth/react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { ChevronDown, Heart, Menu, X, Plus, User } from 'lucide-react'
 import { Logo } from '@/components/Logo'
@@ -19,6 +20,21 @@ export default function Navbar() {
   const { t } = useI18n()
   const pathname = usePathname()
   const reduceMotion = useReducedMotion()
+  const { data: session } = useSession()
+  const menuBtnRef = useRef<HTMLButtonElement>(null)
+
+  // Escape closes the mobile menu and returns focus to the menu button
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+        menuBtnRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
 
   // Close the mobile menu on route change (render-time state adjustment)
   const [prevPathname, setPrevPathname] = useState(pathname)
@@ -106,7 +122,7 @@ export default function Navbar() {
           <Link
             href="/favorites"
             aria-label={`${t('nav.favorites')}${count > 0 ? ` — ${count}` : ''}`}
-            className={`relative grid h-10 w-10 place-items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
+            className={`relative grid h-11 w-11 place-items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
               light ? 'text-sv-ink/70 hover:bg-sv-ink/5' : 'text-white/85 hover:bg-white/10'
             }`}
           >
@@ -119,13 +135,32 @@ export default function Navbar() {
           </Link>
           <ThemeToggle light={light} />
           <LangSwitcher light={light} />
-          <button
-            className={`flex h-10 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
-              light ? 'text-sv-ink hover:bg-sv-ink/5' : 'text-white hover:bg-white/10'
-            }`}
-          >
-            <User className="h-4 w-4" /> {t('nav.login')}
-          </button>
+          {session?.user ? (
+            <Link
+              href="/favorites"
+              className={`flex h-10 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
+                light ? 'text-sv-ink hover:bg-sv-ink/5' : 'text-white hover:bg-white/10'
+              }`}
+            >
+              {session.user.image ? (
+                // Remote OAuth avatar — next/image remotePatterns not configured
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={session.user.image} alt="" className="h-5 w-5 rounded-full" referrerPolicy="no-referrer" />
+              ) : (
+                <User className="h-4 w-4" />
+              )}
+              <span className="max-w-[120px] truncate">{session.user.name ?? t('nav.favorites')}</span>
+            </Link>
+          ) : (
+            <button
+              onClick={() => signIn('google')}
+              className={`flex h-10 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
+                light ? 'text-sv-ink hover:bg-sv-ink/5' : 'text-white hover:bg-white/10'
+              }`}
+            >
+              <User className="h-4 w-4" /> {t('nav.login')}
+            </button>
+          )}
           <Link
             href="/add-listing"
             className="group flex h-11 items-center gap-2 rounded-full bg-sv-orange px-5 text-[14px] font-extrabold text-white shadow-glow-orange transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-orange-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 active:scale-[0.98]"
@@ -136,6 +171,7 @@ export default function Navbar() {
         </div>
 
         <button
+          ref={menuBtnRef}
           className={`grid h-11 w-11 place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 md:hidden ${
             light ? 'text-sv-ink' : 'text-white'
           }`}

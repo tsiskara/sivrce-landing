@@ -57,6 +57,17 @@ const CITY_MULT: Record<string, number> = { თბილისი: 1, ბათ�
 
 const ease = [0.21, 0.65, 0.2, 1] as const
 
+const PHONE_RE = /^\+995 \d{3} \d{2} \d{2} \d{2}$/
+
+/** Normalize to `+995 XXX XX XX XX` while typing (9 digits after the forced prefix) */
+const formatPhone = (raw: string): string => {
+  let d = raw.replace(/\D/g, '')
+  if (d.startsWith('995')) d = d.slice(3)
+  d = d.slice(0, 9)
+  const groups = [d.slice(0, 3), d.slice(3, 5), d.slice(5, 7), d.slice(7, 9)].filter(Boolean)
+  return `+995${groups.length ? ` ${groups.join(' ')}` : ''}`
+}
+
 export default function AddListingClient() {
   const { t } = useI18n()
   const fileRef = useRef<HTMLInputElement>(null)
@@ -116,7 +127,7 @@ export default function AddListingClient() {
     const signals = [
       !!deal && !!propType, !!(city && district && street), areaN > 0, rooms > 0,
       !!condition, features.length >= 3, photos.length >= 1, photos.length >= 5,
-      priceN > 0 || negotiable, description.length >= 80, !!video, !!phone,
+      priceN > 0 || negotiable, description.length >= 80, !!video, PHONE_RE.test(phone),
     ]
     return Math.round((signals.filter(Boolean).length / signals.length) * 100)
   }, [deal, propType, city, district, street, areaN, rooms, condition, features, photos, priceN, negotiable, description, video, phone])
@@ -127,7 +138,7 @@ export default function AddListingClient() {
     areaN > 0,
     true,
     priceN > 0 || negotiable,
-    !!(name.trim() && phone.trim() && terms),
+    !!(name.trim() && PHONE_RE.test(phone) && terms),
   ][step]
 
   const propLabel = propType ? t(PROP_TYPES.find((p) => p.key === propType)!.labelKey) : ''
@@ -145,7 +156,7 @@ export default function AddListingClient() {
     title: autoTitle,
     address: [street && `${street} ${houseNo}`.trim(), district, city].filter(Boolean).join(', ') || '—',
     city: city || '—', district: district || '—',
-    dealType: deal === 'rent' || deal === 'daily' ? 'rent' : 'sale',
+    dealType: deal ?? 'sale',
     propType: propType ?? 'apartment',
     rooms, beds: rooms, baths, area: areaN, floor: Number(floor) || 1, totalFloors: Number(totalFloors) || 1,
     views: 0, badge: null,
@@ -712,7 +723,7 @@ export default function AddListingClient() {
                         <label className={label}>{t('add.phone')} *</label>
                         <div className="relative">
                           <Phone className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-sv-ink/35" />
-                          <input className={`${input} pl-11 ${err(!phone.trim())}`} placeholder={t('add.phonePh')} value={phone} onChange={(e) => setPhone(e.target.value)} />
+                          <input className={`${input} pl-11 ${err(!PHONE_RE.test(phone))}`} placeholder={t('add.phonePh')} value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} />
                         </div>
                       </div>
                     </div>

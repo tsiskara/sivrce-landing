@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { LISTINGS, getListing, similarListings, formatUSD } from '@/data/listings'
+import { jsonLd } from '@/lib/utils'
 import ListingDetailClient from '@/components/listing/ListingDetailClient'
 
 // ponytail: dynamicParams default (true) — unknown ids hit notFound() below;
@@ -36,6 +37,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       type: 'website',
+      url: `https://sivrce.ge/listing/${l.id}`,
+      siteName: 'sivrce',
+      locale: 'ka_GE',
       images: [{ url: l.img, width: 1536, height: 957, alt: l.title }],
     },
     twitter: {
@@ -54,7 +58,14 @@ export default async function ListingPage({ params }: PageProps) {
 
   const similar = similarListings(listing, 3)
 
-  const jsonLd = {
+  // Offer validity: 30 days after posting (matches the 30-day listing lifetime)
+  const priceValidUntil = new Date(
+    Date.parse(`${listing.postedAt}T00:00:00Z`) + 30 * 24 * 60 * 60 * 1000,
+  )
+    .toISOString()
+    .slice(0, 10)
+
+  const listingLd = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateListing',
     name: listing.title,
@@ -62,6 +73,9 @@ export default async function ListingPage({ params }: PageProps) {
     url: `https://sivrce.ge/listing/${listing.id}`,
     image: listing.images.map((src) => `https://sivrce.ge${src}`),
     datePosted: listing.postedAt,
+    numberOfBedrooms: listing.beds,
+    numberOfBathroomsTotal: listing.baths,
+    floorLevel: listing.floor,
     address: {
       '@type': 'PostalAddress',
       streetAddress: listing.address,
@@ -78,7 +92,13 @@ export default async function ListingPage({ params }: PageProps) {
       '@type': 'Offer',
       price: listing.priceUSD,
       priceCurrency: 'USD',
+      priceValidUntil,
       availability: 'https://schema.org/InStock',
+      seller: {
+        '@type': 'RealEstateAgent',
+        name: listing.agent.name,
+        telephone: listing.agent.phone,
+      },
       ...(listing.dealType === 'rent' && {
         priceSpecification: {
           '@type': 'UnitPriceSpecification',
@@ -111,11 +131,11 @@ export default async function ListingPage({ params }: PageProps) {
       <ListingDetailClient listing={listing} similar={similar} />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(listingLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbLd) }}
       />
     </>
   )

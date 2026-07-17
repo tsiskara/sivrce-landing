@@ -4,7 +4,7 @@
  * listing detail page. All client-side; a future API can replace LISTINGS.
  */
 
-export type DealType = 'sale' | 'rent'
+export type DealType = 'sale' | 'rent' | 'daily'
 export type PropType = 'apartment' | 'house' | 'commercial' | 'land'
 export type Badge = 'SUPER VIP' | 'VIP+' | 'VIP' | null
 
@@ -639,9 +639,11 @@ export function formatGEL(n: number): string {
   return `${n.toLocaleString('en-US')} ₾`
 }
 
-/** Card price — appends /თვე for rentals */
+/** Card price — appends /თვე for monthly rent, /დღე for daily rent */
 export function formatListingPrice(l: Listing): string {
-  return l.dealType === 'rent' ? `${formatUSD(l.priceUSD)}/თვე` : formatUSD(l.priceUSD)
+  if (l.dealType === 'rent') return `${formatUSD(l.priceUSD)}/თვე`
+  if (l.dealType === 'daily') return `${formatUSD(l.priceUSD)}/დღე`
+  return formatUSD(l.priceUSD)
 }
 
 export function formatPerM2(l: Listing): string {

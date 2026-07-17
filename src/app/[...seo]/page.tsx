@@ -6,6 +6,7 @@ import Navbar from '@/components/sections/Navbar'
 import Footer from '@/components/sections/Footer'
 import ListingCard from '@/components/ListingCard'
 import { formatUSD } from '@/data/listings'
+import { jsonLd } from '@/lib/utils'
 import {
   DEALS,
   generateAllSeoParams,
@@ -42,11 +43,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     alternates: { canonical: def.path },
-    openGraph: { title, description, type: 'website', url: `https://sivrce.ge${def.path}` },
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: `https://sivrce.ge${def.path}`,
+      siteName: 'sivrce',
+      locale: 'ka_GE',
+      images: [{ url: '/images/og.jpg', width: 1200, height: 630, alt: title }],
+    },
+    twitter: { card: 'summary_large_image', title, description, images: ['/images/og.jpg'] },
   }
 }
 
-function jsonLd(def: SeoPageDef) {
+function seoLd(def: SeoPageDef) {
   const crumbs = breadcrumbsOf(def)
   const faqs = faqsOf(def)
   return {
@@ -242,7 +252,7 @@ export default async function SeoLandingPage({ params }: PageProps) {
         </section>
       </main>
       <Footer />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(def)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(seoLd(def)) }} />
     </div>
   )
 }

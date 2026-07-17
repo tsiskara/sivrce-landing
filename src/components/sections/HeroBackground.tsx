@@ -1,4 +1,8 @@
+'use client'
+
 /* Deterministic pseudo-random so SSR/build output is stable */
+import { useEffect, useRef } from 'react'
+
 function seeded(seed: number) {
   let s = seed
   return () => {
@@ -80,8 +84,21 @@ const particles = buildParticles()
 const windows = buildWindows()
 
 export default function HeroBackground() {
+  const root = useRef<HTMLDivElement>(null)
+
+  // Pause ambient animations while the hero is off-screen
+  useEffect(() => {
+    const el = root.current
+    if (!el) return
+    const io = new IntersectionObserver(([entry]) => {
+      el.classList.toggle('sv-anim-paused', !entry.isIntersecting)
+    })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   return (
-    <div className="absolute inset-0 overflow-hidden bg-sv-navy" aria-hidden>
+    <div ref={root} className="absolute inset-0 overflow-hidden bg-sv-navy" aria-hidden>
       {/* Aurora gradient field — brand blue / violet / orange */}
       <div className="animate-aurora-a absolute -left-[15%] top-[-25%] h-[70%] w-[60%] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--sv-blue)_34%,transparent),transparent_65%)] blur-[90px]" />
       <div className="animate-aurora-b absolute right-[-12%] top-[-10%] h-[65%] w-[55%] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--sv-violet)_26%,transparent),transparent_65%)] blur-[100px]" />
@@ -121,7 +138,7 @@ export default function HeroBackground() {
             width={5}
             height={7}
             rx={1}
-            className="sv-window"
+            className="sv-window hidden md:block"
             fill={w.orange ? 'var(--sv-orange-light)' : 'var(--sv-blue-light)'}
             style={{ '--w-duration': w.duration, '--w-delay': w.delay } as React.CSSProperties}
           />
@@ -134,7 +151,7 @@ export default function HeroBackground() {
       {particles.map((p, i) => (
         <span
           key={i}
-          className="sv-particle absolute rounded-full"
+          className="sv-particle absolute hidden rounded-full md:block"
           style={{
             left: p.left,
             bottom: p.bottom,

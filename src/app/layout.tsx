@@ -4,13 +4,15 @@ import I18nProvider from "@/components/I18nProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { BRAND } from "@/lib/brand";
+import { jsonLd } from "@/lib/utils";
 import "./globals.css";
 
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope",
   display: "swap",
-  preload: true,
+  // Latin-only subsets; Georgian text uses Noto below — save the preload slot
+  preload: false,
 });
 
 const notoGeorgian = Noto_Sans_Georgian({
@@ -22,7 +24,7 @@ const notoGeorgian = Noto_Sans_Georgian({
 
 const SITE_URL = "https://sivrce.ge";
 const SITE_NAME = "sivrce";
-const SITE_TITLE = "sivrce — უძრავი ქონება ერთ სივრცეში";
+const SITE_TITLE = "უძრავი ქონება საქართველოში — ბინები, სახლები იყიდება და ქირავდება | sivrce";
 const SITE_DESCRIPTION =
   "სივრცე — საქართველოს №1 ტექნოლოგიური უძრავი ქონების პლატფორმა. ბინები, სახლები, აგარაკები, მიწა და კომერციული ფართები იყიდება და ქირავდება — ინტერაქტიული 3D რუკით და AI ფასის შეფასებით.";
 
@@ -64,7 +66,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ka_GE",
-    alternateLocale: ["en_US", "ru_RU"],
+    alternateLocale: ["en_US", "ru_RU", "uk_UA", "hy_AM", "az_AZ"],
     url: SITE_URL,
     siteName: SITE_NAME,
     title: SITE_TITLE,
@@ -106,7 +108,7 @@ export const viewport: Viewport = {
   ],
 };
 
-const jsonLd = {
+const siteLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -134,7 +136,6 @@ const jsonLd = {
       url: SITE_URL,
       logo: `${SITE_URL}/logo/sivrce-mark.svg`,
       email: "info@sivrce.ge",
-      telephone: "+995322000000",
       address: {
         "@type": "PostalAddress",
         addressLocality: "თბილისი",
@@ -172,7 +173,7 @@ export default function RootLayout({
         </ThemeProvider>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd(siteLd) }}
         />
       </body>
     </html>
