@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation'
 import { LISTINGS, getListing, similarListings, formatUSD } from '@/data/listings'
 import ListingDetailClient from '@/components/listing/ListingDetailClient'
 
-export const dynamicParams = false
-
+// ponytail: dynamicParams default (true) — unknown ids hit notFound() below;
+// `false` crashes `next start` (NoFallbackError) on any unknown-id request.
 export function generateStaticParams() {
   return LISTINGS.map((l) => ({ id: l.id }))
 }

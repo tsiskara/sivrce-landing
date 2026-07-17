@@ -40,7 +40,7 @@ export default function Categories() {
               >
                 <span
                   className="grid h-14 w-14 place-items-center rounded-module transition-transform duration-500 group-hover:scale-110"
-                  style={{ backgroundColor: c.brand.chip, color: c.brand.hue }}
+                  style={{ backgroundColor: c.brand.chipVar, color: c.brand.hue }}
                 >
                   <c.icon className="h-6 w-6" />
                 </span>

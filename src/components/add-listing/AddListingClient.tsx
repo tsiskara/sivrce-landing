@@ -138,7 +138,7 @@ export default function AddListingClient() {
     : t('add.previewTitle')
 
   const preview: Listing = {
-    id: 'preview',
+    id: LISTINGS[0].id, // real id so Link prefetch doesn't 404 (card is pointer-events-none anyway)
     img: photos[cover]?.url ?? LISTINGS.find((l) => l.propType === propType)?.img ?? LISTINGS[0].img,
     images: photos.length ? photos.map((p) => p.url) : [LISTINGS[0].img],
     priceUSD: priceN, priceGEL: priceN * USD_GEL, perM2USD: areaN ? Math.round(priceN / areaN) : 0,
@@ -342,11 +342,11 @@ export default function AddListingClient() {
                             className={`flex flex-col items-center gap-2.5 rounded-tile border p-5 transition-all duration-300 hover:-translate-y-0.5 ${
                               active ? 'border-transparent' : 'border-sv-ink/[0.08] bg-sv-surface hover:shadow-card'
                             }`}
-                            style={active ? { backgroundColor: p.brand.chip, boxShadow: `0 0 0 2px ${p.brand.hue}` } : undefined}
+                            style={active ? { backgroundColor: p.brand.chipVar, boxShadow: `0 0 0 2px ${p.brand.hue}` } : undefined}
                           >
                             <span
                               className="grid h-11 w-11 place-items-center rounded-module transition-colors"
-                              style={{ backgroundColor: active ? p.brand.hue : p.brand.chip, color: active ? '#fff' : p.brand.hue }}
+                              style={{ backgroundColor: active ? p.brand.hue : p.brand.chipVar, color: active ? '#fff' : p.brand.hue }}
                             >
                               <p.icon className="h-5 w-5" />
                             </span>

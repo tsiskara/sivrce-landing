@@ -20,6 +20,10 @@ fs.mkdirSync(OUT, { recursive: true });
     { path: '/add-listing', name: 'add' },
     { path: '/projects', name: 'projects' },
     { path: '/sale/apartments/tbilisi', name: 'seo' },
+    { path: '/favorites', name: 'favorites' },
+    { path: '/about', name: 'about' },
+    { path: '/contact', name: 'contact' },
+    { path: '/faq', name: 'faq' },
     { path: '/gibberish-404', name: 'notfound' },
   ];
   for (const vp of viewports) {

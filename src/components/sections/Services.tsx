@@ -58,7 +58,7 @@ export default function Services() {
               >
                 <span
                   className="grid h-14 w-14 place-items-center rounded-module transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
-                  style={{ backgroundColor: s.brand.chip, color: s.brand.hue }}
+                  style={{ backgroundColor: s.brand.chipVar, color: s.brand.hue }}
                 >
                   <s.icon className="h-6 w-6" />
                 </span>

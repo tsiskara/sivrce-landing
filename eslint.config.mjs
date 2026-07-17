@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Node tooling scripts are plain CJS, not app code
     "scripts/**",
+    // Generated Prisma client
+    "src/generated/**",
   ]),
 ]);
 

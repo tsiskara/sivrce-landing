@@ -132,7 +132,7 @@ const jsonLd = {
       name: SITE_NAME,
       alternateName: "სივრცე",
       url: SITE_URL,
-      logo: `${SITE_URL}/icon.svg`,
+      logo: `${SITE_URL}/logo/sivrce-mark.svg`,
       email: "info@sivrce.ge",
       telephone: "+995322000000",
       address: {

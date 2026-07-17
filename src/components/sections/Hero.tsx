@@ -6,7 +6,13 @@ import { useRouter } from 'next/navigation'
 import { Search, MapPin, Home, Banknote, Ruler, SlidersHorizontal, Sparkles, ChevronDown, BadgeCheck, ShieldCheck, Zap } from 'lucide-react'
 import HeroBackground from './HeroBackground'
 
-const TABS = ['იყიდება', 'ქირავდება', 'დღიურად', 'ახალი პროექტები']
+/* Deal tabs carry locked deal/category hues (BRAND.md §3.1, category-brand.ts) */
+const TABS = [
+  { label: 'იყიდება', hue: '#2E6BFF' },
+  { label: 'ქირავდება', hue: '#7C3AED' },
+  { label: 'დღიურად', hue: '#E11D48' },
+  { label: 'ახალი პროექტები', hue: '#5B8BFF' },
+]
 
 const QUICK = ['ვაკე', 'საბურთალო', 'მთაწმინდა', 'ბათუმი', 'ძველი თბილისი', 'დიღომი']
 
@@ -91,9 +97,9 @@ export default function Hero() {
         >
           {/* Tabs */}
           <div className="mb-0 flex w-fit items-center gap-1 rounded-t-tile glass p-1.5 max-md:mx-auto">
-            {TABS.map((t, i) => (
+            {TABS.map((tb, i) => (
               <button
-                key={t}
+                key={tb.label}
                 onClick={() => setTab(i)}
                 aria-pressed={tab === i}
                 className={`relative rounded-module px-4 py-2.5 text-[13px] font-extrabold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue-light focus-visible:ring-offset-2 focus-visible:ring-offset-sv-navy md:px-5 md:text-[14px] ${
@@ -107,7 +113,10 @@ export default function Hero() {
                     transition={{ type: 'spring', bounce: 0.18, duration: 0.55 }}
                   />
                 )}
-                <span className="relative z-10">{t}</span>
+                <span className="relative z-10 flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: tb.hue }} aria-hidden />
+                  {tb.label}
+                </span>
               </button>
             ))}
           </div>
@@ -128,16 +137,16 @@ export default function Hero() {
                 />
               </label>
               {[
-                { icon: Home, label: 'ტიპი', value: 'ბინა' },
-                { icon: Banknote, label: 'ფასი', value: 'ნებისმიერი' },
-                { icon: Ruler, label: 'ფართი', value: '40+ მ²' },
+                { icon: Home, label: 'ტიპი', value: 'ბინა', hue: '#8FB4FF' },
+                { icon: Banknote, label: 'ფასი', value: 'ნებისმიერი', hue: undefined },
+                { icon: Ruler, label: 'ფართი', value: '40+ მ²', hue: undefined },
               ].map((f) => (
                 <button
                   key={f.label}
                   onClick={() => router.push('/search')}
                   className="group flex items-center gap-3 rounded-control bg-white/[0.07] px-4 py-3.5 text-left transition-colors hover:bg-white/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue-light focus-visible:ring-offset-2 focus-visible:ring-offset-sv-navy"
                 >
-                  <f.icon className="h-[18px] w-[18px] shrink-0 text-white/50" />
+                  <f.icon className="h-[18px] w-[18px] shrink-0 text-white/50" style={f.hue ? { color: f.hue } : undefined} />
                   <span className="min-w-0 flex-1">
                     <span className="block text-[11px] font-bold uppercase tracking-wider text-white/45">
                       {f.label}

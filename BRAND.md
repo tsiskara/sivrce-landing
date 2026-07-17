@@ -33,6 +33,9 @@ Elevation: `shadow-card` `shadow-card-hover` `shadow-soft` `shadow-glow-orange` 
 
 ## 2. Logo
 - `LogoMark` — blue squircle (r=14/48), white infinite-S path, **orange space point** at bottom-right
+- **Geometry lock (48-unit grid):** S = `M32.649 15.143 A9.2 6.6 0 1 0 24 24 A9.2 6.6 0 1 1 15.351 32.857`,
+  stroke 6.4 (7.0 below 32 px), round caps, exact 180° symmetry about (24,24);
+  point = circle (38.2, 38.2) r=3.0 (3.3 below 32 px). Masters: `logo/assets/`, see `logo/README.md`
 - Never recolor, rotate, outline, or place on busy backgrounds without a dark scrim
 - Min clear space = 50% of tile size on all sides
 - Wordmark: Manrope 800, tracking −0.045em, lowercase, orange final period (`text-sv-orange`)

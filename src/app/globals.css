@@ -160,6 +160,17 @@
   --sv-cloud: #f6f7fb;
   --sv-surface: #ffffff;
   --sv-success: #4ade80;
+
+  /* Locked category/service chips (BRAND.md §3.1, category-brand.ts) —
+     consumed as var() so dark mode can retint without touching hexes */
+  --chip-apartments: #eff3ff;
+  --chip-houses: #fff3ef;
+  --chip-cottages: #edf8f1;
+  --chip-land: #fcf4eb;
+  --chip-commercial: #f5f0fe;
+  --chip-daily-rent: #fdedf1;
+  --chip-hotels: #ecf6f9;
+  --chip-new-projects: #eff3ff;
 }
 
 .dark {
@@ -212,20 +223,21 @@
   --sv-cloud: #060b21;
   --sv-surface: #0e1737;
 
-  /* Category chips: pastel fills → translucent hue tints (same hues) */
-  --color-cat-apartments-chip: color-mix(in oklab, #2e6bff 16%, transparent);
-  --color-cat-houses-chip: color-mix(in oklab, #ff6a2d 16%, transparent);
-  --color-cat-cottages-chip: color-mix(in oklab, #16a34a 18%, transparent);
-  --color-cat-land-chip: color-mix(in oklab, #d97706 18%, transparent);
-  --color-cat-commercial-chip: color-mix(in oklab, #7c3aed 18%, transparent);
-  --color-cat-daily-rent-chip: color-mix(in oklab, #e11d48 18%, transparent);
-  --color-cat-hotels-chip: color-mix(in oklab, #0891b2 18%, transparent);
-  --color-cat-new-projects-chip: color-mix(in oklab, #5b8bff 16%, transparent);
+  /* Category/service chips: locked pastel fills → translucent hue tints
+     (same locked hues, dark-appropriate luminance) */
+  --chip-apartments: color-mix(in oklab, #2e6bff 18%, transparent);
+  --chip-houses: color-mix(in oklab, #ff6a2d 18%, transparent);
+  --chip-cottages: color-mix(in oklab, #16a34a 20%, transparent);
+  --chip-land: color-mix(in oklab, #d97706 20%, transparent);
+  --chip-commercial: color-mix(in oklab, #7c3aed 20%, transparent);
+  --chip-daily-rent: color-mix(in oklab, #e11d48 20%, transparent);
+  --chip-hotels: color-mix(in oklab, #0891b2 20%, transparent);
+  --chip-new-projects: color-mix(in oklab, #5b8bff 18%, transparent);
 }
 
 /* Frosted nav/menu glass: light milk → smoked navy in dark mode */
 .dark .glass-light {
-  background: rgba(8, 13, 38, 0.78);
+  background: rgba(8, 13, 38, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
