@@ -42,3 +42,6 @@ next-env.d.ts
 
 # prisma generated client
 /src/generated
+
+# keep the template, ignore real env files
+!.env.example
