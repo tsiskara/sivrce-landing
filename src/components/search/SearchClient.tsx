@@ -12,7 +12,7 @@ import Footer from '@/components/sections/Footer'
 import ListingCard from '@/components/ListingCard'
 import SaveSearchControl from '@/components/search/SaveSearchControl'
 import { useI18n, type DictKey } from '@/lib/i18n/context'
-import { CATEGORY_BRAND } from '@/lib/category-brand'
+import { CATEGORY_BRAND, DEAL_BRAND } from '@/lib/category-brand'
 import {
   filterListings, CITIES, districtsOf,
   type DealType, type PropType, type SortKey, type Listing,
@@ -141,7 +141,7 @@ export default function SearchClient() {
   const propType = PROP_TYPES.find((p) => p.value === type)
   const propTypeKey = propType?.key
   const chips: { key: string; label: string; hue?: string; clear: () => void }[] = []
-  if (deal) chips.push({ key: 'deal', label: t(deal === 'sale' ? 'search.sale' : deal === 'daily' ? 'add.deal.daily' : 'search.rent'), hue: deal === 'rent' ? '#7C3AED' : deal === 'daily' ? '#E11D48' : '#2E6BFF', clear: () => patchParams({ deal: undefined }) })
+  if (deal) chips.push({ key: 'deal', label: t(deal === 'sale' ? 'search.sale' : deal === 'daily' ? 'add.deal.daily' : 'search.rent'), hue: deal === 'rent' ? DEAL_BRAND.rent : deal === 'daily' ? DEAL_BRAND.daily : DEAL_BRAND.sale, clear: () => patchParams({ deal: undefined }) })
   if (type) chips.push({ key: 'type', label: propTypeKey ? t(propTypeKey) : type, hue: propType?.brand.hue, clear: () => patchParams({ type: undefined }) })
   if (city) chips.push({ key: 'city', label: city, clear: () => patchParams({ city: undefined, district: undefined }) })
   if (district) chips.push({ key: 'district', label: district, clear: () => patchParams({ district: undefined }) })
@@ -205,7 +205,7 @@ export default function SearchClient() {
                       <motion.span
                         layoutId="deal-seg"
                         className="absolute inset-0 rounded-lg"
-                        style={{ backgroundColor: d === 'rent' ? '#7C3AED' : d === 'daily' ? '#E11D48' : '#2E6BFF' }}
+                        style={{ backgroundColor: d === 'rent' ? DEAL_BRAND.rent : d === 'daily' ? DEAL_BRAND.daily : DEAL_BRAND.sale }}
                         transition={{ type: 'spring', bounce: 0.18, duration: 0.5 }}
                       />
                     )}

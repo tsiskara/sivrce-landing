@@ -37,5 +37,14 @@ export const SERVICE_BRAND = {
   mortgage:   { hue: '#16A34A', chip: '#EDF8F1', chipVar: 'var(--chip-cottages)' }, // იპოთეკა და ფინანსები — green
 } as const satisfies Record<string, CategoryBrand>
 
+/** Hero deal tabs + search deal chips (BRAND.md §3.2) — hues map to categories */
+export const DEAL_BRAND = {
+  sale: CATEGORY_BRAND.apartments.hue,       // იყიდება
+  rent: CATEGORY_BRAND.commercial.hue,       // ქირავდება
+  daily: CATEGORY_BRAND.dailyRent.hue,       // დღიურად
+  newProjects: CATEGORY_BRAND.newProjects.hue, // ახალი პროექტები
+} as const
+
 export type CategoryKey = keyof typeof CATEGORY_BRAND
 export type ServiceKey = keyof typeof SERVICE_BRAND
+export type DealKey = keyof typeof DEAL_BRAND

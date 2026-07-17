@@ -5,13 +5,14 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { Search, MapPin, Home, Banknote, Ruler, SlidersHorizontal, Sparkles, ChevronDown, BadgeCheck, ShieldCheck, Zap } from 'lucide-react'
 import HeroBackground from './HeroBackground'
+import { DEAL_BRAND } from '@/lib/category-brand'
 
-/* Deal tabs carry locked deal/category hues (BRAND.md §3.1, category-brand.ts) */
+/* Deal tabs — locked DEAL_BRAND (BRAND.md §3.2) */
 const TABS = [
-  { label: 'იყიდება', hue: '#2E6BFF' },
-  { label: 'ქირავდება', hue: '#7C3AED' },
-  { label: 'დღიურად', hue: '#E11D48' },
-  { label: 'ახალი პროექტები', hue: '#5B8BFF' },
+  { label: 'იყიდება', hue: DEAL_BRAND.sale },
+  { label: 'ქირავდება', hue: DEAL_BRAND.rent },
+  { label: 'დღიურად', hue: DEAL_BRAND.daily },
+  { label: 'ახალი პროექტები', hue: DEAL_BRAND.newProjects },
 ]
 
 const QUICK = ['ვაკე', 'საბურთალო', 'მთაწმინდა', 'ბათუმი', 'ძველი თბილისი', 'დიღომი']

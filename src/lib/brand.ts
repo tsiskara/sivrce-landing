@@ -1,7 +1,8 @@
 /**
- * SIVRCE — Locked Brand Tokens
+ * SIVRCE — Locked Brand Tokens (FROZEN 2026-07-17 · BRAND.md v1.2)
  * Single source of truth. Every new component, section, or page MUST
  * consume these tokens instead of inventing new values.
+ * Change only with owner approval + BRAND.md version bump.
  */
 
 export const BRAND = {
