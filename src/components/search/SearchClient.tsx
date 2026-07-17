@@ -11,6 +11,7 @@ import Navbar from '@/components/sections/Navbar'
 import Footer from '@/components/sections/Footer'
 import ListingCard from '@/components/ListingCard'
 import { useI18n, type DictKey } from '@/lib/i18n/context'
+import { CATEGORY_BRAND } from '@/lib/category-brand'
 import {
   filterListings, CITIES, districtsOf,
   type DealType, type PropType, type SortKey, type Listing,
@@ -18,11 +19,12 @@ import {
 
 const ease = [0.21, 0.65, 0.2, 1] as const
 
-const PROP_TYPES: { value: PropType; key: DictKey }[] = [
-  { value: 'apartment', key: 'prop.apartment' },
-  { value: 'house', key: 'prop.house' },
-  { value: 'commercial', key: 'prop.commercial' },
-  { value: 'land', key: 'prop.land' },
+/* Locked per-category branding (BRAND.md §3.1) */
+const PROP_TYPES: { value: PropType; key: DictKey; brand: (typeof CATEGORY_BRAND)[keyof typeof CATEGORY_BRAND] }[] = [
+  { value: 'apartment', key: 'prop.apartment', brand: CATEGORY_BRAND.apartments },
+  { value: 'house', key: 'prop.house', brand: CATEGORY_BRAND.houses },
+  { value: 'commercial', key: 'prop.commercial', brand: CATEGORY_BRAND.commercial },
+  { value: 'land', key: 'prop.land', brand: CATEGORY_BRAND.land },
 ]
 
 const SORTS: { value: SortKey; key: DictKey }[] = [
@@ -135,10 +137,11 @@ export default function SearchClient() {
   )
 
   // ——— Active filter chips ———
-  const propTypeKey = PROP_TYPES.find((p) => p.value === type)?.key
-  const chips: { key: string; label: string; clear: () => void }[] = []
-  if (deal) chips.push({ key: 'deal', label: t(deal === 'sale' ? 'search.sale' : 'search.rent'), clear: () => patchParams({ deal: undefined }) })
-  if (type) chips.push({ key: 'type', label: propTypeKey ? t(propTypeKey) : type, clear: () => patchParams({ type: undefined }) })
+  const propType = PROP_TYPES.find((p) => p.value === type)
+  const propTypeKey = propType?.key
+  const chips: { key: string; label: string; hue?: string; clear: () => void }[] = []
+  if (deal) chips.push({ key: 'deal', label: t(deal === 'sale' ? 'search.sale' : 'search.rent'), hue: deal === 'rent' ? '#7C3AED' : '#2E6BFF', clear: () => patchParams({ deal: undefined }) })
+  if (type) chips.push({ key: 'type', label: propTypeKey ? t(propTypeKey) : type, hue: propType?.brand.hue, clear: () => patchParams({ type: undefined }) })
   if (city) chips.push({ key: 'city', label: city, clear: () => patchParams({ city: undefined, district: undefined }) })
   if (district) chips.push({ key: 'district', label: district, clear: () => patchParams({ district: undefined }) })
   if (minPrice !== undefined) chips.push({ key: 'min', label: `${t('search.min')}. $${minPrice.toLocaleString('en-US')}`, clear: () => { clearDraft('min'); patchParams({ min: undefined }) } })
