@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { ChevronDown, Heart, Menu, X, Plus, User } from 'lucide-react'
-import { Logo } from '@/components/Reveal'
+import { Logo } from '@/components/Logo'
 import { useFavorites } from '@/lib/favorites'
 import { useI18n, LANGS } from '@/lib/i18n/context'
 import type { DictKey } from '@/lib/i18n/context'
@@ -16,6 +16,7 @@ export default function Navbar() {
   const { count } = useFavorites()
   const { lang, setLang, t } = useI18n()
   const pathname = usePathname()
+  const reduceMotion = useReducedMotion()
 
   // Close the mobile menu on route change (render-time state adjustment)
   const [prevPathname, setPrevPathname] = useState(pathname)
@@ -54,7 +55,7 @@ export default function Navbar() {
           key={code}
           onClick={() => setLang(code)}
           aria-pressed={lang === code}
-          className={`rounded-full px-2.5 py-1.5 text-[12px] font-extrabold uppercase leading-none transition-colors duration-200 ${
+          className={`rounded-full px-3.5 py-2.5 text-[12px] font-extrabold uppercase leading-none transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
             lang === code
               ? 'bg-sv-blue text-white shadow-glow-blue-sm'
               : pillLight
@@ -70,7 +71,7 @@ export default function Navbar() {
 
   return (
     <motion.header
-      initial={{ y: -80, opacity: 0 }}
+      initial={reduceMotion ? false : { y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.7, ease: [0.21, 0.65, 0.2, 1] }}
       className="fixed inset-x-0 top-0 z-50"
@@ -90,7 +91,7 @@ export default function Navbar() {
               <a
                 key={l.key}
                 href={l.to}
-                className={`rounded-full px-4 py-2 text-[15px] font-semibold transition-colors duration-200 ${
+                className={`rounded-full px-4 py-2 text-[15px] font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
                   light
                     ? 'text-sv-ink/80 hover:bg-sv-ink/5 hover:text-sv-ink'
                     : 'text-white/85 hover:bg-white/10 hover:text-white'
@@ -102,7 +103,7 @@ export default function Navbar() {
               <Link
                 key={l.key}
                 href={l.to}
-                className={`rounded-full px-4 py-2 text-[15px] font-semibold transition-colors duration-200 ${
+                className={`rounded-full px-4 py-2 text-[15px] font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
                   light
                     ? 'text-sv-ink/80 hover:bg-sv-ink/5 hover:text-sv-ink'
                     : 'text-white/85 hover:bg-white/10 hover:text-white'
@@ -112,22 +113,23 @@ export default function Navbar() {
               </Link>
             ),
           )}
-          <button
-            className={`flex items-center gap-1 rounded-full px-4 py-2 text-[15px] font-semibold transition-colors ${
+          <Link
+            href="/search"
+            className={`flex items-center gap-1 rounded-full px-4 py-2 text-[15px] font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
               light
                 ? 'text-sv-ink/80 hover:bg-sv-ink/5'
                 : 'text-white/85 hover:bg-white/10'
             }`}
           >
             {t('nav.more')} <ChevronDown className="h-4 w-4" />
-          </button>
+          </Link>
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
           <Link
             href="/search"
             aria-label={`${t('nav.favorites')}${count > 0 ? ` — ${count}` : ''}`}
-            className={`relative grid h-10 w-10 place-items-center rounded-full transition-colors ${
+            className={`relative grid h-10 w-10 place-items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
               light ? 'text-sv-ink/70 hover:bg-sv-ink/5' : 'text-white/85 hover:bg-white/10'
             }`}
           >
@@ -140,27 +142,29 @@ export default function Navbar() {
           </Link>
           {langPills(light)}
           <button
-            className={`flex h-10 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-colors ${
+            className={`flex h-10 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 ${
               light ? 'text-sv-ink hover:bg-sv-ink/5' : 'text-white hover:bg-white/10'
             }`}
           >
             <User className="h-4 w-4" /> {t('nav.login')}
           </button>
-          <a
-            href="#"
-            className="group flex h-11 items-center gap-2 rounded-full bg-sv-orange px-5 text-[14px] font-extrabold text-white shadow-glow-orange transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-orange-lg"
+          <Link
+            href="/add-listing"
+            className="group flex h-11 items-center gap-2 rounded-full bg-sv-orange px-5 text-[14px] font-extrabold text-white shadow-glow-orange transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-orange-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 active:scale-[0.98]"
           >
             <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
             {t('nav.addListing')}
-          </a>
+          </Link>
         </div>
 
         <button
-          className={`grid h-10 w-10 place-items-center rounded-full md:hidden ${
+          className={`grid h-11 w-11 place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 md:hidden ${
             light ? 'text-sv-ink' : 'text-white'
           }`}
           onClick={() => setOpen(!open)}
           aria-label={t('nav.menu')}
+          aria-expanded={open}
+          aria-controls="mobile-menu"
         >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -169,9 +173,10 @@ export default function Navbar() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -12 }}
+            id="mobile-menu"
+            initial={reduceMotion ? false : { opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
+            exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
             transition={{ duration: 0.25 }}
             className="mx-4 mt-2 rounded-tile glass-light p-4 shadow-card md:hidden"
           >
@@ -181,7 +186,7 @@ export default function Navbar() {
                   key={l.key}
                   href={l.to}
                   onClick={() => setOpen(false)}
-                  className="block rounded-control px-4 py-3 text-[16px] font-semibold text-sv-ink hover:bg-sv-ink/5"
+                  className="block rounded-control px-4 py-3 text-[16px] font-semibold text-sv-ink hover:bg-sv-ink/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2"
                 >
                   {t(l.key)}
                 </a>
@@ -190,7 +195,7 @@ export default function Navbar() {
                   key={l.key}
                   href={l.to}
                   onClick={() => setOpen(false)}
-                  className="block rounded-control px-4 py-3 text-[16px] font-semibold text-sv-ink hover:bg-sv-ink/5"
+                  className="block rounded-control px-4 py-3 text-[16px] font-semibold text-sv-ink hover:bg-sv-ink/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2"
                 >
                   {t(l.key)}
                 </Link>
@@ -202,12 +207,13 @@ export default function Navbar() {
               </span>
               {langPills(true)}
             </div>
-            <a
-              href="#"
-              className="mt-2 flex items-center justify-center gap-2 rounded-control bg-sv-orange px-4 py-3.5 text-[15px] font-extrabold text-white"
+            <Link
+              href="/add-listing"
+              onClick={() => setOpen(false)}
+              className="mt-2 flex items-center justify-center gap-2 rounded-control bg-sv-orange px-4 py-3.5 text-[15px] font-extrabold text-white shadow-glow-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2 active:scale-[0.98]"
             >
               <Plus className="h-4 w-4" /> {t('nav.addListingFull')}
-            </a>
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>

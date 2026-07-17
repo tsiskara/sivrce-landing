@@ -12,9 +12,9 @@ import Footer from '@/components/sections/Footer'
 
 export default function Home() {
   return (
-    <div className="font-geo min-h-screen bg-white antialiased">
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <main>
+      <main id="main">
         <Hero />
         <Stats />
         <Categories />

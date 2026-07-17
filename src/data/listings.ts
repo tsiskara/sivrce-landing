@@ -62,8 +62,8 @@ export const LISTINGS: Listing[] = [
   // ——— Homepage 6 (order & figures locked with the homepage) ———
   {
     id: 'vake-chavchavadze-47',
-    img: '/images/p1.png',
-    images: ['/images/p1.png', '/images/p4.png', '/images/p6.png', '/images/np1.png'],
+    img: '/images/p1.webp',
+    images: ['/images/p1.webp', '/images/p4.webp', '/images/p6.webp', '/images/np1.webp'],
     priceUSD: 285000, priceGEL: 769500, perM2USD: 3167,
     title: 'მოდერნული 2-ოთახიანი პანორამული ხედით',
     address: 'ჩავჭავაძის 47, ვაკე, თბილისი',
@@ -81,8 +81,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'saburtalo-pekin-12',
-    img: '/images/p2.png',
-    images: ['/images/p2.png', '/images/p1.png', '/images/p5.png', '/images/np2.png'],
+    img: '/images/p2.webp',
+    images: ['/images/p2.webp', '/images/p1.webp', '/images/p5.webp', '/images/np2.webp'],
     priceUSD: 640000, priceGEL: 1728000, perM2USD: 3765,
     title: 'პენტჰაუსი ტერასით, საბურთალო',
     address: 'პეკინის 12, საბურთალო, თბილისი',
@@ -100,8 +100,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'tskvarichamia-mshvidoba-8',
-    img: '/images/p3.png',
-    images: ['/images/p3.png', '/images/np1.png', '/images/p2.png'],
+    img: '/images/p3.webp',
+    images: ['/images/p3.webp', '/images/np1.webp', '/images/p2.webp'],
     priceUSD: 420000, priceGEL: 1134000, perM2USD: 2100,
     title: 'ავტორის ვილა აუზით, ცხვარიჭამია',
     address: 'მშვიდობის ქ. 8, თბილისის მიდამო',
@@ -119,8 +119,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'vake-abashidze-34',
-    img: '/images/p4.png',
-    images: ['/images/p4.png', '/images/p1.png', '/images/p6.png'],
+    img: '/images/p4.webp',
+    images: ['/images/p4.webp', '/images/p1.webp', '/images/p6.webp'],
     priceUSD: 158500, priceGEL: 427950, perM2USD: 2264,
     title: 'ახალი აშენებული ბინა ვაკეში',
     address: 'აბაშიძის 34, ვაკე, თბილისი',
@@ -138,8 +138,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'mtatsminda-sanapiro-5',
-    img: '/images/p5.png',
-    images: ['/images/p5.png', '/images/p2.png', '/images/p4.png'],
+    img: '/images/p5.webp',
+    images: ['/images/p5.webp', '/images/p2.webp', '/images/p4.webp'],
     priceUSD: 112000, priceGEL: 302400, perM2USD: 1750,
     title: 'მზიანი სტუდიო მთაწმინდაზე',
     address: 'სანაპიროს 5, მთაწმინდა, თბილისი',
@@ -157,8 +157,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'dighomi-gudamaqari-21',
-    img: '/images/p6.png',
-    images: ['/images/p6.png', '/images/p4.png', '/images/np2.png'],
+    img: '/images/p6.webp',
+    images: ['/images/p6.webp', '/images/p4.webp', '/images/np2.webp'],
     priceUSD: 198000, priceGEL: 534600, perM2USD: 2200,
     title: 'დიზაინერული რემონტით, დიღომი',
     address: 'გუდამაყრის 21, დიღომი, თბილისი',
@@ -178,8 +178,8 @@ export const LISTINGS: Listing[] = [
   // ——— Rent: Tbilisi ———
   {
     id: 'vake-irakli-abashidze-10-rent',
-    img: '/images/p4.png',
-    images: ['/images/p4.png', '/images/p5.png', '/images/p1.png'],
+    img: '/images/p4.webp',
+    images: ['/images/p4.webp', '/images/p5.webp', '/images/p1.webp'],
     priceUSD: 1200, priceGEL: 3240, perM2USD: 15,
     title: 'ევრორემონტით 3-ოთახიანი ვაკეში',
     address: 'ი. აბაშიძის 10, ვაკე, თბილისი',
@@ -197,8 +197,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'saburtalo-kavtaradze-3-rent',
-    img: '/images/p6.png',
-    images: ['/images/p6.png', '/images/p2.png'],
+    img: '/images/p6.webp',
+    images: ['/images/p6.webp', '/images/p2.webp'],
     priceUSD: 850, priceGEL: 2295, perM2USD: 13,
     title: '2-ოთახიანი ახალ კომპლექსში',
     address: 'ქავთარაძის 3, საბურთალო, თბილისი',
@@ -216,8 +216,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'ortachala-krtsanisi-15-rent',
-    img: '/images/p5.png',
-    images: ['/images/p5.png', '/images/p6.png', '/images/p3.png'],
+    img: '/images/p5.webp',
+    images: ['/images/p5.webp', '/images/p6.webp', '/images/p3.webp'],
     priceUSD: 650, priceGEL: 1755, perM2USD: 11,
     title: 'მყუდრო ბინა ორთაჭალაში',
     address: 'კრისტესის 15, ორთაჭალა, თბილისი',
@@ -235,8 +235,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'isani-navtlughi-8-rent',
-    img: '/images/p1.png',
-    images: ['/images/p1.png', '/images/p5.png'],
+    img: '/images/p1.webp',
+    images: ['/images/p1.webp', '/images/p5.webp'],
     priceUSD: 500, priceGEL: 1350, perM2USD: 10,
     title: '1-ოთახიანი ისანში, მეტროსთან',
     address: 'ნავთლუღის 8, ისანი, თბილისი',
@@ -254,8 +254,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'gldani-mikheil-4-rent',
-    img: '/images/p6.png',
-    images: ['/images/p6.png', '/images/p4.png'],
+    img: '/images/p6.webp',
+    images: ['/images/p6.webp', '/images/p4.webp'],
     priceUSD: 400, priceGEL: 1080, perM2USD: 8,
     title: 'საოჯახო ბინა გლდანში',
     address: 'მიხეილ გლდანელის 4, გლდანი, თბილისი',
@@ -273,8 +273,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'mtatsminda-foothill-house-rent',
-    img: '/images/p3.png',
-    images: ['/images/p3.png', '/images/np1.png'],
+    img: '/images/p3.webp',
+    images: ['/images/p3.webp', '/images/np1.webp'],
     priceUSD: 2500, priceGEL: 6750, perM2USD: 16,
     title: 'კერძო სახლი მთაწმინდის ძირში',
     address: 'წმ. მიხეილის ქ. 3, მთაწმინდა, თბილისი',
@@ -294,8 +294,8 @@ export const LISTINGS: Listing[] = [
   // ——— Sale: more Tbilisi ———
   {
     id: 'vake-tamarashvili-6',
-    img: '/images/p2.png',
-    images: ['/images/p2.png', '/images/p1.png', '/images/p6.png'],
+    img: '/images/p2.webp',
+    images: ['/images/p2.webp', '/images/p1.webp', '/images/p6.webp'],
     priceUSD: 345000, priceGEL: 931500, perM2USD: 3136,
     title: '4-ოთახიანი თამარაშვილზე, ახალი პროექტი',
     address: 'თამარაშვილის 6, ვაკე, თბილისი',
@@ -313,8 +313,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'saburtalo-nutsubidze-77',
-    img: '/images/p5.png',
-    images: ['/images/p5.png', '/images/p2.png'],
+    img: '/images/p5.webp',
+    images: ['/images/p5.webp', '/images/p2.webp'],
     priceUSD: 95000, priceGEL: 256500, perM2USD: 1583,
     title: '2-ოთახიანი ნუცუბიძის პლატოზე',
     address: 'ნუცუბიძის 77, საბურთალო, თბილისი',
@@ -332,8 +332,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'ortachala-gulia-22',
-    img: '/images/p1.png',
-    images: ['/images/p1.png', '/images/p6.png', '/images/p4.png'],
+    img: '/images/p1.webp',
+    images: ['/images/p1.webp', '/images/p6.webp', '/images/p4.webp'],
     priceUSD: 132000, priceGEL: 356400, perM2USD: 1650,
     title: 'ახალი კომპლექსი ორთაჭალაში, ხედით',
     address: 'გულიას 22, ორთაჭალა, თბილისი',
@@ -351,8 +351,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'isani-berbuta-11',
-    img: '/images/p4.png',
-    images: ['/images/p4.png', '/images/p1.png'],
+    img: '/images/p4.webp',
+    images: ['/images/p4.webp', '/images/p1.webp'],
     priceUSD: 88000, priceGEL: 237600, perM2USD: 1467,
     title: '3-ოთახიანი ისანში, გარემონტებული',
     address: 'ბერბუქის 11, ისანი, თბილისი',
@@ -370,8 +370,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'gldani-omar-khizaneishvili-30',
-    img: '/images/p6.png',
-    images: ['/images/p6.png', '/images/p5.png'],
+    img: '/images/p6.webp',
+    images: ['/images/p6.webp', '/images/p5.webp'],
     priceUSD: 62000, priceGEL: 167400, perM2USD: 1292,
     title: 'სტუდიო გლდანის ახალ კომპლექსში',
     address: 'ხიზანეიშვილის 30, გლდანი, თბილისი',
@@ -389,8 +389,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'dighomi-agmashenebeli-alley-house',
-    img: '/images/p3.png',
-    images: ['/images/p3.png', '/images/p6.png', '/images/np2.png'],
+    img: '/images/p3.webp',
+    images: ['/images/p3.webp', '/images/p6.webp', '/images/np2.webp'],
     priceUSD: 240000, priceGEL: 648000, perM2USD: 1333,
     title: 'კერძო სახლი დიდ დიღომში',
     address: 'აღმაშენებლის ხეივანი, დიდი დიღომი, თბილისი',
@@ -410,8 +410,8 @@ export const LISTINGS: Listing[] = [
   // ——— Batumi ———
   {
     id: 'batumi-sherif-khimshiashvili-20',
-    img: '/images/np1.png',
-    images: ['/images/np1.png', '/images/p2.png', '/images/p1.png'],
+    img: '/images/np1.webp',
+    images: ['/images/np1.webp', '/images/p2.webp', '/images/p1.webp'],
     priceUSD: 165000, priceGEL: 445500, perM2USD: 2357,
     title: 'ზღვის ხედით ბინა ბათუმში, პირველი ხაზი',
     address: 'შ. ხიმშიაშვილის 20, ბათუმი',
@@ -429,8 +429,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'batumi-gorgiladze-50-rent',
-    img: '/images/np2.png',
-    images: ['/images/np2.png', '/images/p4.png'],
+    img: '/images/np2.webp',
+    images: ['/images/np2.webp', '/images/p4.webp'],
     priceUSD: 700, priceGEL: 1890, perM2USD: 12,
     title: 'ბათუმის ცენტრში 2-ოთახიანი',
     address: 'გორგილაძის 50, ბათუმი',
@@ -448,8 +448,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'batumi-makhinjauri-house',
-    img: '/images/p3.png',
-    images: ['/images/p3.png', '/images/np1.png', '/images/np2.png'],
+    img: '/images/p3.webp',
+    images: ['/images/p3.webp', '/images/np1.webp', '/images/np2.webp'],
     priceUSD: 310000, priceGEL: 837000, perM2USD: 1409,
     title: 'ვილა მახინჯაურში, ზღვის ხედით',
     address: 'მახინჯაური, ბათუმის მიდამო',
@@ -469,8 +469,8 @@ export const LISTINGS: Listing[] = [
   // ——— Kutaisi ———
   {
     id: 'kutaisi-tamar-mefe-14',
-    img: '/images/p5.png',
-    images: ['/images/p5.png', '/images/p4.png', '/images/p6.png'],
+    img: '/images/p5.webp',
+    images: ['/images/p5.webp', '/images/p4.webp', '/images/p6.webp'],
     priceUSD: 78000, priceGEL: 210600, perM2USD: 1114,
     title: 'ცენტრალური ბინა ქუთაისში, რემონტით',
     address: 'თამარ მეფის 14, ქუთაისი',
@@ -488,8 +488,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'kutaisi-chavchavadze-rent',
-    img: '/images/p4.png',
-    images: ['/images/p4.png', '/images/p5.png'],
+    img: '/images/p4.webp',
+    images: ['/images/p4.webp', '/images/p5.webp'],
     priceUSD: 450, priceGEL: 1215, perM2USD: 8,
     title: 'ქუთაისში ქირავდება 2-ოთახიანი',
     address: 'ჩავჭავაძის გამზ. 21, ქუთაისი',
@@ -509,8 +509,8 @@ export const LISTINGS: Listing[] = [
   // ——— Commercial & land ———
   {
     id: 'tbilisi-avlabari-commercial',
-    img: '/images/np2.png',
-    images: ['/images/np2.png', '/images/p6.png'],
+    img: '/images/np2.webp',
+    images: ['/images/np2.webp', '/images/p6.webp'],
     priceUSD: 195000, priceGEL: 526500, perM2USD: 1625,
     title: 'კომერციული ფართი ავლაბარში, პირველი სართული',
     address: 'ქეთევან დედოფლის გამზ. 45, ავლაბარი, თბილისი',
@@ -528,8 +528,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'tbilisi-land-tskneti',
-    img: '/images/np1.png',
-    images: ['/images/np1.png', '/images/p3.png'],
+    img: '/images/np1.webp',
+    images: ['/images/np1.webp', '/images/p3.webp'],
     priceUSD: 85000, priceGEL: 229500, perM2USD: 85,
     title: 'მიწის ნაკვეთი წყნეთში, საცხოვრებელი',
     address: 'წყნეთი, თბილისის მიდამო',
@@ -547,8 +547,8 @@ export const LISTINGS: Listing[] = [
   },
   {
     id: 'tbilisi-commercial-vake-rent',
-    img: '/images/np1.png',
-    images: ['/images/np1.png', '/images/np2.png'],
+    img: '/images/np1.webp',
+    images: ['/images/np1.webp', '/images/np2.webp'],
     priceUSD: 1800, priceGEL: 4860, perM2USD: 20,
     title: 'ოფისი ქირავდება ვაკეში, 90 მ²',
     address: 'ჭონქაძის 9, ვაკე, თბილისი',
@@ -601,19 +601,22 @@ export function filterListings(f: ListingFilters): Listing[] {
     if (f.maxArea !== undefined && l.area > f.maxArea) return false
     if (f.q) {
       const q = f.q.toLowerCase()
-      const hay = `${l.title} ${l.address} ${l.city} ${l.district} ${l.id}`.toLowerCase()
+      const hay = `${l.title} ${l.address} ${l.city} ${l.district}`.toLowerCase()
       if (!hay.includes(q)) return false
     }
     return true
   })
 
   const sort: SortKey = f.sort ?? 'date'
+  // ponytail: sale/rent prices are different units (price vs $/mo) — group by deal first.
+  // Upgrade path: split sort per dealType or normalize rent to annual.
+  const dealGroup = (x: Listing) => (x.dealType === 'sale' ? 0 : 1)
   out = [...out].sort((a, b) => {
     switch (sort) {
       case 'price-asc':
-        return a.priceUSD - b.priceUSD
+        return dealGroup(a) - dealGroup(b) || a.priceUSD - b.priceUSD
       case 'price-desc':
-        return b.priceUSD - a.priceUSD
+        return dealGroup(a) - dealGroup(b) || b.priceUSD - a.priceUSD
       case 'area':
         return b.area - a.area
       case 'ai':
@@ -678,7 +681,7 @@ export function similarListings(l: Listing, count = 4): Listing[] {
     (x) => x.district !== l.district && x.propType === l.propType && x.dealType === l.dealType,
   )
   const rest = others.filter(
-    (x) => !sameDistrict.includes(x) && !sameType.includes(x),
+    (x) => x.dealType === l.dealType && !sameDistrict.includes(x) && !sameType.includes(x),
   )
   return [...sameDistrict, ...sameType, ...rest].slice(0, count)
 }

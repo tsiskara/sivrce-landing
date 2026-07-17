@@ -30,10 +30,13 @@ export function toggleFavorite(id: string): string[] {
 }
 
 export function useFavorites() {
-  const [favs, setFavs] = useState<string[]>(readFavs)
+  // Init empty to match SSR, then hydrate from localStorage on mount —
+  // otherwise returning users hit a hydration mismatch.
+  const [favs, setFavs] = useState<string[]>([])
 
   useEffect(() => {
     const sync = () => setFavs(readFavs())
+    sync()
     window.addEventListener(EVENT, sync)
     window.addEventListener('storage', sync)
     return () => {

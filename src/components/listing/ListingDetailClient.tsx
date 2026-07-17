@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
@@ -12,6 +12,7 @@ import {
 import Navbar from '@/components/sections/Navbar'
 import Footer from '@/components/sections/Footer'
 import ListingCard, { BADGE_STYLE } from '@/components/ListingCard'
+import { Reveal } from '@/components/Reveal'
 import {
   formatUSD, formatGEL, formatViews,
   formatFloor, USD_GEL, type Listing, type PropType,
@@ -55,8 +56,11 @@ function Lightbox({
   images, index, onClose, onNav,
 }: { images: string[]; index: number; onClose: () => void; onNav: (dir: number) => void }) {
   const { t } = useI18n()
+  const closeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
+    const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    closeRef.current?.focus()
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
       if (e.key === 'ArrowRight') onNav(1)
@@ -67,6 +71,7 @@ function Lightbox({
     return () => {
       window.removeEventListener('keydown', onKey)
       document.body.style.overflow = ''
+      trigger?.focus()
     }
   }, [onClose, onNav])
 
@@ -82,6 +87,7 @@ function Lightbox({
       aria-label={t('detail.photoViewer')}
     >
       <button
+        ref={closeRef}
         onClick={onClose}
         aria-label={t('detail.close')}
         className="absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
@@ -102,7 +108,7 @@ function Lightbox({
         transition={{ duration: 0.35, ease }}
         src={images[index]}
         alt={t('detail.photo', { n: index + 1 })}
-        className="max-h-[84vh] max-w-full rounded-module object-contain shadow-2xl"
+        className="max-h-[84vh] max-w-full rounded-module object-contain shadow-panel-dark"
         onClick={(e) => e.stopPropagation()}
       />
       <button
@@ -126,6 +132,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
   const [photo, setPhoto] = useState(0)
   const [lightbox, setLightbox] = useState(false)
   const [currency, setCurrency] = useState<'USD' | 'GEL'>('USD')
+  const gradId = useId()
 
   // Mortgage state
   const [downPct, setDownPct] = useState(20)
@@ -169,7 +176,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
     <div className="font-geo min-h-screen bg-sv-cloud antialiased">
       <Navbar />
 
-      <main className="mx-auto max-w-[1440px] px-5 pb-20 pt-[92px] md:px-10">
+      <main id="main" className="mx-auto max-w-[1440px] px-5 pb-20 pt-[92px] md:px-10">
         {/* Breadcrumb */}
         <nav className="mb-5 flex items-center gap-2 text-[13px] font-bold text-sv-ink/45" aria-label={t('detail.breadcrumb')}>
           <Link href="/" className="transition-colors hover:text-sv-blue">{t('detail.home')}</Link>
@@ -189,7 +196,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
         {/* ————— Gallery ————— */}
         <div className="grid gap-4 lg:grid-cols-[1.9fr_1fr]">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease }}
             className="group relative overflow-hidden rounded-card shadow-card"
@@ -215,21 +222,21 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               </span>
             )}
             <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between">
-              <span className="flex items-center gap-1.5 rounded-full bg-black/45 px-3 py-1.5 text-[12px] font-bold text-white/90 backdrop-blur">
+              <span className="flex items-center gap-1.5 rounded-full bg-sv-navy/55 px-3 py-1.5 text-[12px] font-bold text-white/90 backdrop-blur">
                 <Eye className="h-3.5 w-3.5" /> {t('detail.views', { n: formatViews(l.views) })}
               </span>
               <div className="flex gap-2">
                 <button
                   onClick={() => navPhoto(-1)}
                   aria-label={t('detail.prevPhoto')}
-                  className="grid h-10 w-10 place-items-center rounded-full bg-white/90 text-sv-ink backdrop-blur transition-all hover:bg-white"
+                  className="grid h-11 w-11 place-items-center rounded-full bg-white/90 text-sv-ink backdrop-blur transition-all hover:bg-white"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => navPhoto(1)}
                   aria-label={t('detail.nextPhoto')}
-                  className="grid h-10 w-10 place-items-center rounded-full bg-white/90 text-sv-ink backdrop-blur transition-all hover:bg-white"
+                  className="grid h-11 w-11 place-items-center rounded-full bg-white/90 text-sv-ink backdrop-blur transition-all hover:bg-white"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
@@ -288,18 +295,23 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   onClick={() => toggle(l.id)}
                   aria-label={fav ? t('detail.removeFavorite') : t('detail.addFavorite')}
                   aria-pressed={fav}
-                  className={`grid h-11 w-11 place-items-center rounded-full border transition-all duration-300 hover:scale-105 ${
+                  className={`group grid h-11 w-11 place-items-center rounded-full border transition-all duration-300 hover:scale-105 ${
                     fav
                       ? 'border-sv-orange/30 bg-sv-orange/10 text-sv-orange'
-                      : 'border-sv-ink/10 bg-white text-sv-ink/60 hover:text-sv-orange'
+                      : 'border-sv-ink/10 bg-white text-sv-ink'
                   }`}
                 >
-                  <Heart className={`h-5 w-5 ${fav ? 'fill-current' : ''}`} />
+                  <Heart
+                    className={`h-5 w-5 transition-all ${
+                      fav ? 'fill-sv-orange text-sv-orange' : 'group-hover:fill-sv-orange/20 group-hover:text-sv-orange'
+                    }`}
+                  />
                 </button>
                 <button
                   onClick={() => {
-                    navigator.clipboard?.writeText(window.location.href).catch(() => {})
-                    toast.success(t('detail.linkCopied'))
+                    navigator.clipboard?.writeText(window.location.href)
+                      .then(() => toast.success(t('detail.linkCopied')))
+                      .catch(() => toast.error('ბმულის კოპირება ვერ მოხერხდა'))
                   }}
                   aria-label={t('detail.share')}
                   className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-white text-sv-ink/60 transition-all duration-300 hover:scale-105 hover:text-sv-blue"
@@ -320,7 +332,9 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   {!isSale && <span className="text-[18px] font-extrabold text-sv-ink/45"> {t('detail.perMonth')}</span>}
                 </div>
                 <div className="mt-0.5 text-[14px] font-bold text-sv-ink/45">
-                  {priceAlt} · ${l.perM2USD.toLocaleString('en-US')}/მ²
+                  {priceAlt} · {currency === 'USD'
+                    ? `$${l.perM2USD.toLocaleString('en-US')}`
+                    : `${Math.round(l.priceGEL / l.area).toLocaleString('en-US')} ₾`}/მ²
                 </div>
               </div>
               {/* Currency toggle */}
@@ -359,9 +373,9 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               <div className="mt-4 flex flex-wrap items-center gap-6">
                 <div className="relative grid h-[88px] w-[88px] shrink-0 place-items-center">
                   <svg viewBox="0 0 36 36" className="h-[88px] w-[88px] -rotate-90">
-                    <circle cx="18" cy="18" r="15.5" fill="none" stroke="#2e6bff" strokeOpacity="0.12" strokeWidth="3" />
+                    <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--sv-blue)" strokeOpacity="0.12" strokeWidth="3" />
                     <motion.circle
-                      cx="18" cy="18" r="15.5" fill="none" stroke="url(#aigrad-lg)" strokeWidth="3"
+                      cx="18" cy="18" r="15.5" fill="none" stroke={`url(#${gradId})`} strokeWidth="3"
                       strokeLinecap="round"
                       initial={{ strokeDasharray: '0 97.4' }}
                       whileInView={{ strokeDasharray: `${(l.ai.score / 100) * 97.4} 97.4` }}
@@ -369,9 +383,9 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                       transition={{ duration: 1.2, ease }}
                     />
                     <defs>
-                      <linearGradient id="aigrad-lg" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stopColor="#2e6bff" />
-                        <stop offset="100%" stopColor="#7a5cff" />
+                      <linearGradient id={gradId} x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="var(--sv-blue)" />
+                        <stop offset="100%" stopColor="var(--sv-violet)" />
                       </linearGradient>
                     </defs>
                   </svg>
@@ -390,7 +404,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
             </div>
 
             {/* Specs */}
-            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <Reveal className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {specs.map((s) => (
                 <div
                   key={s.label}
@@ -401,10 +415,10 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   <div className="text-[12px] font-bold text-sv-ink/45">{s.label}</div>
                 </div>
               ))}
-            </div>
+            </Reveal>
 
             {/* Features */}
-            <div className="mt-8">
+            <Reveal className="mt-8">
               <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">{t('detail.features')}</h2>
               <div className="mt-4 flex flex-wrap gap-2">
                 {l.features.map((f) => (
@@ -416,7 +430,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   </span>
                 ))}
               </div>
-            </div>
+            </Reveal>
 
             {/* Description */}
             <div className="mt-8">
@@ -431,11 +445,11 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               <h2 className="text-[20px] font-black tracking-[-0.02em] text-sv-ink">{t('detail.location')}</h2>
               <div className="relative mt-4 overflow-hidden rounded-card shadow-card">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/map3d.png" alt={t('detail.map')} className="h-[320px] w-full object-cover" />
+                <img src="/images/map3d.webp" alt={t('detail.map')} className="h-[320px] w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-sv-navy/60 via-transparent to-transparent" />
                 {/* Pin */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <span className="animate-pin block h-5 w-5 rounded-full border-[3px] border-white bg-sv-orange shadow-lg" />
+                  <span className="animate-pin block h-5 w-5 rounded-full border-[3px] border-white bg-sv-orange shadow-glow-orange" />
                 </div>
                 <div className="absolute bottom-5 left-5 right-5 flex flex-wrap items-center justify-between gap-3">
                   <div className="rounded-module glass px-4 py-2.5">
@@ -552,7 +566,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               <div className="mt-5 grid grid-cols-2 gap-2.5">
                 <a
                   href={`tel:${l.agent.phone.replace(/\s/g, '')}`}
-                  className="flex h-12 items-center justify-center gap-2 rounded-full bg-sv-orange text-[14px] font-extrabold text-white shadow-[0_8px_24px_-8px_rgba(255,106,45,0.8)] transition-all duration-300 hover:bg-[#ff5a14]"
+                  className="flex h-12 items-center justify-center gap-2 rounded-full bg-sv-orange text-[14px] font-extrabold text-white shadow-glow-orange transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-orange-lg active:scale-[0.98]"
                 >
                   <Phone className="h-4 w-4" /> {t('detail.call')}
                 </a>
@@ -575,7 +589,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
               </div>
 
               <p className="mt-4 flex items-center justify-center gap-1.5 text-[11px] font-bold text-sv-ink/35">
-                <BadgeCheck className="h-3.5 w-3.5 text-sv-success" />
+                <BadgeCheck className="h-3.5 w-3.5 text-sv-blue" />
                 {t('detail.verifiedBy')}
               </p>
             </div>
@@ -592,29 +606,31 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
 
         {/* ————— Similar ————— */}
         {similar.length > 0 && (
-          <section className="mt-16">
-            <div className="mb-6 flex items-end justify-between">
-              <div>
-                <h2 className="text-[24px] font-black tracking-[-0.02em] text-sv-ink md:text-[28px]">
-                  {t('detail.similar')}
-                </h2>
-                <p className="mt-1 text-[14px] font-semibold text-sv-ink/50">
-                  {t('detail.similarSub', { deal: t(isSale ? 'search.sale' : 'search.rent') })}
-                </p>
+          <Reveal className="mt-16">
+            <section>
+              <div className="mb-6 flex items-end justify-between">
+                <div>
+                  <h2 className="text-[24px] font-black tracking-[-0.02em] text-sv-ink md:text-[28px]">
+                    {t('detail.similar')}
+                  </h2>
+                  <p className="mt-1 text-[14px] font-semibold text-sv-ink/50">
+                    {t('detail.similarSub', { deal: t(isSale ? 'search.sale' : 'search.rent') })}
+                  </p>
+                </div>
+                <Link
+                  href={`/search?deal=${l.dealType}&type=${l.propType}`}
+                  className="hidden shrink-0 items-center gap-2 text-[14px] font-extrabold text-sv-blue transition-colors hover:text-sv-blue-deep sm:flex"
+                >
+                  {t('detail.seeMore')} <ChevronRight className="h-4 w-4" />
+                </Link>
               </div>
-              <Link
-                href={`/search?deal=${l.dealType}&type=${l.propType}`}
-                className="hidden shrink-0 items-center gap-2 text-[14px] font-extrabold text-sv-blue transition-colors hover:text-sv-blue-deep sm:flex"
-              >
-                {t('detail.seeMore')} <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {similar.map((s, i) => (
-                <ListingCard key={s.id} l={s} i={i} layout="wide" />
-              ))}
-            </div>
-          </section>
+              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                {similar.map((s, i) => (
+                  <ListingCard key={s.id} l={s} i={i} layout="wide" />
+                ))}
+              </div>
+            </section>
+          </Reveal>
         )}
       </main>
 

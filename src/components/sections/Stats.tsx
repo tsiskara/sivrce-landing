@@ -12,6 +12,10 @@ function CountUp({ target, suffix = '' }: { target: number; suffix?: string }) {
 
   useEffect(() => {
     if (!inView) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const raf = requestAnimationFrame(() => setVal(target))
+      return () => cancelAnimationFrame(raf)
+    }
     const start = performance.now()
     const dur = 1600
     let raf: number
@@ -46,26 +50,24 @@ export default function Stats() {
   return (
     <section className="relative bg-white py-20 md:py-28">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-        <Reveal>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
-            {STATS.map((s, i) => (
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+          {STATS.map((s, i) => (
+            <Reveal key={s.label} delay={i * 0.02} className="h-full">
               <div
-                key={s.label}
-                className="group relative overflow-hidden rounded-card border border-sv-ink/[0.06] bg-gradient-to-b from-sv-cloud to-white p-6 transition-all duration-500 hover:-translate-y-1.5 hover:border-sv-blue/25 hover:shadow-card-hover"
-                style={{ transitionDelay: `${i * 20}ms` }}
+                className="group relative h-full overflow-hidden rounded-card border border-sv-ink/[0.06] bg-gradient-to-b from-sv-cloud to-white p-6 transition-all duration-500 hover:-translate-y-1.5 hover:border-sv-blue/25 hover:shadow-card-hover"
               >
-                <div className="mb-5 grid h-11 w-11 place-items-center rounded-2xl bg-sv-blue/10 text-sv-blue transition-all duration-500 group-hover:scale-110 group-hover:bg-sv-blue group-hover:text-white">
+                <div className="mb-5 grid h-11 w-11 place-items-center rounded-module bg-sv-blue/10 text-sv-blue transition-all duration-500 group-hover:scale-110 group-hover:bg-sv-blue group-hover:text-white">
                   <s.icon className="h-5 w-5" />
                 </div>
                 <div className="text-[34px] font-black tracking-tight text-sv-ink md:text-[38px]">
                   <CountUp target={s.value} suffix={s.suffix} />
                 </div>
                 <div className="mt-1 text-[14px] font-extrabold text-sv-ink/85">{s.label}</div>
-                <div className="mt-0.5 text-[12px] font-semibold text-sv-ink/45">{s.sub}</div>
+                <div className="mt-0.5 text-[12px] font-semibold text-sv-ink/60">{s.sub}</div>
               </div>
-            ))}
-          </div>
-        </Reveal>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   )

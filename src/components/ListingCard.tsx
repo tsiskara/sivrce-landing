@@ -1,11 +1,13 @@
 'use client'
 
+import { useId } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Heart, BedDouble, Bath, Ruler, MapPin, Eye, Crown, Flame } from 'lucide-react'
 import type { Listing } from '@/data/listings'
 import { formatListingPrice, formatPerM2, formatViews, formatFloor } from '@/data/listings'
 import { useFavorites } from '@/lib/favorites'
+import { useI18n } from '@/lib/i18n/context'
 import { BRAND } from '@/lib/brand'
 
 /* VIP badge system — locked in BRAND.vipTiers, consumed here (BRAND.md §8) */
@@ -16,16 +18,18 @@ export const BADGE_STYLE: Record<NonNullable<Listing['badge']>, string> = {
 }
 
 function AIScoreRing({ score, size = 40 }: { score: number; size?: number }) {
+  // useId: gradient id must be unique per card instance (duplicate ids across cards collide)
+  const gradId = useId()
   return (
     <div className="relative grid shrink-0 place-items-center" style={{ width: size, height: size }}>
       <svg viewBox="0 0 36 36" className="-rotate-90" style={{ width: size, height: size }}>
         <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--sv-blue)" strokeOpacity="0.15" strokeWidth="3.5" />
         <circle
-          cx="18" cy="18" r="15.5" fill="none" stroke="url(#aigrad)" strokeWidth="3.5"
+          cx="18" cy="18" r="15.5" fill="none" stroke={`url(#${gradId})`} strokeWidth="3.5"
           strokeLinecap="round" strokeDasharray={`${(score / 100) * 97.4} 97.4`}
         />
         <defs>
-          <linearGradient id="aigrad" x1="0" y1="0" x2="1" y2="1">
+          <linearGradient id={gradId} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="var(--sv-blue)" />
             <stop offset="100%" stopColor="var(--sv-violet)" />
           </linearGradient>
@@ -46,18 +50,19 @@ interface ListingCardProps {
 
 export default function ListingCard({ l, i = 0, layout = 'grid', animate = true }: ListingCardProps) {
   const { has, toggle } = useFavorites()
+  const { t } = useI18n()
   const fav = has(l.id)
 
   const favButton = (
     <button
-      aria-label={fav ? 'ფავორიტებიდან წაშლა' : 'ფავორიტებში დამატება'}
+      aria-label={fav ? t('detail.removeFavorite') : t('detail.addFavorite')}
       aria-pressed={fav}
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
         toggle(l.id)
       }}
-      className={`absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full backdrop-blur transition-all duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sv-blue ${
+      className={`absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full backdrop-blur transition-all duration-300 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sv-blue ${
         fav
           ? 'bg-white text-sv-orange'
           : 'bg-white/90 text-sv-ink hover:bg-white hover:text-sv-orange'
@@ -86,7 +91,7 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
       {favButton}
       <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
         <div>
-          <div className="text-[24px] font-black tracking-tight text-white drop-shadow">{formatListingPrice(l)}</div>
+          <div className="text-[24px] font-black tracking-tight text-white [text-shadow:0_2px_10px_rgba(5,11,38,0.55)]">{formatListingPrice(l)}</div>
           <div className="text-[12px] font-bold text-white/75">{formatPerM2(l)}</div>
         </div>
         <span className="flex items-center gap-1 rounded-full bg-sv-navy/55 px-2.5 py-1 text-[11px] font-bold text-white/85 backdrop-blur">
@@ -99,14 +104,21 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
   const bodyBlock = (
     <div className="flex min-w-0 flex-1 flex-col p-5">
       <h3 className="line-clamp-1 text-[16px] font-extrabold text-sv-ink transition-colors group-hover:text-sv-blue">
-        {l.title}
+        {/* stretched link: ::after covers the whole card; fav button sits above via z-10 */}
+        <Link
+          href={`/listing/${l.id}`}
+          aria-label={l.title}
+          className="rounded-sm after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue focus-visible:ring-offset-2"
+        >
+          {l.title}
+        </Link>
       </h3>
       <p className="mt-1.5 flex items-center gap-1.5 text-[13px] font-semibold text-sv-ink/50">
         <MapPin className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{l.address}</span>
       </p>
       <div className="mt-4 flex items-center gap-4 border-t border-sv-ink/[0.06] pt-4 text-[13px] font-bold text-sv-ink/70">
-        <span className="flex items-center gap-1.5"><BedDouble className="h-4 w-4 text-sv-ink/40" /> {l.beds}</span>
-        <span className="flex items-center gap-1.5"><Bath className="h-4 w-4 text-sv-ink/40" /> {l.baths}</span>
+        <span className="flex items-center gap-1.5"><BedDouble className="h-4 w-4 text-sv-ink/40" /> {l.beds > 0 ? l.beds : '—'}</span>
+        <span className="flex items-center gap-1.5"><Bath className="h-4 w-4 text-sv-ink/40" /> {l.baths > 0 ? l.baths : '—'}</span>
         <span className="flex items-center gap-1.5"><Ruler className="h-4 w-4 text-sv-ink/40" /> {l.area} მ²</span>
         <span className="ml-auto text-sv-ink/45">{formatFloor(l)}</span>
       </div>
@@ -114,7 +126,7 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
       <div className="mt-4 flex items-center gap-3 rounded-module bg-gradient-to-r from-sv-blue/[0.07] to-sv-violet/[0.07] p-3 ring-1 ring-inset ring-sv-blue/15">
         <AIScoreRing score={l.ai.score} />
         <div className="min-w-0">
-          <div className="text-[11px] font-black uppercase tracking-wider text-sv-blue">AI შეფასება</div>
+          <div className="text-[11px] font-black uppercase tracking-wider text-sv-blue">{t('detail.aiScore')}</div>
           <div className="truncate text-[13px] font-extrabold text-sv-ink">{l.ai.label}</div>
         </div>
       </div>
@@ -130,20 +142,14 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
 
   return (
     <motion.article
-      initial={animate ? { opacity: 0, y: 32 } : false}
+      initial={animate ? { opacity: 0, y: 28 } : false}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.65, delay: (i % 3) * 0.08, ease: [0.21, 0.65, 0.2, 1] }}
-      className={`group overflow-hidden rounded-card border border-sv-ink/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover ${sizeClass}`}
+      transition={{ duration: 0.7, delay: (i % 3) * 0.08, ease: [0.21, 0.65, 0.2, 1] }}
+      className={`group relative flex flex-col overflow-hidden rounded-card border border-sv-ink/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover ${sizeClass}`}
     >
-      <Link
-        href={`/listing/${l.id}`}
-        className={`flex h-full flex-col outline-none ${layout === 'list' ? 'sm:flex-row' : ''}`}
-        aria-label={l.title}
-      >
-        {imageBlock}
-        {bodyBlock}
-      </Link>
+      {imageBlock}
+      {bodyBlock}
     </motion.article>
   )
 }

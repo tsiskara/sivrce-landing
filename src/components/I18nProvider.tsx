@@ -16,6 +16,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useSyncExternalStore, type ReactNode } from 'react'
+import { MotionConfig } from 'framer-motion'
 import {
   I18nContext,
   emitLangChange,
@@ -52,5 +53,9 @@ export default function I18nProvider({ children }: { children: ReactNode }) {
     [lang, setLang],
   )
 
-  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
+  return (
+    <I18nContext.Provider value={value}>
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </I18nContext.Provider>
+  )
 }

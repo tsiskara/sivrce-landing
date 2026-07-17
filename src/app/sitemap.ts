@@ -7,11 +7,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: BASE,
+      lastModified: new Date(),
       changeFrequency: 'hourly',
       priority: 1,
     },
     {
       url: `${BASE}/search`,
+      lastModified: new Date(),
       changeFrequency: 'hourly',
       priority: 0.9,
     },

@@ -14,7 +14,7 @@ export default function AISection() {
           {/* Visual card */}
           <Reveal className="order-2 lg:order-1">
             <div className="relative mx-auto max-w-[560px]">
-              <div className="absolute -inset-6 rounded-card bg-gradient-to-br from-sv-blue/12 via-transparent to-sv-orange/10 blur-2xl" />
+              <div className="absolute -inset-6 rounded-card bg-gradient-to-br from-sv-blue/12 via-transparent to-sv-violet/10 blur-2xl" />
               <motion.div
                 whileHover={{ y: -6 }}
                 transition={{ type: 'spring', stiffness: 220, damping: 22 }}
@@ -39,17 +39,17 @@ export default function AISection() {
                 <div className="p-6">
                   <div className="flex items-end justify-between">
                     <div>
-                      <div className="text-[12px] font-bold uppercase tracking-wider text-sv-ink/45">
+                      <div className="text-[12px] font-bold uppercase tracking-wider text-sv-ink/60">
                         საბაზარო ღირებულება
                       </div>
                       <div className="mt-1 text-[34px] font-black tracking-tight text-sv-ink">$128,400</div>
-                      <div className="text-[13px] font-bold text-sv-ink/50">$1,980/მ² • ვაკე, თბილისი</div>
+                      <div className="text-[13px] font-bold text-sv-ink/65">$1,980/მ² • ვაკე, თბილისი</div>
                     </div>
                     <div className="rounded-module bg-sv-blue/10 px-4 py-2.5 text-right">
                       <div className="flex items-center gap-1 text-[15px] font-black text-sv-blue">
                         <TrendingUp className="h-4 w-4" /> +8.4%
                       </div>
-                      <div className="text-[11px] font-bold text-sv-ink/45">ბოლო 12 თვეში</div>
+                      <div className="text-[11px] font-bold text-sv-ink/60">ბოლო 12 თვეში</div>
                     </div>
                   </div>
 
@@ -62,7 +62,7 @@ export default function AISection() {
                         whileInView={{ height: `${h}%` }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.3 + i * 0.05, duration: 0.6, ease: [0.21, 0.65, 0.2, 1] }}
-                        className={`flex-1 rounded-t-md ${
+                        className={`flex-1 rounded-t-control ${
                           i === BARS.length - 1
                             ? 'bg-gradient-to-t from-sv-orange to-sv-orange-light'
                             : 'bg-gradient-to-t from-sv-blue/25 to-sv-blue/60'
@@ -85,7 +85,7 @@ export default function AISection() {
                       <div key={s.label} className="rounded-module bg-sv-cloud p-3.5 text-center">
                         <s.icon className={`mx-auto h-4 w-4 ${s.good ? 'text-sv-blue' : 'text-sv-ink/40'}`} />
                         <div className="mt-1.5 text-[16px] font-black text-sv-ink">{s.val}</div>
-                        <div className="mt-0.5 text-[10.5px] font-bold leading-tight text-sv-ink/45">{s.label}</div>
+                        <div className="mt-0.5 text-[10.5px] font-bold leading-tight text-sv-ink/60">{s.label}</div>
                       </div>
                     ))}
                   </div>
@@ -129,7 +129,7 @@ export default function AISection() {
             <Reveal delay={0.4}>
               <a
                 href="#"
-                className="group mt-9 inline-flex items-center gap-2.5 rounded-full bg-sv-navy px-7 py-4 text-[15px] font-extrabold text-white transition-all duration-300 hover:bg-sv-navy-soft hover:shadow-glow-navy"
+                className="group mt-9 inline-flex items-center gap-2.5 rounded-full bg-sv-navy px-7 py-4 text-[15px] font-extrabold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-sv-navy-soft hover:shadow-glow-navy"
               >
                 შეაფასე შენი ქონება
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />

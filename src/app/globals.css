@@ -23,6 +23,26 @@
   --color-sv-cloud: #f6f7fb;
   --color-sv-success: #4ade80;
 
+  /* Locked category branding (BRAND.md §3.1) — every category/service owns
+     its hue + chip. Mirrors src/lib/category-brand.ts. Never reuse across
+     categories, never recolor. Usage: text-cat-houses · bg-cat-houses-chip */
+  --color-cat-apartments: #2e6bff;
+  --color-cat-apartments-chip: #eff3ff;
+  --color-cat-houses: #ff6a2d;
+  --color-cat-houses-chip: #fff3ef;
+  --color-cat-cottages: #16a34a;
+  --color-cat-cottages-chip: #edf8f1;
+  --color-cat-land: #d97706;
+  --color-cat-land-chip: #fcf4eb;
+  --color-cat-commercial: #7c3aed;
+  --color-cat-commercial-chip: #f5f0fe;
+  --color-cat-daily-rent: #e11d48;
+  --color-cat-daily-rent-chip: #fdedf1;
+  --color-cat-hotels: #0891b2;
+  --color-cat-hotels-chip: #ecf6f9;
+  --color-cat-new-projects: #5b8bff;
+  --color-cat-new-projects-chip: #eff3ff;
+
   /* Brand shape tokens (BRAND.md §5) */
   --radius-card: 26px;
   --radius-tile: 22px;
@@ -365,7 +385,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .animate-aurora-a, .animate-aurora-b, .animate-aurora-c,
-  .sv-particle, .sv-window, .animate-float, .animate-pin, .animate-marquee {
+  .sv-particle, .sv-window, .animate-float, .animate-pin, .animate-marquee,
+  .animate-ping {
     animation: none !important;
   }
 }

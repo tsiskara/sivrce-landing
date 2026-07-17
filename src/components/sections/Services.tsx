@@ -36,10 +36,10 @@ export default function Services() {
     <section id="services" className="bg-white py-20 md:py-28">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <Reveal className="mb-12 text-center">
-          <h2 className="text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
+          <h2 className="text-balance text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
             ყველაფერი უძრავი ქონებისთვის
           </h2>
-          <p className="mx-auto mt-3 max-w-[560px] text-[15px] font-semibold text-sv-ink/50 md:text-[16px]">
+          <p className="mx-auto mt-3 max-w-[560px] text-[15px] font-semibold text-sv-ink/65 md:text-[16px]">
             ძიებიდან გარიგებამდე — სრული ეკოსისტემა ერთ პლატფორმაზე
           </p>
         </Reveal>
@@ -52,7 +52,7 @@ export default function Services() {
                 className="group relative block h-full overflow-hidden rounded-card border border-sv-ink/[0.06] bg-gradient-to-b from-sv-cloud to-white p-7 transition-all duration-500 hover:-translate-y-2 hover:border-transparent hover:shadow-card-hover"
               >
                 <span
-                  className="grid h-14 w-14 place-items-center rounded-2xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
+                  className="grid h-14 w-14 place-items-center rounded-module transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
                   style={{ backgroundColor: s.brand.chip, color: s.brand.hue }}
                 >
                   <s.icon className="h-6 w-6" />

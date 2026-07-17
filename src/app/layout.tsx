@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, Noto_Sans_Georgian } from "next/font/google";
 import I18nProvider from "@/components/I18nProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { BRAND } from "@/lib/brand";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -69,9 +70,9 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [
       {
-        url: "/images/hero.png",
-        width: 2048,
-        height: 1077,
+        url: "/images/og.jpg",
+        width: 1200,
+        height: 630,
         alt: "sivrce — უძრავი ქონება ერთ სივრცეში",
       },
     ],
@@ -80,7 +81,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    images: ["/images/hero.png"],
+    images: ["/images/og.jpg"],
   },
   robots: {
     index: true,
@@ -99,8 +100,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#050B26" },
-    { media: "(prefers-color-scheme: dark)", color: "#050B26" },
+    { media: "(prefers-color-scheme: light)", color: BRAND.colors.navy },
+    { media: "(prefers-color-scheme: dark)", color: BRAND.colors.navy },
   ],
 };
 
@@ -157,8 +158,14 @@ export default function RootLayout({
       className={`${manrope.variable} ${notoGeorgian.variable} h-full antialiased`}
     >
       <body className="min-h-full">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-control focus:bg-sv-blue focus:px-4 focus:py-2 focus:text-white"
+        >
+          მთავარ შინაარსზე გადასვლა
+        </a>
         <I18nProvider>{children}</I18nProvider>
-        <Toaster position="top-center" richColors />
+        <Toaster position="top-center" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -65,12 +65,35 @@ export function emitLangChange() {
   window.dispatchEvent(new CustomEvent(LANG_EVENT))
 }
 
+/** Russian plural rule: n%10==1 && n%100!=11 → one; n%10 in 2..4 && n%100 not in 12..14 → few; else many. */
+export function ruPlural(n: number, one: string, few: string, many: string): string {
+  const mod100 = Math.abs(n) % 100
+  const mod10 = mod100 % 10
+  if (mod10 === 1 && mod100 !== 11) return one
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few
+  return many
+}
+
+/** Applies `{plural:one|other}` (2 forms) or `{plural:one|few|many}` (ru, 3 forms) markers using numeric var `n`. */
+function applyPlurals(template: string, vars?: Record<string, string | number>): string {
+  if (!template.includes('{plural:')) return template
+  const n = Number(vars?.n)
+  return template.replace(/\{plural:([^}]+)\}/g, (_m, forms: string) => {
+    const f = forms.split('|')
+    const one = f[0] ?? ''
+    const few = f[1] ?? one
+    const many = f[2] ?? few
+    if (!Number.isFinite(n)) return many // pre-formatted n (e.g. "3.2კ") → most general form
+    return f.length === 3 ? ruPlural(n, one, few, many) : n === 1 ? one : few
+  })
+}
+
 export function translate(
   lang: Lang,
   key: DictKey,
   vars?: Record<string, string | number>,
 ): string {
-  const template = DICTS[lang][key] ?? ka[key]
+  const template = applyPlurals(DICTS[lang][key] ?? ka[key], vars)
   if (!vars) return template
   return template.replace(/\{(\w+)\}/g, (match, name: string) =>
     vars[name] !== undefined ? String(vars[name]) : match,

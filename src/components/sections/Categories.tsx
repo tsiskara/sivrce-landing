@@ -21,10 +21,10 @@ export default function Categories() {
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <Reveal className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
+            <h2 className="text-balance text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
               რას ეძებ?
             </h2>
-            <p className="mt-2 text-[15px] font-semibold text-sv-ink/50 md:text-[16px]">
+            <p className="mt-2 text-[15px] font-semibold text-sv-ink/65 md:text-[16px]">
               ყველა ტიპის უძრავი ქონება — ერთ სივრცეში
             </p>
           </div>
@@ -38,13 +38,13 @@ export default function Categories() {
                 className="group relative flex flex-col items-center gap-3 rounded-card border border-sv-ink/[0.06] bg-white p-6 text-center transition-all duration-500 hover:-translate-y-2 hover:border-transparent hover:shadow-card-hover"
               >
                 <span
-                  className="grid h-14 w-14 place-items-center rounded-2xl transition-transform duration-500 group-hover:scale-110"
+                  className="grid h-14 w-14 place-items-center rounded-module transition-transform duration-500 group-hover:scale-110"
                   style={{ backgroundColor: c.brand.chip, color: c.brand.hue }}
                 >
                   <c.icon className="h-6 w-6" />
                 </span>
                 <span className="text-[14px] font-extrabold text-sv-ink">{c.label}</span>
-                <span className="text-[12px] font-bold text-sv-ink/40">{c.count}</span>
+                <span className="text-[12px] font-bold text-sv-ink/55">{c.count}</span>
                 <ArrowUpRight className="absolute right-4 top-4 h-4 w-4 text-sv-ink/0 transition-all duration-300 group-hover:text-sv-ink/40" />
               </a>
             </Reveal>

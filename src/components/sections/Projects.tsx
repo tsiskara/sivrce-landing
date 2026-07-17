@@ -1,9 +1,13 @@
+'use client'
+
+import { motion } from 'framer-motion'
+import Link from 'next/link'
 import { MapPin, ArrowRight, BadgeCheck, Building2, CalendarCheck, Star } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
 
 const PROJECTS = [
   {
-    img: '/images/np1.png',
+    img: '/images/np1.webp',
     name: 'Downtown Residence',
     dev: 'm2 დეველოპმენტი',
     location: 'საბურთალო, თბილისი',
@@ -14,7 +18,7 @@ const PROJECTS = [
     rating: 4.8,
   },
   {
-    img: '/images/np2.png',
+    img: '/images/np2.webp',
     name: 'Batumi Riviera Tower',
     dev: 'Alliance Group',
     location: 'ახალი ბულვარი, ბათუმი',
@@ -35,14 +39,14 @@ export default function Projects() {
             <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-sv-blue/10 px-4 py-1.5 text-[12px] font-black uppercase tracking-wider text-sv-blue">
               <Building2 className="h-3.5 w-3.5" /> ახალი კორპუსები
             </span>
-            <h2 className="text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
+            <h2 className="text-balance text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
               მშენებარე პროექტები
             </h2>
-            <p className="mt-2 text-[15px] font-semibold text-sv-ink/50 md:text-[16px]">
+            <p className="mt-2 text-[15px] font-semibold text-sv-ink/65 md:text-[16px]">
               ყველა დეველოპერი, ყველა პროექტი — შეფასებებით და 3D ვიზუალიზაციით
             </p>
           </div>
-          <a href="#" className="group flex items-center gap-2 text-[15px] font-extrabold text-sv-blue hover:text-sv-blue-deep">
+          <a href="#" className="group flex items-center gap-2 text-[15px] font-extrabold text-sv-blue transition-colors duration-200 hover:text-sv-blue-deep">
             136 პროექტის ნახვა
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </a>
@@ -51,7 +55,8 @@ export default function Projects() {
         <div className="grid gap-6 lg:grid-cols-2">
           {PROJECTS.map((p, i) => (
             <Reveal key={p.name} delay={i * 0.12}>
-              <article className="group cursor-pointer overflow-hidden rounded-card border border-sv-ink/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover">
+              <Link href="/search" className="block">
+                <article className="group cursor-pointer overflow-hidden rounded-card border border-sv-ink/[0.06] bg-white shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover">
                 <div className="relative aspect-[16/9] overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -63,7 +68,7 @@ export default function Projects() {
                   <div className="absolute inset-0 bg-gradient-to-t from-sv-navy/75 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-5 right-5 flex items-end justify-between">
                     <div>
-                      <h3 className="text-[22px] font-black text-white drop-shadow">{p.name}</h3>
+                      <h3 className="text-[22px] font-black text-white [text-shadow:0_2px_10px_rgba(5,11,38,0.55)]">{p.name}</h3>
                       <p className="flex items-center gap-1.5 text-[13px] font-bold text-white/80">
                         <BadgeCheck className="h-4 w-4 text-sv-success" /> {p.dev}
                       </p>
@@ -88,17 +93,21 @@ export default function Projects() {
                     <Building2 className="h-4 w-4 text-sv-ink/35" /> {p.flats} ბინა
                   </span>
                   <span className="ml-auto text-[16px] font-black text-sv-blue">
-                    {p.priceFrom}<span className="text-[12px] font-bold text-sv-ink/45"> /მ²-დან</span>
+                    {p.priceFrom}<span className="text-[12px] font-bold text-sv-ink/60"> /მ²-დან</span>
                   </span>
                 </div>
                 {/* progress bar */}
                 <div className="mx-5 mb-5 h-1.5 overflow-hidden rounded-full bg-sv-ink/[0.07]">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-sv-blue to-sv-violet transition-all duration-1000"
-                    style={{ width: `${p.done}%` }}
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${p.done}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, ease: [0.21, 0.65, 0.2, 1] }}
+                    className="h-full rounded-full bg-gradient-to-r from-sv-blue to-sv-violet"
                   />
                 </div>
-              </article>
+                </article>
+              </Link>
             </Reveal>
           ))}
         </div>

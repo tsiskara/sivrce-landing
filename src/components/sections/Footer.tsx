@@ -1,7 +1,7 @@
 'use client'
 
 import { Mail, Phone, MapPin } from 'lucide-react'
-import { Logo } from '@/components/Reveal'
+import { Logo } from '@/components/Logo'
 import { useI18n, type DictKey } from '@/lib/i18n/context'
 
 /* Brand glyphs (lucide-react v1 dropped brand icons) — same 24px stroke style */
@@ -65,8 +65,10 @@ export default function Footer() {
   const { t } = useI18n()
 
   return (
-    <footer className="border-t border-white/[0.07] bg-sv-navy">
-      <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-20">
+    <footer className="relative overflow-hidden border-t border-white/[0.07] bg-sv-navy">
+      <div aria-hidden className="absolute inset-0 bg-grid-dark opacity-50" />
+      <div aria-hidden className="absolute -top-40 left-1/3 h-[360px] w-[560px] rounded-full bg-sv-blue/10 blur-[160px]" />
+      <div className="relative mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div>
             <Logo light />
@@ -74,14 +76,14 @@ export default function Footer() {
               {t('footer.tagline')}
             </p>
             <div className="mt-6 space-y-2.5 text-[14px] font-semibold text-white/60">
-              <a href="mailto:info@sivrce.ge" className="flex items-center gap-2.5 transition-colors hover:text-white">
-                <Mail className="h-4 w-4 text-sv-blue" /> info@sivrce.ge
+              <a href="mailto:info@sivrce.ge" className="flex items-center gap-2.5 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue-light focus-visible:ring-offset-2 focus-visible:ring-offset-sv-navy">
+                <Mail className="h-4 w-4 text-sv-blue-light" /> info@sivrce.ge
               </a>
-              <a href="tel:+995322000000" className="flex items-center gap-2.5 transition-colors hover:text-white">
-                <Phone className="h-4 w-4 text-sv-blue" /> +995 32 2 00 00 00
+              <a href="tel:+995322000000" className="flex items-center gap-2.5 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue-light focus-visible:ring-offset-2 focus-visible:ring-offset-sv-navy">
+                <Phone className="h-4 w-4 text-sv-blue-light" /> +995 32 2 00 00 00
               </a>
               <span className="flex items-center gap-2.5">
-                <MapPin className="h-4 w-4 text-sv-blue" /> {t('footer.location')}
+                <MapPin className="h-4 w-4 text-sv-blue-light" /> {t('footer.location')}
               </span>
             </div>
             <div className="mt-7 flex gap-3">
@@ -90,7 +92,7 @@ export default function Footer() {
                   key={s.label}
                   href="#"
                   aria-label={s.label}
-                  className="grid h-10 w-10 place-items-center rounded-full border border-white/10 text-white/60 transition-all duration-300 hover:border-sv-blue hover:bg-sv-blue hover:text-white"
+                  className="grid h-11 w-11 place-items-center rounded-full border border-white/10 text-white/60 transition-all duration-300 hover:border-sv-blue hover:bg-sv-blue hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sv-blue-light focus-visible:ring-offset-2 focus-visible:ring-offset-sv-navy"
                 >
                   <s.icon className="h-4 w-4" />
                 </a>
@@ -100,7 +102,7 @@ export default function Footer() {
 
           {COLS.map((c) => (
             <div key={c.titleKey}>
-              <h4 className="text-[13px] font-black uppercase tracking-wider text-white/40">{t(c.titleKey)}</h4>
+              <h4 className="text-[13px] font-black uppercase tracking-wider text-white/60">{t(c.titleKey)}</h4>
               <ul className="mt-5 space-y-3">
                 {c.linkKeys.map((key) => (
                   <li key={key}>
@@ -118,10 +120,10 @@ export default function Footer() {
         </div>
 
         <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.07] pt-8">
-          <p className="text-[13px] font-semibold text-white/35">
+          <p className="text-[13px] font-semibold text-white/55">
             {t('footer.rights')}
           </p>
-          <div className="flex gap-6 text-[13px] font-semibold text-white/45">
+          <div className="flex gap-6 text-[13px] font-semibold text-white/60">
             <a href="#" className="transition-colors hover:text-white">{t('footer.terms')}</a>
             <a href="#" className="transition-colors hover:text-white">{t('footer.privacy')}</a>
             <a href="#" className="transition-colors hover:text-white">{t('footer.cookies')}</a>

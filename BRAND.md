@@ -56,8 +56,35 @@ Rules:
   `sv-success` green is reserved for dark surfaces (LIVE, verified, trust badges)
 - **Hover rules:** blue surfaces → `sv-blue-deep`; orange surfaces → keep color, upgrade
   elevation to `shadow-glow-orange-lg` + `hover:-translate-y-0.5` (never a new hue)
-- Category/service icon tints cycle only through `sv-blue → sv-blue-deep → sv-ink`,
-  with `sv-orange` reserved for the single promoted item
+
+### 3.1 Category & service branding (locked — owner-approved 2026-07-17)
+
+Every category/service icon owns its personal hue + chip tint. Source of truth:
+`src/lib/category-brand.ts` · CSS mirror: `--color-cat-*` tokens in `globals.css`.
+Never cycle tints, never recolor, never inline new hex values for these items.
+
+| Category (KA) | Key | Hue | Chip |
+|---|---|---|---|
+| ბინები | `apartments` | #2E6BFF | #EFF3FF |
+| სახლები | `houses` | #FF6A2D | #FFF3EF |
+| აგარაკები | `cottages` | #16A34A | #EDF8F1 |
+| მიწის ნაკვეთები | `land` | #D97706 | #FCF4EB |
+| კომერციული | `commercial` | #7C3AED | #F5F0FE |
+| დღიური ქირა | `dailyRent` | #E11D48 | #FDEDF1 |
+| სასტუმროები | `hotels` | #0891B2 | #ECF6F9 |
+| ახალი პროექტები | `newProjects` | #5B8BFF | #EFF3FF |
+
+| Service (KA) | Key | Hue | Chip |
+|---|---|---|---|
+| აგენტები და სააგენტოები | `agents` | #2E6BFF | #EFF3FF |
+| დეველოპერები | `developers` | #7C3AED | #F5F0FE |
+| რემონტი და კალკულატორი | `renovation` | #FF6A2D | #FFF3EF |
+| იპოთეკა და ფინანსები | `mortgage` | #16A34A | #EDF8F1 |
+
+Rules:
+- Icon chip = category `chip` bg + category `hue` glyph; hover keeps hue, upgrades scale/elevation only
+- The ≤10% orange rule applies to CTAs/highlights, NOT to the locked category identity hues
+- A new category is added ONLY by extending `category-brand.ts` + this table first
 
 ## 4. Typography
 - Stack: Manrope (Latin/digits, weights 400–900 loaded) + Noto Sans Georgian

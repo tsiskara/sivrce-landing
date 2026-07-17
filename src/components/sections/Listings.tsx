@@ -22,10 +22,10 @@ export default function Listings() {
             <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-sv-orange/10 px-4 py-1.5 text-[12px] font-black uppercase tracking-wider text-sv-orange">
               <Crown className="h-3.5 w-3.5" /> არჩეული შეთავაზებები
             </span>
-            <h2 className="text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
+            <h2 className="text-balance text-[30px] font-black tracking-[-0.02em] text-sv-ink md:text-[40px]">
               SUPER VIP განცხადებები
             </h2>
-            <p className="mt-2 text-[15px] font-semibold text-sv-ink/50 md:text-[16px]">
+            <p className="mt-2 text-[15px] font-semibold text-sv-ink/65 md:text-[16px]">
               პრემიუმ ქონებები AI ფასის შეფასებით
             </p>
           </div>
@@ -34,14 +34,14 @@ export default function Listings() {
               <button
                 onClick={() => scrollBy(-1)}
                 aria-label="წინა"
-                className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-white text-sv-ink transition-all hover:border-sv-blue hover:text-sv-blue"
+                className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-white text-sv-ink transition-all duration-300 hover:border-sv-blue hover:text-sv-blue"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <button
                 onClick={() => scrollBy(1)}
                 aria-label="შემდეგი"
-                className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-white text-sv-ink transition-all hover:border-sv-blue hover:text-sv-blue"
+                className="grid h-11 w-11 place-items-center rounded-full border border-sv-ink/10 bg-white text-sv-ink transition-all duration-300 hover:border-sv-blue hover:text-sv-blue"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
@@ -59,7 +59,10 @@ export default function Listings() {
 
       <div
         ref={scroller}
-        className="scrollbar-hide flex gap-6 overflow-x-auto px-5 pb-4 md:px-10 lg:px-[max(2.5rem,calc((100vw-1440px)/2+2.5rem))]"
+        tabIndex={0}
+        role="region"
+        aria-label="SUPER VIP განცხადებები"
+        className="scrollbar-hide flex gap-6 overflow-x-auto px-5 pb-8 pt-2 md:px-10 lg:px-[max(2.5rem,calc((100vw-1440px)/2+2.5rem))]"
       >
         {FEATURED.map((l, i) => (
           <ListingCard key={l.id} l={l} i={i} />

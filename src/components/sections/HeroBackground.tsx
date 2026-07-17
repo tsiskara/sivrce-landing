@@ -83,10 +83,10 @@ export default function HeroBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden bg-sv-navy" aria-hidden>
       {/* Aurora gradient field — brand blue / violet / orange */}
-      <div className="animate-aurora-a absolute -left-[15%] top-[-25%] h-[70%] w-[60%] rounded-full bg-[radial-gradient(circle,rgba(46,107,255,0.34),transparent_65%)] blur-[90px]" />
-      <div className="animate-aurora-b absolute right-[-12%] top-[-10%] h-[65%] w-[55%] rounded-full bg-[radial-gradient(circle,rgba(122,92,255,0.26),transparent_65%)] blur-[100px]" />
-      <div className="animate-aurora-c absolute bottom-[-30%] left-[25%] h-[70%] w-[50%] rounded-full bg-[radial-gradient(circle,rgba(255,106,45,0.16),transparent_65%)] blur-[110px]" />
-      <div className="absolute left-1/2 top-[30%] h-[50%] w-[46%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(46,107,255,0.14),transparent_70%)] blur-[110px]" />
+      <div className="animate-aurora-a absolute -left-[15%] top-[-25%] h-[70%] w-[60%] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--sv-blue)_34%,transparent),transparent_65%)] blur-[90px]" />
+      <div className="animate-aurora-b absolute right-[-12%] top-[-10%] h-[65%] w-[55%] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--sv-violet)_26%,transparent),transparent_65%)] blur-[100px]" />
+      <div className="animate-aurora-c absolute bottom-[-30%] left-[25%] h-[70%] w-[50%] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--sv-orange)_16%,transparent),transparent_65%)] blur-[110px]" />
+      <div className="absolute left-1/2 top-[30%] h-[50%] w-[46%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--sv-blue)_14%,transparent),transparent_70%)] blur-[110px]" />
 
       {/* Map dot-grid + faint line grid */}
       <div className="bg-dots-dark absolute inset-0 [mask-image:radial-gradient(75%_65%_at_50%_42%,black,transparent)]" />
@@ -100,19 +100,19 @@ export default function HeroBackground() {
       >
         <defs>
           <linearGradient id="skylineFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0a1440" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#050b26" stopOpacity="1" />
+            <stop offset="0%" stopColor="var(--sv-navy-soft)" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="var(--sv-navy)" stopOpacity="1" />
           </linearGradient>
         </defs>
         {BUILDINGS.map(([x, w, h], i) => (
           <g key={i}>
             <rect x={x} y={SV_H - h} width={w} height={h} fill="url(#skylineFill)" />
-            <rect x={x} y={SV_H - h} width={w} height={2} fill="#2e6bff" opacity="0.22" />
+            <rect x={x} y={SV_H - h} width={w} height={2} fill="var(--sv-blue)" opacity="0.22" />
           </g>
         ))}
         {/* Antenna on tallest */}
-        <line x1={584 + 24} y1={SV_H - 300} x2={584 + 24} y2={SV_H - 332} stroke="#2e6bff" strokeWidth="2" opacity="0.5" />
-        <circle cx={584 + 24} cy={SV_H - 334} r="3" fill="#ff6a2d" opacity="0.9" />
+        <line x1={584 + 24} y1={SV_H - 300} x2={584 + 24} y2={SV_H - 332} stroke="var(--sv-blue)" strokeWidth="2" opacity="0.5" />
+        <circle cx={584 + 24} cy={SV_H - 334} r="3" fill="var(--sv-orange)" opacity="0.9" />
         {windows.map((w, i) => (
           <rect
             key={i}
@@ -122,7 +122,7 @@ export default function HeroBackground() {
             height={7}
             rx={1}
             className="sv-window"
-            fill={w.orange ? '#ffb25e' : '#8fb4ff'}
+            fill={w.orange ? 'var(--sv-orange-light)' : 'var(--sv-blue-light)'}
             style={{ '--w-duration': w.duration, '--w-delay': w.delay } as React.CSSProperties}
           />
         ))}
@@ -140,10 +140,10 @@ export default function HeroBackground() {
             bottom: p.bottom,
             width: p.size,
             height: p.size,
-            background: p.orange ? '#ffb25e' : '#8fb4ff',
+            background: p.orange ? 'var(--sv-orange-light)' : 'var(--sv-blue-light)',
             boxShadow: p.orange
-              ? '0 0 12px rgba(255,106,45,0.8)'
-              : '0 0 10px rgba(143,180,255,0.7)',
+              ? '0 0 12px color-mix(in srgb, var(--sv-orange) 80%, transparent)'
+              : '0 0 10px color-mix(in srgb, var(--sv-blue-light) 70%, transparent)',
             '--p-duration': p.duration,
             '--p-delay': p.delay,
             '--p-drift': p.drift,
@@ -157,7 +157,7 @@ export default function HeroBackground() {
       <span className="absolute right-[20%] top-[24%] hidden h-2.5 w-2.5 animate-pin rounded-full bg-sv-blue md:block" style={{ animationDelay: '1.2s' }} />
 
       {/* Vignette + transition into next section */}
-      <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_40%,transparent_55%,rgba(5,11,38,0.55))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_40%,transparent_55%,color-mix(in_srgb,var(--sv-navy)_55%,transparent))]" />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-sv-navy/60 to-white" />
     </div>
   )

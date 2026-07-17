@@ -66,21 +66,33 @@ export default function SearchClient() {
     return () => window.clearTimeout(timer)
   }, [paramsKey, loadedKey])
 
-  // ——— Read filters from URL ———
-  const deal = (params.get('deal') as DealType | null) ?? undefined
-  const type = (params.get('type') as PropType | null) ?? undefined
+  // ——— Read filters from URL — invalid values are ignored (whitelists + numeric checks) ———
+  const dealParam = params.get('deal')
+  const deal: DealType | undefined = dealParam === 'sale' || dealParam === 'rent' ? dealParam : undefined
+  const typeParam = params.get('type')
+  const type: PropType | undefined = PROP_TYPES.some((p) => p.value === typeParam)
+    ? (typeParam as PropType)
+    : undefined
   const city = params.get('city') ?? undefined
   const district = params.get('district') ?? undefined
-  const minPrice = params.get('min') ? Number(params.get('min')) : undefined
-  const maxPrice = params.get('max') ? Number(params.get('max')) : undefined
-  const rooms = params.get('rooms') ? Number(params.get('rooms')) : undefined
-  const minArea = params.get('amin') ? Number(params.get('amin')) : undefined
-  const maxArea = params.get('amax') ? Number(params.get('amax')) : undefined
-  const sort = (params.get('sort') as SortKey | null) ?? 'date'
+  const numParam = (key: string, min = 0): number | undefined => {
+    const raw = params.get(key)
+    if (raw === null || raw === '') return undefined
+    const n = Number(raw)
+    return Number.isFinite(n) && n >= min ? n : undefined
+  }
+  const minPrice = numParam('min')
+  const maxPrice = numParam('max')
+  const rooms = numParam('rooms', 1)
+  const minArea = numParam('amin')
+  const maxArea = numParam('amax')
+  const sortParam = params.get('sort')
+  const sort: SortKey = SORTS.some((s) => s.value === sortParam) ? (sortParam as SortKey) : 'date'
   const q = params.get('q') ?? ''
 
+  // Always build patches on the live URL — never a stale closure
   const patchParams = (patch: Record<string, string | undefined>) => {
-    const next = new URLSearchParams(params.toString())
+    const next = new URLSearchParams(window.location.search)
     for (const [k, v] of Object.entries(patch)) {
       if (v === undefined || v === '') next.delete(k)
       else next.set(k, v)
@@ -89,9 +101,28 @@ export default function SearchClient() {
     router.replace(qs ? `/search?${qs}` : '/search', { scroll: false })
   }
 
+  // ——— Keyword/price/area inputs: local drafts, debounced into the URL (~300ms) ———
+  const urlText = {
+    q,
+    min: minPrice !== undefined ? String(minPrice) : '',
+    max: maxPrice !== undefined ? String(maxPrice) : '',
+    amin: minArea !== undefined ? String(minArea) : '',
+    amax: maxArea !== undefined ? String(maxArea) : '',
+  }
+  const [drafts, setDrafts] = useState(urlText)
+  const clearDraft = (k: keyof typeof urlText) => setDrafts((d) => ({ ...d, [k]: '' }))
+
   useEffect(() => {
-    window.scrollTo({ top: 0 })
-  }, [])
+    const timer = window.setTimeout(() => {
+      const patch: Record<string, string | undefined> = {}
+      for (const k of ['q', 'min', 'max', 'amin', 'amax'] as const) {
+        if (drafts[k] !== urlText[k]) patch[k] = drafts[k] || undefined
+      }
+      if (Object.keys(patch).length > 0) patchParams(patch)
+    }, 300)
+    return () => window.clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- urlText/patchParams derive from drafts+paramsKey
+  }, [drafts, paramsKey])
 
   const results: Listing[] = useMemo(
     () =>
@@ -110,27 +141,31 @@ export default function SearchClient() {
   if (type) chips.push({ key: 'type', label: propTypeKey ? t(propTypeKey) : type, clear: () => patchParams({ type: undefined }) })
   if (city) chips.push({ key: 'city', label: city, clear: () => patchParams({ city: undefined, district: undefined }) })
   if (district) chips.push({ key: 'district', label: district, clear: () => patchParams({ district: undefined }) })
-  if (minPrice !== undefined) chips.push({ key: 'min', label: `${t('search.min')}. $${minPrice.toLocaleString('en-US')}`, clear: () => patchParams({ min: undefined }) })
-  if (maxPrice !== undefined) chips.push({ key: 'max', label: `${t('search.max')}. $${maxPrice.toLocaleString('en-US')}`, clear: () => patchParams({ max: undefined }) })
+  if (minPrice !== undefined) chips.push({ key: 'min', label: `${t('search.min')}. $${minPrice.toLocaleString('en-US')}`, clear: () => { clearDraft('min'); patchParams({ min: undefined }) } })
+  if (maxPrice !== undefined) chips.push({ key: 'max', label: `${t('search.max')}. $${maxPrice.toLocaleString('en-US')}`, clear: () => { clearDraft('max'); patchParams({ max: undefined }) } })
   if (rooms !== undefined) chips.push({ key: 'rooms', label: t('search.roomsChip', { n: rooms }), clear: () => patchParams({ rooms: undefined }) })
-  if (minArea !== undefined) chips.push({ key: 'amin', label: `${t('search.min')}. ${minArea} მ²`, clear: () => patchParams({ amin: undefined }) })
-  if (maxArea !== undefined) chips.push({ key: 'amax', label: `${t('search.max')}. ${maxArea} მ²`, clear: () => patchParams({ amax: undefined }) })
-  if (q) chips.push({ key: 'q', label: `„${q}"`, clear: () => patchParams({ q: undefined }) })
+  if (minArea !== undefined) chips.push({ key: 'amin', label: `${t('search.min')}. ${minArea} მ²`, clear: () => { clearDraft('amin'); patchParams({ amin: undefined }) } })
+  if (maxArea !== undefined) chips.push({ key: 'amax', label: `${t('search.max')}. ${maxArea} მ²`, clear: () => { clearDraft('amax'); patchParams({ amax: undefined }) } })
+  if (q) chips.push({ key: 'q', label: `„${q}"`, clear: () => { clearDraft('q'); patchParams({ q: undefined }) } })
 
-  const resetAll = () => router.replace('/search', { scroll: false })
+  const resetAll = () => {
+    setDrafts({ q: '', min: '', max: '', amin: '', amax: '' })
+    router.replace('/search', { scroll: false })
+  }
 
   const selectClass =
-    'h-10 w-full appearance-none rounded-control border border-sv-ink/10 bg-white pl-3.5 pr-9 text-[13px] font-bold text-sv-ink outline-none transition-colors focus:border-sv-blue cursor-pointer'
+    'h-11 w-full appearance-none rounded-control border border-sv-ink/10 bg-white pl-3.5 pr-9 text-[13px] font-bold text-sv-ink outline-none transition-colors focus:border-sv-blue focus-visible:ring-2 focus-visible:ring-sv-blue/30 cursor-pointer'
   const inputClass =
-    'h-10 w-full rounded-control border border-sv-ink/10 bg-white px-3.5 text-[13px] font-bold text-sv-ink outline-none transition-colors placeholder:text-sv-ink/35 focus:border-sv-blue'
+    'h-11 w-full rounded-control border border-sv-ink/10 bg-white px-3.5 text-[13px] font-bold text-sv-ink outline-none transition-colors placeholder:text-sv-ink/35 focus:border-sv-blue focus-visible:ring-2 focus-visible:ring-sv-blue/30'
 
   return (
     <div className="font-geo min-h-screen bg-sv-cloud antialiased">
       <Navbar />
 
       {/* Page header */}
-      <div className="bg-sv-navy pb-8 pt-[104px]">
-        <div className="mx-auto max-w-[1440px] px-5 md:px-10">
+      <div className="relative overflow-hidden bg-sv-navy pb-8 pt-[104px]">
+        <div aria-hidden className="absolute inset-0 bg-dots-dark" />
+        <div className="relative mx-auto max-w-[1440px] px-5 md:px-10">
           <h1 className="text-[28px] font-black tracking-[-0.02em] text-white md:text-[36px]">
             {t('search.title')}
           </h1>
@@ -227,8 +262,8 @@ export default function SearchClient() {
             <label className="relative min-w-[160px] flex-1">
               <SearchIcon className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-sv-ink/35" />
               <input
-                value={q}
-                onChange={(e) => patchParams({ q: e.target.value || undefined })}
+                value={drafts.q}
+                onChange={(e) => setDrafts((d) => ({ ...d, q: e.target.value }))}
                 placeholder={t('search.keywordPlaceholder')}
                 className={`${inputClass} pl-10`}
                 aria-label={t('search.keyword')}
@@ -251,22 +286,22 @@ export default function SearchClient() {
             </div>
 
             {/* View toggle */}
-            <div className="ml-auto flex rounded-control bg-sv-ink/[0.05] p-1" aria-label={t('search.view')}>
+            <div className="ml-auto flex rounded-control bg-sv-ink/[0.05] p-1" role="group" aria-label={t('search.view')}>
               <button
                 onClick={() => setView('grid')}
                 aria-label={t('search.grid')}
                 aria-pressed={view === 'grid'}
-                className={`grid h-8 w-9 place-items-center rounded-lg transition-colors ${view === 'grid' ? 'bg-white text-sv-blue shadow-sm' : 'text-sv-ink/45 hover:text-sv-ink'}`}
+                className={`grid h-11 w-11 place-items-center rounded-lg transition-colors ${view === 'grid' ? 'bg-white text-sv-blue shadow-glow-blue-sm' : 'text-sv-ink/45 hover:text-sv-ink'}`}
               >
-                <LayoutGrid className="h-4 w-4" />
+                <LayoutGrid className="h-5 w-5" />
               </button>
               <button
                 onClick={() => setView('list')}
                 aria-label={t('search.list')}
                 aria-pressed={view === 'list'}
-                className={`grid h-8 w-9 place-items-center rounded-lg transition-colors ${view === 'list' ? 'bg-white text-sv-blue shadow-sm' : 'text-sv-ink/45 hover:text-sv-ink'}`}
+                className={`grid h-11 w-11 place-items-center rounded-lg transition-colors ${view === 'list' ? 'bg-white text-sv-blue shadow-glow-blue-sm' : 'text-sv-ink/45 hover:text-sv-ink'}`}
               >
-                <Rows3 className="h-4 w-4" />
+                <Rows3 className="h-5 w-5" />
               </button>
             </div>
           </div>
@@ -277,16 +312,16 @@ export default function SearchClient() {
               <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">{t('search.price')}</span>
               <input
                 type="number" min={0} placeholder={t('search.min')}
-                value={minPrice ?? ''}
-                onChange={(e) => patchParams({ min: e.target.value || undefined })}
+                value={drafts.min}
+                onChange={(e) => setDrafts((d) => ({ ...d, min: e.target.value }))}
                 className={`${inputClass} w-[104px]`}
                 aria-label={t('search.minPrice')}
               />
               <span className="text-sv-ink/30">—</span>
               <input
                 type="number" min={0} placeholder={t('search.max')}
-                value={maxPrice ?? ''}
-                onChange={(e) => patchParams({ max: e.target.value || undefined })}
+                value={drafts.max}
+                onChange={(e) => setDrafts((d) => ({ ...d, max: e.target.value }))}
                 className={`${inputClass} w-[104px]`}
                 aria-label={t('search.maxPrice')}
               />
@@ -303,7 +338,7 @@ export default function SearchClient() {
                       key={r}
                       onClick={() => patchParams({ rooms: active ? undefined : String(n) })}
                       aria-pressed={active}
-                      className={`h-10 min-w-[44px] rounded-control px-2.5 text-[13px] font-extrabold transition-colors ${
+                      className={`h-11 min-w-[44px] rounded-control px-2.5 text-[13px] font-extrabold transition-colors ${
                         active
                           ? 'bg-sv-blue text-white shadow-glow-blue-sm'
                           : 'border border-sv-ink/10 bg-white text-sv-ink/60 hover:border-sv-blue/50 hover:text-sv-blue'
@@ -320,22 +355,22 @@ export default function SearchClient() {
               <span className="text-[12px] font-black uppercase tracking-wide text-sv-ink/40">{t('search.area')}</span>
               <input
                 type="number" min={0} placeholder={t('search.min')}
-                value={minArea ?? ''}
-                onChange={(e) => patchParams({ amin: e.target.value || undefined })}
+                value={drafts.amin}
+                onChange={(e) => setDrafts((d) => ({ ...d, amin: e.target.value }))}
                 className={`${inputClass} w-[88px]`}
                 aria-label={t('search.minArea')}
               />
               <span className="text-sv-ink/30">—</span>
               <input
                 type="number" min={0} placeholder={t('search.max')}
-                value={maxArea ?? ''}
-                onChange={(e) => patchParams({ amax: e.target.value || undefined })}
+                value={drafts.amax}
+                onChange={(e) => setDrafts((d) => ({ ...d, amax: e.target.value }))}
                 className={`${inputClass} w-[88px]`}
                 aria-label={t('search.maxArea')}
               />
             </div>
 
-            {chips.length > 0 && (
+            {(chips.length > 0 || sort !== 'date') && (
               <button
                 onClick={resetAll}
                 className="ml-auto flex items-center gap-1.5 rounded-control px-3 py-2 text-[13px] font-extrabold text-sv-orange transition-colors hover:bg-sv-orange/10"
@@ -348,7 +383,7 @@ export default function SearchClient() {
       </div>
 
       {/* Results */}
-      <main className="mx-auto max-w-[1440px] px-5 py-8 md:px-10">
+      <main id="main" className="mx-auto max-w-[1440px] px-5 py-8 md:px-10">
         <div className="mb-5 flex flex-wrap items-center gap-3">
           <p className="text-[15px] font-extrabold text-sv-ink" aria-live="polite">
             {loading ? t('search.loading') : t('search.results', { n: results.length })}
@@ -362,10 +397,11 @@ export default function SearchClient() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.25, ease }}
                 onClick={c.clear}
+                aria-label={t('search.removeFilter', { label: c.label })}
                 className="flex items-center gap-1.5 rounded-full bg-sv-blue/10 px-3.5 py-1.5 text-[12px] font-extrabold text-sv-blue transition-colors hover:bg-sv-blue/15"
               >
                 {c.label}
-                <X className="h-3 w-3" aria-label={t('search.removeFilter', { label: c.label })} />
+                <X className="h-3 w-3" aria-hidden="true" />
               </motion.button>
             ))}
           </AnimatePresence>
@@ -377,13 +413,13 @@ export default function SearchClient() {
           </div>
         ) : results.length === 0 ? (
           <div className="flex flex-col items-center rounded-card border border-sv-ink/[0.06] bg-white px-6 py-20 text-center shadow-card">
-            <span className="grid h-16 w-16 place-items-center rounded-2xl bg-sv-blue/10">
+            <span className="grid h-16 w-16 place-items-center rounded-module bg-sv-blue/10">
               <SearchX className="h-7 w-7 text-sv-blue" />
             </span>
             <h2 className="mt-5 text-[20px] font-black tracking-[-0.02em] text-sv-ink">
               {t('search.emptyTitle')}
             </h2>
-            <p className="mt-2 max-w-[380px] text-[14px] font-semibold leading-relaxed text-sv-ink/50">
+            <p className="mt-2 max-w-[380px] text-[15px] font-semibold leading-relaxed text-sv-ink/50">
               {t('search.emptyText')}
             </p>
             <button
