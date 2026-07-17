@@ -1,17 +1,18 @@
 import { Building, Home, TreePalm, Map, Briefcase, CalendarClock, Hotel, Sparkles, ArrowUpRight } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
+import { CATEGORY_BRAND } from '@/lib/category-brand'
 
-/* Brand tints only (BRAND.md §3) — blue family dominant, orange reserved
-   for the single promoted category (orange ≤10% rule) */
+/* Locked per-category branding (BRAND.md §3.1) — every category owns its
+   hue + chip from CATEGORY_BRAND. Never inline new tints here. */
 const CATS = [
-  { icon: Building, label: 'ბინები', count: '28,400', tint: '#2e6bff' },
-  { icon: Home, label: 'სახლები', count: '9,850', tint: '#1a3fc0' },
-  { icon: TreePalm, label: 'აგარაკები', count: '2,130', tint: '#0a1030' },
-  { icon: Map, label: 'მიწის ნაკვეთები', count: '4,720', tint: '#2e6bff' },
-  { icon: Briefcase, label: 'კომერციული', count: '5,310', tint: '#1a3fc0' },
-  { icon: CalendarClock, label: 'დღიური ქირა', count: '1,940', tint: '#0a1030' },
-  { icon: Hotel, label: 'სასტუმროები', count: '180', tint: '#2e6bff' },
-  { icon: Sparkles, label: 'ახალი პროექტები', count: '136', tint: '#ff6a2d' },
+  { icon: Building, label: 'ბინები', count: '28,400', brand: CATEGORY_BRAND.apartments },
+  { icon: Home, label: 'სახლები', count: '9,850', brand: CATEGORY_BRAND.houses },
+  { icon: TreePalm, label: 'აგარაკები', count: '2,130', brand: CATEGORY_BRAND.cottages },
+  { icon: Map, label: 'მიწის ნაკვეთები', count: '4,720', brand: CATEGORY_BRAND.land },
+  { icon: Briefcase, label: 'კომერციული', count: '5,310', brand: CATEGORY_BRAND.commercial },
+  { icon: CalendarClock, label: 'დღიური ქირა', count: '1,940', brand: CATEGORY_BRAND.dailyRent },
+  { icon: Hotel, label: 'სასტუმროები', count: '180', brand: CATEGORY_BRAND.hotels },
+  { icon: Sparkles, label: 'ახალი პროექტები', count: '136', brand: CATEGORY_BRAND.newProjects },
 ]
 
 export default function Categories() {
@@ -38,7 +39,7 @@ export default function Categories() {
               >
                 <span
                   className="grid h-14 w-14 place-items-center rounded-2xl transition-transform duration-500 group-hover:scale-110"
-                  style={{ backgroundColor: `${c.tint}14`, color: c.tint }}
+                  style={{ backgroundColor: c.brand.chip, color: c.brand.hue }}
                 >
                   <c.icon className="h-6 w-6" />
                 </span>

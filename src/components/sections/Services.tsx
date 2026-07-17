@@ -1,30 +1,33 @@
 import { Users, Building2, Paintbrush, Landmark, ArrowUpRight } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
+import { SERVICE_BRAND } from '@/lib/category-brand'
 
+/* Locked per-service branding (BRAND.md §3.1) — every service owns its
+   hue + chip from SERVICE_BRAND. Never inline new tints here. */
 const SERVICES = [
   {
     icon: Users,
     title: 'აგენტები და სააგენტოები',
     text: '1,800+ ვერიფიცირებული პროფესიონელი შეფასებებით — აირჩიე საუკეთესო.',
-    tint: '#2e6bff',
+    brand: SERVICE_BRAND.agents,
   },
   {
     icon: Building2,
     title: 'დეველოპერები',
     text: 'ყველა დეველოპერული კომპანია, მათი პროექტები და რეალური რეიტინგი.',
-    tint: '#1a3fc0',
+    brand: SERVICE_BRAND.developers,
   },
   {
     icon: Paintbrush,
     title: 'რემონტი და კალკულატორი',
     text: 'რემონტის კომპანიები შეფასებებით და ღირებულების ზუსტი კალკულატორი.',
-    tint: '#ff6a2d',
+    brand: SERVICE_BRAND.renovation,
   },
   {
     icon: Landmark,
     title: 'იპოთეკა და ფინანსები',
     text: 'ბანკების შეთავაზებების შედარება და წინასწარი დამტკიცება ონლაინ.',
-    tint: '#0a1030',
+    brand: SERVICE_BRAND.mortgage,
   },
 ]
 
@@ -50,19 +53,19 @@ export default function Services() {
               >
                 <span
                   className="grid h-14 w-14 place-items-center rounded-2xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
-                  style={{ backgroundColor: `${s.tint}14`, color: s.tint }}
+                  style={{ backgroundColor: s.brand.chip, color: s.brand.hue }}
                 >
                   <s.icon className="h-6 w-6" />
                 </span>
                 <h3 className="mt-6 text-[18px] font-extrabold text-sv-ink">{s.title}</h3>
                 <p className="mt-2.5 text-[14px] font-medium leading-relaxed text-sv-ink/55">{s.text}</p>
-                <span className="mt-6 flex items-center gap-1.5 text-[14px] font-extrabold" style={{ color: s.tint }}>
+                <span className="mt-6 flex items-center gap-1.5 text-[14px] font-extrabold" style={{ color: s.brand.hue }}>
                   გაეცანი
                   <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
                 <span
                   className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-20"
-                  style={{ backgroundColor: s.tint }}
+                  style={{ backgroundColor: s.brand.hue }}
                 />
               </a>
             </Reveal>
