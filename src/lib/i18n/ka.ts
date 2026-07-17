@@ -21,6 +21,9 @@ export const ka = {
   'nav.language': 'ენა',
   'nav.theme': 'თემა',
   'nav.themeToggle': 'თემის გადართვა — ნათელი ან მუქი',
+  'nav.daily': 'დღიურად',
+  'nav.neighborhoods': 'უბნები',
+  'nav.blog': 'ბლოგი',
 
   // ——— Search page chrome ———
   'search.title': 'ძიება',

@@ -39,6 +39,10 @@ export const metadata: Metadata = {
     "უძრავი ქონება",
     "ბინები იყიდება",
     "ბინები ქირავდება",
+    "ბინები დღიურად",
+    "დღიური ქირა",
+    "ქირავდება ბინა",
+    "იყიდება ბინა",
     "სახლები იყიდება",
     "აგარაკები",
     "მიწის ნაკვეთები",
@@ -46,8 +50,10 @@ export const metadata: Metadata = {
     "ახალი პროექტები თბილისში",
     "უძრავი ქონება თბილისში",
     "უძრავი ქონება ბათუმში",
+    "უძრავი ქონება ქუთაისში",
     "real estate georgia",
     "apartments tbilisi",
+    "apartments batumi",
     "sivrce",
     "სივრცე",
   ],
@@ -127,6 +133,11 @@ const siteLd = {
         },
         "query-input": "required name=search_term_string",
       },
+      // Speakable: marks site identity/headline for voice assistants
+      speakable: {
+        "@type": "SpeakableSpecification",
+        cssSelector: ["h1", ".speakable-lead"],
+      },
     },
     {
       "@type": "RealEstateAgent",
@@ -144,6 +155,25 @@ const siteLd = {
       areaServed: {
         "@type": "Country",
         name: "Georgia",
+      },
+    },
+    // SiteNavigationElement — exposes the main menu so Google can render
+    // sitelinks in search results.
+    {
+      "@type": "SiteNavigationElement",
+      name: "მთავარი ნავიგაცია",
+      url: `${SITE_URL}/`,
+      potentialAction: {
+        "@type": "ItemList",
+        itemListElement: [
+          { "@type": "SiteNavigationElement", name: "იყიდება", url: `${SITE_URL}/sale` },
+          { "@type": "SiteNavigationElement", name: "ქირავდება", url: `${SITE_URL}/rent` },
+          { "@type": "SiteNavigationElement", name: "დღიურად", url: `${SITE_URL}/daily` },
+          { "@type": "SiteNavigationElement", name: "ძიება", url: `${SITE_URL}/search` },
+          { "@type": "SiteNavigationElement", name: "უბნები", url: `${SITE_URL}/neighborhoods` },
+          { "@type": "SiteNavigationElement", name: "ახალი პროექტები", url: `${SITE_URL}/projects` },
+          { "@type": "SiteNavigationElement", name: "ბლოგი", url: `${SITE_URL}/blog` },
+        ],
       },
     },
   ],

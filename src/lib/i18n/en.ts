@@ -22,6 +22,9 @@ export const en: Dict = {
   'nav.language': 'Language',
   'nav.theme': 'Theme',
   'nav.themeToggle': 'Toggle theme — light or dark',
+  'nav.daily': 'Daily',
+  'nav.neighborhoods': 'Neighborhoods',
+  'nav.blog': 'Blog',
 
   // ——— Search page chrome ———
   'search.title': 'Search',

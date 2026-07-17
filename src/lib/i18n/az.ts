@@ -22,6 +22,9 @@ export const az: Dict = {
   'nav.language': 'Dil',
   'nav.theme': 'Mövzu',
   'nav.themeToggle': 'Mövzunu dəyiş — işıqlı və ya tünd',
+  'nav.daily': 'Günlük',
+  'nav.neighborhoods': 'Məhəllələr',
+  'nav.blog': 'Bloq',
 
   // ——— Search page chrome ———
   'search.title': 'Axtarış',

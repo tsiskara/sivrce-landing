@@ -57,8 +57,11 @@ export default function Navbar() {
   const NAV_LINKS: { key: DictKey; to: string }[] = [
     { key: 'nav.buy', to: '/sale' },
     { key: 'nav.rent', to: '/rent' },
+    { key: 'nav.daily', to: '/daily' },
     { key: 'nav.search', to: '/search' },
+    { key: 'nav.neighborhoods', to: '/neighborhoods' },
     { key: 'nav.projects', to: '/projects' },
+    { key: 'nav.blog', to: '/blog' },
     { key: 'nav.services', to: `${pathname === '/' ? '' : '/'}#services` },
   ]
 

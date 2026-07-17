@@ -22,6 +22,9 @@ export const ar: Dict = {
   'nav.language': 'اللغة',
   'nav.theme': 'المظهر',
   'nav.themeToggle': 'تبديل المظهر — فاتح أو داكن',
+  'nav.daily': 'يومي',
+  'nav.neighborhoods': 'الأحياء',
+  'nav.blog': 'المدونة',
 
   // ——— Search page chrome ———
   'search.title': 'بحث',

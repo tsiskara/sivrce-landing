@@ -22,6 +22,9 @@ export const uk: Dict = {
   'nav.language': 'Мова',
   'nav.theme': 'Тема',
   'nav.themeToggle': 'Перемкнути тему — світла або темна',
+  'nav.daily': 'Подобово',
+  'nav.neighborhoods': 'Райони',
+  'nav.blog': 'Блог',
 
   // ——— Search page chrome ———
   'search.title': 'Пошук',

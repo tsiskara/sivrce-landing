@@ -22,6 +22,9 @@ export const tr: Dict = {
   'nav.language': 'Dil',
   'nav.theme': 'Tema',
   'nav.themeToggle': 'Temayı değiştir — açık veya koyu',
+  'nav.daily': 'Günlük',
+  'nav.neighborhoods': 'Mahalleler',
+  'nav.blog': 'Blog',
 
   // ——— Search page chrome ———
   'search.title': 'Arama',

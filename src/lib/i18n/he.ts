@@ -22,6 +22,9 @@ export const he: Dict = {
   'nav.language': 'שפה',
   'nav.theme': 'ערכת נושא',
   'nav.themeToggle': 'החלפת ערכת נושא — בהירה או כהה',
+  'nav.daily': 'יומי',
+  'nav.neighborhoods': 'שכונות',
+  'nav.blog': 'בלוג',
 
   // ——— Search page chrome ———
   'search.title': 'חיפוש',

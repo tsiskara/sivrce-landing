@@ -22,6 +22,9 @@ export const hy: Dict = {
   'nav.language': 'Լեզու',
   'nav.theme': 'Թեմա',
   'nav.themeToggle': 'Փոխարկել թեման՝ բաց կամ մուգ',
+  'nav.daily': 'Օրական',
+  'nav.neighborhoods': 'Թաղամասեր',
+  'nav.blog': 'Բլոգ',
 
   // ——— Search page chrome ———
   'search.title': 'Որոնում',

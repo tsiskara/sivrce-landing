@@ -47,9 +47,10 @@ const COLS: { titleKey: DictKey; links: { key: DictKey; href: string }[] }[] = [
       { key: 'footer.re.apartments', href: '/sale/apartments' },
       { key: 'footer.re.houses', href: '/sale/houses' },
       { key: 'footer.re.rent', href: '/rent/apartments' },
-      { key: 'footer.re.daily', href: '/rent' },
+      { key: 'footer.re.daily', href: '/daily' },
       { key: 'footer.re.land', href: '/sale/land' },
       { key: 'footer.re.commercial', href: '/sale/commercial' },
+      { key: 'nav.neighborhoods', href: '/neighborhoods' },
     ],
   },
   {
@@ -68,7 +69,7 @@ const COLS: { titleKey: DictKey; links: { key: DictKey; href: string }[] }[] = [
     links: [
       { key: 'footer.co.about', href: '/about' },
       { key: 'footer.co.careers', href: '/contact' },
-      { key: 'footer.co.blog', href: '/faq' },
+      { key: 'footer.co.blog', href: '/blog' },
       { key: 'footer.co.partnership', href: '/contact' },
       { key: 'footer.co.ads', href: '/advertise' },
       { key: 'footer.co.contact', href: '/contact' },

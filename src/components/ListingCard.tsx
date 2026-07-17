@@ -94,7 +94,8 @@ export default function ListingCard({ l, i = 0, layout = 'grid', animate = true 
       <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
         <div>
           <div className="text-[24px] font-black tracking-tight text-white [text-shadow:0_2px_10px_rgba(5,11,38,0.55)]">{formatListingPrice(l)}</div>
-          <div className="text-[12px] font-bold text-white/75">{formatPerM2(l)}</div>
+          {/* perM2 only meaningful for sale; rent/daily are priced per period */}
+          {l.dealType === 'sale' && <div className="text-[12px] font-bold text-white/75">{formatPerM2(l)}</div>}
         </div>
         <span className="flex items-center gap-1 rounded-full bg-sv-navy/55 px-2.5 py-1 text-[11px] font-bold text-white/85 backdrop-blur">
           <Eye className="h-3 w-3" /> {formatViews(l.views)}

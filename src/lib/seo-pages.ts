@@ -19,6 +19,9 @@ export interface GeoLoc {
 export const DEALS: Record<string, { deal: DealType; ka: string; noun: string }> = {
   sale: { deal: 'sale', ka: 'იყიდება', noun: 'ყიდვა' },
   rent: { deal: 'rent', ka: 'ქირავდება', noun: 'ქირა' },
+  // "ბინები დღიურად" — top Georgian real-estate query. Listings below render
+  // /daily, /daily/apartments, /daily/apartments/tbilisi(/old-tbilisi), etc.
+  daily: { deal: 'daily', ka: 'დღიურად', noun: 'დღიური ქირა' },
 }
 
 export const TYPES: Record<string, { type: PropType; ka: string; kaSingle: string }> = {
@@ -297,6 +300,16 @@ export function faqsOf(def: SeoPageDef): Faq[] {
     faqs.push({
       q: `რა პირობებით ქირავდება ${subject} ${where}?`,
       a: `უმეტესი მესაკუთრე ითხოვს პირველი და ბოლო თვის გადასახადს. გრძელვადიანი ქირის შემთხვევაში ფასი ხშირად მოლაპარაკებადია — დაუკავშირდით აგენტს პირდაპირ განცხადებიდან.`,
+    })
+  }
+  if (def.dealSlug === 'daily') {
+    faqs.push({
+      q: `რა ღირს ${subject} დღიურად ${where}?`,
+      a: `ფასი მოცემულია ერთ ღამეზე (დღეზე) და ${formatUSD(s.minPrice)}-დან იწყება. საბაზრო საშუალო ${s.avgPerM2 ? formatUSD(s.avgPerM2) : formatUSD(Math.round((s.minPrice + s.maxPrice) / 2))}-ს შეადგენს. შაბათ-კვირასა და სეზონში ფასი იზრდება — ზუსტი თარიღისთვის მიმართეთ მესაკუთრეს განცხადებიდან.`,
+    })
+    faqs.push({
+      q: `როგორ დავჯავშნოთ ბინა დღიურად?`,
+      a: `აირჩიეთ განცხადება, შეარჩიეთ თარიღები და დაუკავშირდით მესაკუთრეს პირდაპირ sivrce-ის ჩატით. გადახდა ხდება ადგილზე ან ონლაინ — მესაკუთრის პირობის მიხედვით. უსაფრთხოებისთვის გადახდამდე შეამოწმეთ განცხადების ვერიფიკაციის სტატუსი.`,
     })
   }
   return faqs
