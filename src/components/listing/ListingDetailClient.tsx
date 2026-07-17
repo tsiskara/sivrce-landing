@@ -623,7 +623,7 @@ export default function ListingDetailClient({ listing: l, similar }: { listing: 
                   }`}
                 >
                   <Heart className={`h-4.5 w-4.5 ${fav ? 'fill-sv-orange text-sv-orange' : ''}`} />
-                  <span className="text-[13px] font-extrabold">{t('detail.addFavorite')}</span>
+                  <span className="text-[13px] font-extrabold">{t('nav.favorites')}</span>
                 </button>
                 <button
                   onClick={share}

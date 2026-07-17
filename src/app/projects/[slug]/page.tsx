@@ -127,7 +127,7 @@ export default async function ProjectPage({ params }: PageProps) {
                 { label: 'ფასი /მ²-დან', value: project.priceFromM2 },
                 { label: 'აშენებულია', value: `${project.done}%` },
                 { label: 'ჩაბარება', value: project.finish },
-                { label: 'ბინა', value: project.flats },
+                { label: 'ბინა', value: String(project.flats) },
               ]}
             />
             <div className="mt-6 h-1.5 max-w-xl overflow-hidden rounded-full bg-sv-ink/[0.07]">

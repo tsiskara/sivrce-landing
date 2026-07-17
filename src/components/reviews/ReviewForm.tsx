@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useId, useState, type FormEvent } from 'react'
+import { useId, useState, type FormEvent } from 'react'
 import { useSession } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { RatingStars } from './RatingStars'
@@ -31,11 +31,14 @@ export function ReviewForm({ targetType, targetId, strings: s, locale, onSubmitt
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
-  // Prefill the name once the session resolves; never overwrite what the user typed.
-  useEffect(() => {
-    const n = session?.user?.name
-    if (n) setName((prev) => prev || n)
-  }, [session])
+  // Prefill the name once the session resolves; never overwrite what the user
+  // typed. State adjusted during render — no setState in effect bodies.
+  const sessionName = session?.user?.name ?? ''
+  const [prefilledFor, setPrefilledFor] = useState('')
+  if (sessionName && prefilledFor !== sessionName) {
+    setPrefilledFor(sessionName)
+    setName((prev) => (prev ? prev : sessionName))
+  }
 
   const bodyLen = body.trim().length
 

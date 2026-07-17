@@ -87,10 +87,8 @@ export function ReviewsSection({ targetType, targetId, className }: ReviewsSecti
       const distribution = { ...prev.distribution, [key]: (prev.distribution?.[key] ?? 0) + 1 }
       return { ...prev, count, average, distribution, reviews: [review, ...prev.reviews] }
     })
-    setStatus((st) => (st === 'error' ? 'ready' : st))
-  }, [])
-
-  const busy = status === 'loading'
+    setErrorKey((k) => (k === reqKey ? null : k))
+  }, [reqKey])
 
   return (
     <section aria-label={s.sectionTitle} className={cn('w-full', className)}>
@@ -120,7 +118,7 @@ export function ReviewsSection({ targetType, targetId, className }: ReviewsSecti
         </>
       )}
 
-      {status === 'error' && !data && (
+      {errorKey === reqKey && (
         <div role="alert" className="mt-6 rounded-card border border-sv-ink/[0.06] bg-sv-surface p-8 text-center shadow-card">
           <p className="text-[16px] font-extrabold text-sv-ink">{s.loadError}</p>
           <button
@@ -136,7 +134,7 @@ export function ReviewsSection({ targetType, targetId, className }: ReviewsSecti
         </div>
       )}
 
-      {data && (
+      {data && errorKey !== reqKey && (
         <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)]">
           <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
             {data.count > 0 && (
